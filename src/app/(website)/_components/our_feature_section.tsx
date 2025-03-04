@@ -29,7 +29,7 @@ const OurFeatureSection = ({token} : Props) => {
     queryKey: ["products"],
     queryFn: async () => {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}api/product`, {
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/product`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
@@ -41,6 +41,8 @@ const OurFeatureSection = ({token} : Props) => {
     },
   });
   if(!token) return;
+
+  console.log(data);
   
   const products = data?.data;
   let content;
