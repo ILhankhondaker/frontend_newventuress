@@ -29,7 +29,7 @@ const OurFeatureSection = ({token} : Props) => {
     queryKey: ["products"],
     queryFn: async () => {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/product`, {
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
