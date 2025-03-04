@@ -41,35 +41,6 @@ const productData: ProductData = {
   ],
   mainImage: { src: "/assets/img/prodDetails.png", alt: "Product main image" },
 };
-// const reviews = [
-//   {
-//     imageSrc: "/assets/img/reviews-card-imag.png.png",
-//     name: "Leslie Alexander",
-//     date: "16 June 2025",
-//     rating: 4,
-//     review:
-//       "Welcome to Pacific Rim Fusion, the leading B2B online auction marketplace dedicated to empowering local cannabis farms and businesses in markets often dominated by larger operators. Operating in Federally legal jurisdictions including Thailand, Germany, and Canada, we specialize in facilitating the sale of surplus cannabis and cannabis-related products through a secure and dynamic platform.",
-//     storeName: "American Beauty",
-//   },
-//   {
-//     imageSrc: "/assets/img/reviews-card-imag.png.png",
-//     name: "Leslie Alexander",
-//     date: "10 May 2025",
-//     rating: 4,
-//     review:
-//       "Welcome to Pacific Rim Fusion, the leading B2B online auction marketplace dedicated to empowering local cannabis farms and businesses in markets often dominated by larger operators. Operating in Federally legal jurisdictions including Thailand, Germany, and Canada, we specialize in facilitating the sale of surplus cannabis and cannabis-related products through a secure and dynamic platform.",
-//     storeName: "Beauty Green",
-//   },
-//   {
-//     imageSrc: "/assets/img/reviews-card-imag.png.png",
-//     name: "Leslie Alexander",
-//     date: "5 April 2025",
-//     rating: 5,
-//     review:
-//       "Welcome to Pacific Rim Fusion, the leading B2B online auction marketplace dedicated to empowering local cannabis farms and businesses in markets often dominated by larger operators. Operating in Federally legal jurisdictions including Thailand, Germany, and Canada, we specialize in facilitating the sale of surplus cannabis and cannabis-related products through a secure and dynamic platform.",
-//     storeName: "Green Leaf",
-//   },
-// ];
 
 const fetchProducts = async ({ }) => {
   const response = await fetch(
