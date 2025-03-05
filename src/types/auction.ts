@@ -6,7 +6,7 @@ export type AuctionProduct = {
     category: string;
     startingPrice: number;
     startingTime: string; // Consider using Date if parsing is needed
-    endingTime: string; // Consider using Date if parsing is needed
+    endingTime: Date; // Consider using Date if parsing is needed
     sku: string;
     stockQuantity: number;
     tags: string[]; // Fixing array structure, assuming it's an array of strings

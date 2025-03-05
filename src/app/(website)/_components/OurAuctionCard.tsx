@@ -16,25 +16,25 @@ const AuctionCountDownTimer = dynamic(
 );
 
 interface Auction {
-  _id: string;
-  title: string;
-  shortDescription?: string;
-  productType?: string;
-  startingPrice: number;
-  startingTime: string;
-  endingTime: Date;
-  sku: string;
-  stockQuantity: number;
-  tags?: string[];
-  images: string[];
-}
+    _id: string;
+    title: string;
+    shortDescription?: string;
+    productType?: string;
+    startingPrice?: number; // Changed to optional
+    startingTime: string;
+    endingTime: Date;
+    sku: string;
+    stockQuantity: number;
+    tags?: string[];
+    images: string[];
+  }
 
 interface Props {
   auction: Auction;
   index: number;
 }
 
-export default function AuctionCard({ auction, index }: Props) {
+export default function OurAuctionCard({ auction, index }: Props) {
   const [imgLoaded, setImgLoaded] = useState(false);
   const [isWishlist, setIsWishlist] = useState(false);
 
@@ -43,9 +43,10 @@ export default function AuctionCard({ auction, index }: Props) {
   };
 
   const endDate = new Date(auction.endingTime);
-  const isExpired = Date.now() > endDate.getTime();
-
-  console.log({auction})
+  const isExpired = new Date() > endDate;
+  console.log("isExpired", isExpired);
+  console.log('endDate', endDate);
+  console.log(auction)
 
   return (
     <div className="flex relative flex-col grow shrink self-stretch p-3 my-auto mx-auto bg-white rounded-[8px] border border-gray-200 border-solid w-full md:h-auto hover:shadow-feature_card transition-shadow duration-300 h-[389px]">
@@ -111,7 +112,7 @@ export default function AuctionCard({ auction, index }: Props) {
             </div>
           </div>
         </div>
-        {!isExpired && <AuctionCountDownTimer endDate={auction.endingTime} />}
+        {!isExpired && <AuctionCountDownTimer endDate={endDate} />}
         <Button
           aria-label="Bid Now"
           disabled={isExpired}
