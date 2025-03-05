@@ -11,6 +11,9 @@ import { Form, FormControl, FormField, FormItem, FormMessage } from "@/component
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+import { useSession } from "next-auth/react";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 // Define Zod schema for validation
 const formSchema = z.object({
@@ -23,6 +26,41 @@ const formSchema = z.object({
 type FormValues = z.infer<typeof formSchema>;
 
 const ContactForm: React.FC = () => {
+
+  const session = useSession();
+  const token = session.data?.user.token;
+  console.log({token})
+
+  const {mutate} = useMutation<any, unknown, FormData>({
+    mutationKey : ["contact"],
+    mutationFn : (formData)=> fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/contact`,{
+      method : "POST",
+      headers : {
+        Authorization : `Bearer ${token}`
+      },
+      body : formData
+    })
+    .then ((res)=> res.json()),
+
+    onSuccess : (formData) =>{
+      if(!formData.status){
+        toast.error(formData.message, {
+          position : "top-right",
+          richColors : true
+        })
+        return ;
+      }
+      form.reset();
+    toast.success(formData.message, {
+      position : "top-right",
+      richColors : true
+    })
+    }
+
+    
+    
+  })
+
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema), // Use Zod resolver for validation
     defaultValues: {
@@ -34,8 +72,13 @@ const ContactForm: React.FC = () => {
   });
 
   const onSubmit = (data: FormValues) => {
-    console.log("Form submitted", data);
-
+    const formData = new FormData();
+    formData.append("name", data.name);
+    formData.append("email", data.email);
+    formData.append("subject", JSON.stringify(data.subject));
+    formData.append("message", data.message)
+    mutate(formData);
+    
     // Optionally reset the form
     form.reset();
   };
