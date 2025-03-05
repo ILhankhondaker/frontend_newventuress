@@ -22,7 +22,7 @@ interface Auction {
     productType?: string;
     startingPrice?: number; // Changed to optional
     startingTime: string;
-    endingTime: string;
+    endingTime: Date;
     sku: string;
     stockQuantity: number;
     tags?: string[];
