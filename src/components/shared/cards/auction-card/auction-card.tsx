@@ -22,7 +22,7 @@ interface Auction {
   productType?: string;
   startingPrice: number;
   startingTime: string;
-  endingTime: string;
+  endingTime: Date;
   sku: string;
   stockQuantity: number;
   tags?: string[];
@@ -43,10 +43,9 @@ export default function AuctionCard({ auction, index }: Props) {
   };
 
   const endDate = new Date(auction.endingTime);
-  const isExpired = new Date() > endDate;
-  console.log("isExpired", isExpired);
-  console.log('endDate', endDate);
-  console.log(auction)
+  const isExpired = Date.now() > endDate.getTime();
+
+  console.log({auction})
 
   return (
     <div className="flex relative flex-col grow shrink self-stretch p-3 my-auto mx-auto bg-white rounded-[8px] border border-gray-200 border-solid w-full md:h-auto hover:shadow-feature_card transition-shadow duration-300 h-[389px]">
@@ -112,7 +111,7 @@ export default function AuctionCard({ auction, index }: Props) {
             </div>
           </div>
         </div>
-        {!isExpired && <AuctionCountDownTimer endDate={endDate} />}
+        {!isExpired && <AuctionCountDownTimer endDate={auction.endingTime} />}
         <Button
           aria-label="Bid Now"
           disabled={isExpired}

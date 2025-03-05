@@ -29,7 +29,9 @@ const OurFeatureSection = ({token} : Props) => {
     queryKey: ["featured-products"],
     queryFn: async () => {
       const response = await fetch(
+
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/product/featured`, {
+
           headers: {
             'Authorization': `Bearer ${token}`
           }
@@ -40,6 +42,8 @@ const OurFeatureSection = ({token} : Props) => {
       return response.json();
     },
   });
+  if(!token) return;
+
   if (!token) {
     return (
       <div className="section container py-[80px]">

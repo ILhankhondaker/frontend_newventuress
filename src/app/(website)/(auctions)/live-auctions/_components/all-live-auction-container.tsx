@@ -16,9 +16,9 @@ const AllLiveAuctionContainer = () => {
   console.log({ token });
 
   const { data } = useQuery<AuctionProductResponse>({
-    queryKey: ["membership"],
+    queryKey: ["all-auctions", currentPage],
     queryFn: () =>
-      fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auction/all`, {
+      fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auction/all?page=${currentPage}&limit=8`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -29,21 +29,30 @@ const AllLiveAuctionContainer = () => {
 
   console.log("auction data:", data);
 
+  const liveAuctionsData = data?.data?.filter((liveAuction) => {
+    const auctionEndTime = new Date(liveAuction.endingTime).getTime(); 
+    return auctionEndTime > Date.now();
+  });
+
 
   return (
     <div className="mb-[70px] mt-[40px]">
       <SectionHeading heading="Our Live Auctions" subheading="" />
       <div className="mt-[40px] grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-[30px] container">
-      {data?.data?.map((auction, index) => (
-  <AuctionCard key={auction._id} auction={auction} index={index} />
-))}
+      {liveAuctionsData?.map((auction, index) => (
+      <AuctionCard key={auction._id} auction={auction} index={index} />
+      ))}
       </div>
       <div className="mt-[40px]">
-        <PacificPagination
+        {
+          data?.pagination && data?.pagination?.totalPages > 1 && (
+            <PacificPagination
           currentPage={currentPage}
           onPageChange={(page) => setCurrentPage(page)}
-          totalPages={10}
+          totalPages={data?.pagination?.totalPages}
         />
+          )
+        }
       </div>
     </div>
   );

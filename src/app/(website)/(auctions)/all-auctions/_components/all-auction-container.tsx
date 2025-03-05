@@ -23,9 +23,9 @@ const AllAuctionsContainer = () => {
   console.log({ token });
 
   const { data } = useQuery<AuctionProductResponse>({
-    queryKey: ["membership"],
+    queryKey: ["all-auctions", currentPage],
     queryFn: () =>
-      fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auction/all`, {
+      fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auction/all?page=${currentPage}&limit=8`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -33,8 +33,6 @@ const AllAuctionsContainer = () => {
         },
       }).then((res) => res.json()),
   });
-
-  console.log("auction data:", data);
 
 
   return (
@@ -46,11 +44,15 @@ const AllAuctionsContainer = () => {
 ))}
       </div>
       <div className="mt-[40px]">
-        <PacificPagination
-          currentPage={currentPage}
-          onPageChange={(page) => setCurrentPage(page)}
-          totalPages={7 }
-        />
+      {
+        data?.pagination && data?.pagination?.totalPages > 1 &&(
+          <PacificPagination
+            currentPage={currentPage}
+            onPageChange={(page) => setCurrentPage(page)}
+            totalPages={ data?.pagination?.totalPages}
+            />
+        )
+      }
       </div>
     </div>
   );
