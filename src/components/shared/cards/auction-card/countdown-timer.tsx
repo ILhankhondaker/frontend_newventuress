@@ -1,7 +1,7 @@
 "use client";
 import { useCountdown } from "@/hooks/useCountDown";
 
-const AuctionCountDownTimer = ({ endDate }: { endDate: string }) => {
+const AuctionCountDownTimer = ({ endDate }: { endDate: Date }) => {
   const targetDate = new Date(endDate); // Convert string to Date object
   const timeLeft = useCountdown(targetDate);
   return (
