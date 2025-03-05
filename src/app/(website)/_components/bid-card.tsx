@@ -9,7 +9,6 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Rating } from "@/components/ui/Rating";
 // import { useCountdown } from "@/hooks/useCountDown";
 import { Product } from "@/types/product";
-import CountdownTimer from "@/components/shared/CountdownTimer/CountdownTimer";
 import dynamic from "next/dynamic";
 
 const AuctionCountDownTimer = dynamic(
@@ -73,9 +72,11 @@ export default function BiddingCard({ product }: { product: Product }) {
           </span>
         </div>
 
-        {!isExpired && <AuctionCountDownTimer endDate={endDate} />}
+     <div className="p-5">
+     {!isExpired && <AuctionCountDownTimer endDate={endDate} />}
+     </div>
   
-        <CountdownTimer targetDate = "12"/>
+      
       </CardContent>
     </Card>
   );
