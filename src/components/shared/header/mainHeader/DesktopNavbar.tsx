@@ -80,7 +80,7 @@ function DesktopNavbar({ pathName, loggedin }: DesktopNavbarProps) {
         >
           Home
         </Link>
-        <Link
+        {/* <Link
           href="/about"
           className={cn(
             "text-[20px] font-medium hover:text-primary-blue-main dark:hover:text-primary-pink-main",
@@ -88,7 +88,7 @@ function DesktopNavbar({ pathName, loggedin }: DesktopNavbarProps) {
           )}
         >
           About
-        </Link>
+        </Link> */}
         <Link
           href=""
           className={cn(
@@ -100,15 +100,18 @@ function DesktopNavbar({ pathName, loggedin }: DesktopNavbarProps) {
         >
           <AuctionList />
         </Link>
-        <Link
-          href="/blogs"
+         <Link
+          href="/products"
           className={cn(
             "text-[20px] font-medium hover:text-primary-blue-main dark:hover:text-primary-pink-main",
-            pathName === "/blogs" ? "text-primary-blue-main dark:text-primary-pink-main" : "text-black font-normal"
+            pathName === "/products"
+              ? "text-primary-blue-main dark:text-primary-pink-main"
+              : "text-black font-normal"
           )}
         >
-          Blog
+         Products
         </Link>
+       
         <Link
           href=""
           className={cn(
@@ -117,6 +120,15 @@ function DesktopNavbar({ pathName, loggedin }: DesktopNavbarProps) {
           )}
         >
           <PagesList />
+        </Link>
+         <Link
+          href="/blogs"
+          className={cn(
+            "text-[20px] font-medium hover:text-primary-blue-main dark:hover:text-primary-pink-main",
+            pathName === "/blogs" ? "text-primary-blue-main dark:text-primary-pink-main" : "text-black font-normal"
+          )}
+        >
+          Blog
         </Link>
         <Link
           href="/contact"

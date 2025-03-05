@@ -11,7 +11,6 @@ import { useParams } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import { TextAnimate } from "@/components/magicui/text-animate";
 import ErrorContainer from "@/components/ui/error-container";
-import { auth } from "@/auth";
 
 
 // Mock authentication function (Replace with actual auth logic)
@@ -30,8 +29,7 @@ function BlogComments() {
   const { fullName, usernameOrEmail } = useAuth();
   const queryClient = useQueryClient();
 
-  const userAuth = auth()
-  console.log(userAuth);
+ 
 
   // Fetch Blog Comments
   const {
@@ -105,7 +103,7 @@ function BlogComments() {
     );
   } else if (isError) {
     content = <ErrorContainer message="Failed to load comments. Please try again!" />;
-  } else if (!comments?.length) {
+  } else if (comments?.data.length <= 0 ) {
     content = (
       <div className="py-5 text-center">
         <TextAnimate animation="slideUp" by="word">
@@ -116,7 +114,7 @@ function BlogComments() {
   } else {
     content = (
       <div className="flex flex-col items-start mt-5 w-full max-md:max-w-full">
-        {comments.map((comment: any) => (
+        {comments?.data?.map((comment: any) => (
           <Commentcard
             key={comment._id}
             author={comment.fullName}
