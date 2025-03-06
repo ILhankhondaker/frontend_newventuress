@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useAppSelector } from "@/redux/store";
 import { useEffect, useState } from "react";
 import { WishlistCard } from "./WishlistCard";
+import Link from "next/link";
 
 const WishlistContainer = () => {
   const cartItems = useAppSelector((state) => state.wishlist.items); // Get cart items from Redux
@@ -45,9 +46,11 @@ const WishlistContainer = () => {
       </div>
 
       <div className="flex justify-center pt-[20px] md:pt-[30px] lg:pt-[40px]">
-        <Button className="text-base font-medium leading-[19px] bg-gradient-to-r from-[#121D42] via-[#152764] to-[#4857BD] hover:bg-[#121D42] rounded-[8px] py-[12px] px-[24px]">
-          Move All to Cart
+ <Link href="/cart">
+ <Button className="text-base font-medium leading-[19px] bg-gradient-to-r from-[#121D42] via-[#152764] to-[#4857BD] hover:bg-[#121D42] rounded-[8px] py-[12px] px-[24px]">
+          Go to Cart
         </Button>
+ </Link>
       </div>
     </section>
   );

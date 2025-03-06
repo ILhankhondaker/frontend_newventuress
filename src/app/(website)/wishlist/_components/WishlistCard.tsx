@@ -1,31 +1,33 @@
-
 import { useDispatch, useSelector } from "react-redux";
-import { Check, Heart,  } from "lucide-react";
+import { Check, Heart } from "lucide-react";
 import Image from "next/image";
 import { RootState } from "@/redux/store";
 import { addToWishlist, removeFromWishlist } from "@/redux/features/wishlist/wishlistSlice";
 import { StarRating } from "../../cart/_components/star-rating";
+import { addToCart } from "@/redux/features/cart/cartSlice";
 
 interface WishlistItem {
-    _id: string;
-    title: string;
-    discountPrice: number;
-    sellingPrice: number;
-    stockStatus: string;
-    image: string;
-  }
+  _id: string;
+  title: string;
+  discountPrice: number;
+  sellingPrice: number;
+  stockStatus: string;
+  image: string;
+}
 
 interface CartItemProps {
-    item: WishlistItem;
-    onUpdateQuantity: (id: string, quantity: number) => void;
-    onRemove: (id: string) => void;
-    icon?: React.ElementType;  // Add icon prop if needed
+  item: WishlistItem;
+  onUpdateQuantity: (id: string, quantity: number) => void;
+  onRemove: (id: string) => void;
+  icon?: React.ElementType;
 }
 
 export function WishlistCard({ item }: CartItemProps) {
   const dispatch = useDispatch();
   const wishlist = useSelector((state: RootState) => state.wishlist.items);
+  const cart = useSelector((state: RootState) => state.cart.items);  // Accessing the cart items
   const isWishlist = wishlist.some((wishlistItem) => wishlistItem._id === item._id);
+  const isInCart = cart.some((cartItem) => cartItem._id === item._id); // Check if item is in the cart
 
   const handleWishlistToggle = () => {
     if (isWishlist) {
@@ -41,7 +43,18 @@ export function WishlistCard({ item }: CartItemProps) {
       }));
     }
   };
-  console.log("wishlist data", item);
+
+  const handleAddToCart = () => {
+    dispatch(addToCart({
+      _id: item._id,
+      title: item.title,
+      discountPrice: item.discountPrice,
+      sellingPrice: item.sellingPrice,
+      stockStatus: item.stockStatus,
+      image: item.image,
+      quantity: 1,  // You can set the quantity here based on your requirements
+    }));
+  };
 
   return (
     <div className="flex flex-col gap-[16px] rounded-lg p-[12px] border border-gray-200">
@@ -93,18 +106,18 @@ export function WishlistCard({ item }: CartItemProps) {
             </div>
           </div>
           <div className="flex items-center justify-between gap-4 mt-[8px]">
-            {/* <div className="w-[163px] h-[32px] flex justify-between items-center px-[24px] bg-white border border-white rounded-[24px]">
-              <button onClick={() => onUpdateQuantity(item._id, Math.max(0, item.quantity - 1))} className="w-8 h-8 text-2xl flex items-center justify-center">
-                <Minus className="w-[20px] h-[20px]  text-[#6D6D6D]" />
-              </button>
-              <span className="text-xl text-[#444444] text-center">{item.quantity}</span>
-              <button onClick={() => onUpdateQuantity(item._id, item.quantity + 1)} className="w-8 h-8 text-2xl flex items-center justify-center">
-                <Plus className="w-[20px] h-[20px] text-[#272323]" />
-              </button>
-            </div> */}
-            {/* <button onClick={() => onRemove(item._id)} className="text-base font-normal leading-[19px] text-[#00417E] dark:text-gradient-pink">
-              Remove
-            </button> */}
+            <div>
+              {/* Empty div (you can implement quantity controls here if needed) */}
+            </div>
+            <button
+              onClick={handleAddToCart}
+              className={`text-base font-bold leading-[19px] text-[#00417E] dark:text-gradient-pink ${
+                isInCart ? "bg-primary dark:bg-pinkGradient text-white cursor-not-allowed p-1 rounded-sm" : ""
+              }`}
+              disabled={isInCart} // Disable the button if the item is in the cart
+            >
+              {isInCart ? "Allready Added" : "Add to Cart"}
+            </button>
           </div>
         </div>
       </div>
