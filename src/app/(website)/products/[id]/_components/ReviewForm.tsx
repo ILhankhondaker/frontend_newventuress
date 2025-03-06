@@ -1,11 +1,59 @@
+"use client"
 import * as React from "react";
 import { ProvideStarRating } from "./ProvideStarRatting";
 import { Button } from "@/components/ui/button";
 import { ReviewFormProps } from "./types";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useParams } from "next/navigation";
+import { useSession } from "next-auth/react";
+import { toast } from "sonner";
+
+interface reviewType {
+  storeID : string,
+  productID : string | string[],
+  userID : string,
+  rating : number,
+  comment : string
+}
 
 export const ReviewForm: React.FC<ReviewFormProps> = () => {
+
+  const params = useParams();
+  const session = useSession();
+  const userId = session.data?.user.id;
+
+  const queryClient = useQueryClient();
   const [rating, setRating] = React.useState(0);
   const [review, setReview] = React.useState("");
+
+  const {mutate} = useMutation<any, unknown, reviewType >({
+    mutationKey : ["add-review"],
+    mutationFn : (data ) => fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/review/product/create`, {
+      method : "POST",
+      headers : {
+        "Content-Type" : "application/json",
+      },
+      body : JSON.stringify(data)
+    })
+    .then((res) => res.json()),
+    
+    onSuccess : (data)=> {
+      if(data.status === false){
+        toast.error(data.message, {
+          position: "top-right",
+          richColors: true
+        })
+        return ;
+      }
+      toast.success(data.message, {
+        position: "top-right",
+        richColors: true
+      })
+      queryClient.invalidateQueries({queryKey : ["allreview"]})
+    }
+  })
+
+  
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -13,8 +61,21 @@ export const ReviewForm: React.FC<ReviewFormProps> = () => {
       alert("Please provide a rating.");
       return;
     }
+
+
     console.log("Rating:", rating);
     console.log("Review:", review);
+
+    const userID = userId;
+    const storeID = "6795fbc52288a452214d2371"; 
+    const productID = params.id; 
+
+    if (!userID || !storeID || !productID) {
+      alert("Invalid store, product, or user information.");
+      return;
+    }
+
+    mutate({ userID, storeID, productID, rating, comment: review });
     setRating(0);
     setReview("");
   };
