@@ -38,7 +38,7 @@ export default function FeaturedProductCard({
       discountPrice: product.discountPrice,
       sellingPrice: product.selllingPrice,
       stockStatus: product.stockStatus,
-      image: product.images[0] || "/assets/blogs/blogs.png", // Ensure there's an image
+      image: product?.images[0] || "https://images.pexels.com/photos/3612193/pexels-photo-3612193.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1", // Ensure there's an image
       quantity: 1,
     }));
 
