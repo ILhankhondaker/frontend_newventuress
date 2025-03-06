@@ -43,7 +43,7 @@ const VendorStoreProducts = () => {
   const uniqueCategories = Array.from(
     new Set(products.map((product: any) => product.cateogry)),
   );
-  console.log("uniqueCategories", uniqueCategories);
+  // console.log("uniqueCategories", uniqueCategories);
 
   // Map unique categories to the dropdown format
   const categoryOptions = uniqueCategories.map((category, index) => ({
@@ -60,7 +60,7 @@ const VendorStoreProducts = () => {
     <div>
       <div className="mb-8 flex items-center justify-between">
         <form onSubmit={onSearchHandle}>
-          <div className="flex h-[41px] w-full max-w-[400px] overflow-hidden rounded-[6px] border-2 border-[#0057A8] bg-white">
+          <div className="flex h-[41px] w-full max-w-[400px] overflow-hidden rounded-[6px] border-2 border-[#0057A8] dark:border-[#643F9E] bg-white">
             <div className="flex items-center pl-2">
               <Search className="h-5 w-5 text-gray-400" />
             </div>
@@ -69,10 +69,10 @@ const VendorStoreProducts = () => {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Search"
-              className="flex-1 px-2 py-3 text-lg text-gray-600 placeholder-gray-400 focus:outline-none"
+              className="flex-1 px-2 py-3 text-lg text-gray-600 placeholder-gray-400 focus:outline-none dark:bg-white"
             />
             <button
-              className="w-[105px] bg-[#0057A8] px-4 font-medium text-white transition-colors hover:bg-blue-800"
+              className="w-[105px] bg-primary dark:bg-pinkGradient px-4 font-medium text-white transition-colors hover:bg-blue-800 "
               type="submit"
             >
               Search
