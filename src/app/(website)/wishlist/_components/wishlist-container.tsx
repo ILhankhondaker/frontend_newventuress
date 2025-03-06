@@ -1,13 +1,13 @@
 "use client";
 
-import { CartItemCard } from "@/components/shared/cards/cart-item";
+
 import { Button } from "@/components/ui/button";
 import { useAppSelector } from "@/redux/store";
-import { ShoppingCart } from "lucide-react";
 import { useEffect, useState } from "react";
+import { WishlistCard } from "./WishlistCard";
 
 const WishlistContainer = () => {
-  const cartItems = useAppSelector((state) => state.cart.items); // Get cart items from Redux
+  const cartItems = useAppSelector((state) => state.wishlist.items); // Get cart items from Redux
 
   useEffect(() => {
     console.log("Cart Items from Redux:", cartItems); // Log cart items
@@ -34,11 +34,11 @@ const WishlistContainer = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {items.slice(0, 6).map((item) => (
           <div key={item._id} className="w-full pb-[16px]">
-            <CartItemCard
+            <WishlistCard
               item={item}
               onUpdateQuantity={updateQuantity}
               onRemove={removeItem}
-              icon={<ShoppingCart className="w-4 h-4 " />}
+              // icon={<ShoppingCart className="w-4 h-4 " />}
             />
           </div>
         ))}

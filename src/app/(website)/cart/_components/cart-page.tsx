@@ -1,6 +1,5 @@
 'use client'
 import { CartItemCard } from "@/components/shared/cards/cart-item";
-import { Heart } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { CartSummary } from "./cart-summary";
@@ -79,7 +78,7 @@ export default function CartPage() {
                 item={item}
                 onUpdateQuantity={updateQuantityHandler}
                 onRemove={removeItemHandler}
-                icon={<Heart className="w-4 h-4 text-gray-600" />}
+
               />
             ))}
           </div>
