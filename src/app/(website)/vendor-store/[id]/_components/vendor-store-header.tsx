@@ -10,7 +10,7 @@ import { ProvideStarRating } from "@/app/(website)/products/[id]/_components/Pro
 
 const VendorStoreHeader = () => {
   const [rating, setRating] = React.useState(0);
-   const [review, setReview] = React.useState("");
+  const [review, setReview] = React.useState("");
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (rating === 0) {
@@ -44,7 +44,7 @@ const VendorStoreHeader = () => {
           alt="profile"
         />
         <h1 className="mt-[20px] text-[48px] text-[#000000] font-semibold leading-[57.6px]">
-          License Information 
+          License Information
         </h1>
         <div className="flex items-center gap-x-3">
           {/* <span className="text-[#3D3D3D] text-[16px] font-bold leading-[19.2px]">
@@ -83,55 +83,55 @@ const VendorStoreHeader = () => {
           </Button> */}
           <Dialog>
             <DialogTrigger asChild>
-              <Button variant="outline" className="bg-white text-gradient dark:text-gradient-pink "  >
+              <Button variant="outline" className="bg-white text-gradient dark:text-gradient-pink  dark:hover:text-[#7449B9] "  >
                 <span>
-                  <MdOutlineReviews className="text-black "/>
+                  <MdOutlineReviews className="text-black " />
                 </span>
                 Reveiw</Button>
             </DialogTrigger>
             <DialogContent className="w-[80%] md:w-[50%]">
-                <form
-                   onSubmit={handleSubmit}
-                   className="flex flex-col gap-4 rounded-lg w-full"
-                 >
-                   <h2 className="text-lg font-semibold text-gradient dark:bg-pinkGradient">Add a review</h2>
-             
-                   <div className="flex gap-2">
-                     <label htmlFor="rating" className="text-base text-neutral-700">
-                       Your rating <span className="text-red-600">*</span>
-                     </label>
-                     <span>
-                       <ProvideStarRating rating={rating} onChange={setRating} />
-                     </span>
-                   </div>
-             
-                   <div className="flex flex-col gap-2">
-                     <label htmlFor="review" className="text-base text-neutral-700">
-                       Your review <span className="text-red-600">*</span>
-                     </label>
-                     <textarea
-                       id="review"
-                       value={review}
-                       onChange={(e) => setReview(e.target.value)}
-                       className="p-3 border rounded-lg min-h-[120px] border-neutral-300 focus:border-green-600 focus:ring-green-600 dark:bg-white dark:text-black"
-                       placeholder="Write your review"
-                       required
-                       aria-required="true"
-                     />
-                   </div>
-             
-                   <Button
-                     type="submit"
-                     className="self-start "
-                   >
-                     Submit
-                   </Button>
-                 </form>
+              <form
+                onSubmit={handleSubmit}
+                className="flex flex-col gap-4 rounded-lg w-full"
+              >
+                <h2 className="text-lg font-semibold text-gradient dark:bg-pinkGradient">Add a review</h2>
+
+                <div className="flex gap-2">
+                  <label htmlFor="rating" className="text-base text-neutral-700">
+                    Your rating <span className="text-red-600">*</span>
+                  </label>
+                  <span>
+                    <ProvideStarRating rating={rating} onChange={setRating} />
+                  </span>
+                </div>
+
+                <div className="flex flex-col gap-2">
+                  <label htmlFor="review" className="text-base text-neutral-700">
+                    Your review <span className="text-red-600">*</span>
+                  </label>
+                  <textarea
+                    id="review"
+                    value={review}
+                    onChange={(e) => setReview(e.target.value)}
+                    className="p-3 border rounded-lg min-h-[120px] border-neutral-300 focus:border-green-600 focus:ring-green-600 dark:bg-white dark:text-black"
+                    placeholder="Write your review"
+                    required
+                    aria-required="true"
+                  />
+                </div>
+
+                <Button
+                  type="submit"
+                  className="self-start "
+                >
+                  Submit
+                </Button>
+              </form>
             </DialogContent>
           </Dialog>
         </div>
       </div>
-    
+
     </div>
   );
 };
