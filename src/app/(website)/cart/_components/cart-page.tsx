@@ -78,6 +78,7 @@ export default function CartPage() {
                 item={item}
                 onUpdateQuantity={updateQuantityHandler}
                 onRemove={removeItemHandler}
+
               />
             ))}
           </div>
