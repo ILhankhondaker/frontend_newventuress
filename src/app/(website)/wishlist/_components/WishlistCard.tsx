@@ -1,19 +1,28 @@
 
 import { useDispatch, useSelector } from "react-redux";
-import { Check, Heart, Minus, Plus } from "lucide-react";
+import { Check, Heart,  } from "lucide-react";
 import Image from "next/image";
-import { StarRating } from "../clientReview/StarRating";
-import { CartItem } from "@/redux/features/cart/cartSlice";
 import { RootState } from "@/redux/store";
 import { addToWishlist, removeFromWishlist } from "@/redux/features/wishlist/wishlistSlice";
+import { StarRating } from "../../cart/_components/star-rating";
+
+interface WishlistItem {
+    _id: string;
+    title: string;
+    discountPrice: number;
+    sellingPrice: number;
+    stockStatus: string;
+    image: string;
+  }
 
 interface CartItemProps {
-  item: CartItem;
-  onUpdateQuantity: (id: string, quantity: number) => void;
-  onRemove: (id: string) => void;
+    item: WishlistItem;
+    onUpdateQuantity: (id: string, quantity: number) => void;
+    onRemove: (id: string) => void;
+    icon?: React.ElementType;  // Add icon prop if needed
 }
 
-export function CartItemCard({ item, onUpdateQuantity, onRemove }: CartItemProps) {
+export function WishlistCard({ item }: CartItemProps) {
   const dispatch = useDispatch();
   const wishlist = useSelector((state: RootState) => state.wishlist.items);
   const isWishlist = wishlist.some((wishlistItem) => wishlistItem._id === item._id);
@@ -32,6 +41,7 @@ export function CartItemCard({ item, onUpdateQuantity, onRemove }: CartItemProps
       }));
     }
   };
+  console.log("wishlist data", item);
 
   return (
     <div className="flex flex-col gap-[16px] rounded-lg p-[12px] border border-gray-200">
@@ -57,7 +67,7 @@ export function CartItemCard({ item, onUpdateQuantity, onRemove }: CartItemProps
         <div className="flex-1 space-y-1 pt-2 flex flex-col justify-evenly">
           <div className="flex items-start justify-between">
             <div>
-              <StarRating className="w-[14px] h-[14px] pb-[5px] -ml-1" rating={4} activeColor="fill-amber-500 text-amber-500" inactiveColor="fill-stone-300 text-stone-300" />
+              <StarRating className="w-[14px] h-[14px] pb-[5px] -ml-1" rating={4} />
               <p className={`text-xs font-normal leading-[14px] pb-[4px] ${item.stockStatus === "Out of Stoke" ? "text-[#E10E0E]" : "text-[#2A6C2D]"}`}>
                 {item.stockStatus}
               </p>
@@ -83,7 +93,7 @@ export function CartItemCard({ item, onUpdateQuantity, onRemove }: CartItemProps
             </div>
           </div>
           <div className="flex items-center justify-between gap-4 mt-[8px]">
-            <div className="w-[163px] h-[32px] flex justify-between items-center px-[24px] bg-white border border-white rounded-[24px]">
+            {/* <div className="w-[163px] h-[32px] flex justify-between items-center px-[24px] bg-white border border-white rounded-[24px]">
               <button onClick={() => onUpdateQuantity(item._id, Math.max(0, item.quantity - 1))} className="w-8 h-8 text-2xl flex items-center justify-center">
                 <Minus className="w-[20px] h-[20px]  text-[#6D6D6D]" />
               </button>
@@ -91,10 +101,10 @@ export function CartItemCard({ item, onUpdateQuantity, onRemove }: CartItemProps
               <button onClick={() => onUpdateQuantity(item._id, item.quantity + 1)} className="w-8 h-8 text-2xl flex items-center justify-center">
                 <Plus className="w-[20px] h-[20px] text-[#272323]" />
               </button>
-            </div>
-            <button onClick={() => onRemove(item._id)} className="text-base font-normal leading-[19px] text-[#00417E] dark:text-gradient-pink">
+            </div> */}
+            {/* <button onClick={() => onRemove(item._id)} className="text-base font-normal leading-[19px] text-[#00417E] dark:text-gradient-pink">
               Remove
-            </button>
+            </button> */}
           </div>
         </div>
       </div>
