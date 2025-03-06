@@ -57,7 +57,7 @@ const CategoryFilter = () => {
               checked={categories.includes(category._id)}
               onCheckedChange={() => handleCategoryToggle(category._id)}
             />
-            <Label htmlFor={category.categoryName.toLowerCase()} className="text-[20px] leading-[24px] text-[#001E3B]">
+            <Label htmlFor={category.categoryName.toLowerCase()} className="text-[20px] leading-[24px] text-gradient dark:text-gradient-pink">
               {category.categoryName}
             </Label>
           </div>
