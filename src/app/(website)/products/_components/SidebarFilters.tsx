@@ -87,7 +87,7 @@ export default function SidebarFilters() {
                 checked={flowers.includes(flower)}
                 onCheckedChange={() => handleFlowerToggle(flower)}
               />
-              <Label htmlFor={flower.toLowerCase()} className="text-[20px] leading-[24px] text-[#001E3B]">
+              <Label htmlFor={flower.toLowerCase()} className="text-[20px] leading-[24px] text-[#001E3B] dark:text-gradient-pink">
                 {flower}
               </Label>
             </div>

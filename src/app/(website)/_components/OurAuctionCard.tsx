@@ -78,7 +78,7 @@ export default function OurAuctionCard({ auction, index }: Props) {
         <motion.div
           initial={{ opacity: 0.5, scale: 0.5 }}
           animate={{ opacity: 1, scale: 1, transition: { duration: 0.4, ease: "circIn" } }}
-          className="absolute -top-[10px] -right-[10px] rounded-full w-[48px] h-[48px] p-0 bg-gradient-to-r from-[#121D42] via-[#152764] to-[#4857BD] hover:bg-[#121D42] flex justify-center items-center"
+          className="absolute -top-[10px] -right-[10px] rounded-full w-[48px] h-[48px] p-0 bg-gradient-to-r from-[#121D42] via-[#152764] to-[#4857BD] hover:bg-[#121D42] flex justify-center items-center dark:bg-pinkGradient"
         >
           <Image src="/assets/svg/hammer.svg" alt="hammer" width={20} height={20} />
         </motion.div>
@@ -91,11 +91,11 @@ export default function OurAuctionCard({ auction, index }: Props) {
             handleWishlistToggle();
           }}
           className={`flex gap-2.5 justify-center items-center px-2 bg-white rounded-full ${
-            isWishlist ? "border-none text-white bg-primary" : "text-black hover:bg-hover-gradient"
+            isWishlist ? "border-none text-white bg-primary" : "text-black hover:bg-hover-gradient dark:hover:bg-pinkGradient dark:hover:text-white"
           } min-h-[32px] w-[32px]`}
           aria-label="Add to wishlist"
         >
-          <Heart className="group-hover:fill-white hover:border-0 w-4 h-4" />
+          <Heart className="group-hover:fill-white hover:border-0 w-4 h-4"  />
         </button>
       </div>
       <div className="flex z-0 flex-col mt-2 w-full">
@@ -103,7 +103,7 @@ export default function OurAuctionCard({ auction, index }: Props) {
           <div className="flex gap-10 justify-between items-center w-full">
             <p className="text-xs font-medium leading-[14px] text-[#9C9C9C]">8 Views</p>
           </div>
-          <div className="mt-2 text-[16px] text-base font-medium leading-[19.2px] text-gradient">
+          <div className="mt-2 text-[16px] text-base font-medium leading-[19.2px] text-gradient dark:text-gradient-pink">
             {auction.title}
           </div>
           <div className="flex gap-1 items-end self-start mt-2 font-medium leading-tight">

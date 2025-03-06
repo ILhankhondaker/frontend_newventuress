@@ -5,7 +5,7 @@ const EmptyCart = () => {
   return (
     <div className="section container border-b-2 pb-[40px] border-primary-green-hover/20">
       <div className="flex flex-col justify-center w-full items-center">
-        <h1 className="text-[#2A6C2D] text-[32px] font-semibold leading-[38.4px] text-center">
+        <h1 className="text-[#2A6C2D] dark:text-gradient-pink text-[32px] font-semibold leading-[38.4px] text-center">
           Sorry
         </h1>
         <p className="text-[20px] text-[#6D6D6D] font-normal leading-[24px] text-center">
