@@ -2,16 +2,15 @@ import { TriangleAlert } from "lucide-react";
 
 interface ErrorContainerProps {
   message: string;
+  className? : string
 }
 
-const ErrorContainer = ({ message }: ErrorContainerProps) => {
+const ErrorContainer = ({ message, className="" }: ErrorContainerProps) => {
   return (
-    <div>
-      <div className="flex h-[400px] w-full flex-col items-center justify-center bg-gray-50">
+    <div className="flex h-[300px] w-full flex-col items-center justify-center bg-[#b4b3b3] rounded-lg">
         <TriangleAlert className="text-red-500" />
-        <h3 className="mt-2 text-black/70">{message}</h3>
+        <h3 className={`mt-2 text-black/70 ${className}`}>{message}</h3>
       </div>
-    </div>
   );
 };
 
