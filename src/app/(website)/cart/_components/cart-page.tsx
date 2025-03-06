@@ -5,27 +5,28 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { CartSummary } from "./cart-summary";
 import SectionHeading from "@/components/shared/SectionHeading/SectionHeading";
-import { useAppSelector, useAppDispatch } from "@/redux/store"; // Import useAppDispatch
+import { useAppSelector, useAppDispatch } from "@/redux/store";
 import EmptyCart from "./empty-cart";
-import { updateQuantity, removeFromCart } from "@/redux/features/cart/cartSlice"; // Import actions
+import { updateQuantity, removeFromCart } from "@/redux/features/cart/cartSlice";
 
 export default function CartPage() {
   const [loading, setLoading] = useState(false);
+  const [isClient, setIsClient] = useState(false); // Track client rendering
   const router = useRouter();
-  const dispatch = useAppDispatch(); // Use dispatch
+  const dispatch = useAppDispatch();
 
-  const cartItems = useAppSelector((state) => state.cart.items); // Get cart items from Redux
+  const cartItems = useAppSelector((state) => state.cart.items);
 
   useEffect(() => {
-    console.log("Cart Items from Redux:", cartItems); // Log cart items
-  }, [cartItems]); // Re-log when cartItems change
+    setIsClient(true); // Ensure this runs only on the client
+  }, []);
 
   const updateQuantityHandler = (id: string, quantity: number) => {
-    dispatch(updateQuantity({ id, quantity })); // Dispatch updateQuantity action
+    dispatch(updateQuantity({ id, quantity }));
   };
 
   const removeItemHandler = (id: string) => {
-    dispatch(removeFromCart(id)); // Dispatch removeFromCart action
+    dispatch(removeFromCart(id));
   };
 
   const calculateTotals = () => {
@@ -51,6 +52,11 @@ export default function CartPage() {
 
   const { subtotal, shipping, tax, total } = calculateTotals();
 
+  // Prevent server-client UI mismatch
+  if (!isClient) {
+    return <div className="h-screen flex items-center justify-center">Loading...</div>;
+  }
+
   if (cartItems.length === 0) {
     return <EmptyCart />;
   }
@@ -71,8 +77,8 @@ export default function CartPage() {
               <CartItemCard
                 key={item._id}
                 item={item}
-                onUpdateQuantity={updateQuantityHandler} // Use the handler
-                onRemove={removeItemHandler} // Use the handler
+                onUpdateQuantity={updateQuantityHandler}
+                onRemove={removeItemHandler}
                 icon={<Heart className="w-4 h-4 text-gray-600" />}
               />
             ))}
