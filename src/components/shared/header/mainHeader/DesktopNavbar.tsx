@@ -24,11 +24,16 @@ interface DesktopNavbarProps {
 function DesktopNavbar({ pathName, loggedin }: DesktopNavbarProps) {
 
    const cartItems = useAppSelector((state) => state.cart.items);
+   const wishListItems = useAppSelector((state) => state.wishlist.items);
    const [itemCount, setItemCount] = useState(0);
+   const [wishListitemCount, setwishListItemCount] = useState(0);
 
    useEffect(() => {
      setItemCount(cartItems.length); // Ensure client-only data updates after hydration
    }, [cartItems]);
+   useEffect(() => {
+    setwishListItemCount(wishListItems.length); // Ensure client-only data updates after hydration
+   }, [wishListItems]);
 
    const Navicons = [
     {
@@ -42,6 +47,7 @@ function DesktopNavbar({ pathName, loggedin }: DesktopNavbarProps) {
       href: "/wishlist",
       icon: <Heart />,
       alt: "heart-icon",
+      count: wishListitemCount,
       srOnlyText: "View wishlist",
     },
     {
