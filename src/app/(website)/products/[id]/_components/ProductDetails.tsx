@@ -108,7 +108,7 @@ const ProductDetails = ({ productId }: props) => {
           >
             <VendorReviewCard
               key={index}
-              imageSrc={review?.user.image}
+              imageSrc={review?.user?.image || "https://images.pexels.com/photos/7668007/pexels-photo-7668007.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"}
               name={review?.user?.fullName}
               date={review.createdAt}
               rating={review.rating}
