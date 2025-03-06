@@ -86,7 +86,7 @@ export function CartItemCard({
        
           <div className=" flex items-center justify-between gap-4 mt-[8px]">
         
-            <div className="w-[163px] h-[32px] flex justify-between items-center px-[24px] bg-white border border-white rounded-[24px] shadow-[28px_28px_20px_28px_#0000000D]  ">
+            <div className="w-[163px] h-[32px] flex justify-between items-center px-[24px] bg-white border border-white rounded-[24px]clear  ">
               <button
                 onClick={() =>
                   onUpdateQuantity(item._id, Math.max(0, item.quantity - 1))

@@ -169,7 +169,7 @@ const AuctionDetails = () => {
                   <div className="flex gap-1 items-end self-start mt-2 font-medium leading-tight">
                  
 
-                    <span className="text-gradient text-[18px]">
+                    <span className="text-gradient dark:text-gradient-pink text-[18px]">
                       Winning Bid:
                     </span>
                     <span className="text-[#1A1A1A] text-[18px]">$7000</span>
@@ -192,7 +192,7 @@ const AuctionDetails = () => {
                         alt="store name"
                       />
                     </Avatar>
-                    <div className="text-gradient">{productData.store}</div>
+                    <div className="text-gradient dark:text-gradient-pink">{productData.store}</div>
                   </div>
                 </div>
                 <div className="mt-5 w-full border border-solid  border-b-stone-700 h-[1px]" />
@@ -210,7 +210,7 @@ const AuctionDetails = () => {
                     <div className="flex justify-between mt-2 w-full h-11 whitespace-nowrap rounded-md border border-solid border-neutral-400">
                       <label
                         htmlFor="bidInput"
-                        className="gap-3 self-stretch px-4 font-semibold bg-[#E6EEF6] rounded-lg h-[42px] w-[42px] flex items-center justify-center"
+                        className="gap-3 self-stretch px-4 font-semibold bg-[#E6EEF6] dark:bg-[#482D721A] rounded-lg h-[42px] w-[42px] flex items-center justify-center text-gradient dark:text-gradient-pink"
                       >
                         $
                       </label>
@@ -218,7 +218,7 @@ const AuctionDetails = () => {
                         id="bidInput"
                         type="number"
                         onChange={handleBidChange}
-                        className="appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none [&::-moz-appearance:textfield] flex-1 shrink gap-2 self-stretch py-2 pr-5 pl-4 pb-2 my-auto text-base leading-snug rounded-lg min-w-[240px] text-black outline-none focus:outline-none focus:ring-0 focus:border-none"
+                        className="appearance-none [&::-webkit-inner-spin-button]:appearance-none dark:bg-white [&::-webkit-outer-spin-button]:appearance-none [&::-moz-appearance:textfield] flex-1 shrink gap-2 self-stretch py-2 pr-5 pl-4 pb-2 my-auto text-base leading-snug rounded-lg min-w-[240px] text-black outline-none focus:outline-none focus:ring-0 focus:border-none"
                         aria-label="Bid amount in dollars"
                       />
                     </div>
@@ -237,7 +237,7 @@ const AuctionDetails = () => {
                       } h-[42px] min-h-[41px] w-[43px]`}
                       aria-label="Add to wishlist"
                     >
-                      <Heart fill={isWishlist ? "red" : "none"} />
+                      <Heart fill={isWishlist ? "red" : "none"} className="dark:text-black"/>
                     </button>
                     {islive ? (
                       <Button
@@ -257,7 +257,7 @@ const AuctionDetails = () => {
             </div>
           </div>
           <div className="flex flex-col items-center mt-10 w-full text-center max-md:max-w-full">
-            <div className="text-2xl font-semibold leading-tight text-gradient max-md:max-w-full">
+            <div className="text-2xl font-semibold leading-tight text-gradient dark:text-gradient-pink max-md:max-w-full">
               Description
             </div>
             <div className="mt-5 text-base leading-5 text-neutral-700 max-md:max-w-full">
@@ -274,11 +274,11 @@ const AuctionDetails = () => {
             opacity: bidsItemsOpacity,
           }}
         >
-          <h2 className="text-gradient text-center text-[25px] font-[600]">
+          <h2 className="text-gradient dark:text-gradient-pink text-center text-[25px] font-[600]">
             Bids
           </h2>
           <div className="mb-[20px]">
-            <h3 className="text-gradient text-[20px] font-[600]">
+            <h3 className="text-gradient dark:text-gradient-pink text-[20px] font-[600]">
               Total Bids Placed:
             </h3>
             <p className="text-[#3D3D3D] text-[16px] font-[400]">
@@ -334,7 +334,7 @@ const AuctionDetails = () => {
             opacity: reviewSectionOpacity,
           }}
         >
-          <h2 className="text-gradient text-center text-[25px] font-[600] mt-[50px]">
+          <h2 className="text-gradient dark:text-gradient-pink text-center text-[25px] font-[600] mt-[50px]">
             Review
           </h2>
           <div>

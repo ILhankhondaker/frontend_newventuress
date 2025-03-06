@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import ErrorContainer from "@/components/ui/error-container";
 import { ProductResponse } from "@/types/product";
 
-import { Product  } from "@/types/product";
+import { Product } from "@/types/product";
 
 
 import { useQuery } from "@tanstack/react-query";
@@ -20,33 +20,33 @@ import OurAuctionCard from "./OurAuctionCard";
 interface FeaturedCardsProps {
   data: Product[],
   isLoading: boolean,
-  
+
 
 }
-const FeaturedCards = ({data, isLoading}: FeaturedCardsProps) => {
+const FeaturedCards = ({ data, isLoading }: FeaturedCardsProps) => {
 
   let content;
 
-  if(isLoading) {
+  if (isLoading) {
     content = <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-      {[1,2,3,4].map((n) => (
-        <ProductCardSkeleton  key={n} />
+      {[1, 2, 3, 4].map((n) => (
+        <ProductCardSkeleton key={n} />
       ))}
     </div>
   } else {
     content = <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-   
-   
-    {/* {data.slice(0, 4).map((items: any) => (
+
+
+      {/* {data.slice(0, 4).map((items: any) => (
         <OurAuctionCard key={items._id} product={items} />
     ))} */}
 
-{data?.slice(0, 4).map((auction, index) => (
-  <OurAuctionCard key={auction._id} auction={auction} index={index} />
-))}
+      {data?.slice(0, 4).map((auction, index) => (
+        <OurAuctionCard key={auction._id} auction={auction} index={index} />
+      ))}
 
 
-  </div>
+    </div>
   }
 
 
@@ -62,27 +62,27 @@ const BiddingCard = dynamic(() => import("./bid-card"), {
 interface Props {
   token: string | null
 }
-export default function OurAuction({token} : Props) {
-  
-  const { data, error, isError, isLoading } = useQuery<ProductResponse>({
-      queryKey: ["products"],
-      queryFn: async () => {
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auction/recent`, {
-            headers: {
-              'Authorization': `Bearer ${token}`
-            }
-          });
-        if (!response.ok) {
-          throw new Error("Network error");
-        }
-        return response.json();
-      },
-    });
+export default function OurAuction({ token }: Props) {
 
-    if(!token) return null
+  const { data, error, isError, isLoading } = useQuery<ProductResponse>({
+    queryKey: ["products"],
+    queryFn: async () => {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auction/recent`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      if (!response.ok) {
+        throw new Error("Network error");
+      }
+      return response.json();
+    },
+  });
+
+  if (!token) return null
   const products = data?.data;
-  console.log("our auctiondaata",products)
+  console.log("our auctiondaata", products)
 
   let content;
 
@@ -90,26 +90,26 @@ export default function OurAuction({token} : Props) {
 
 
   if (isError) {
-    content =  <div className="container">
+    content = <div className="container">
       <ErrorContainer message={error?.message || "something went wrong"} />
     </div>;
-  } else if (products?.length === 0 ) {
+  } else if (products?.length === 0) {
     content = <ErrorContainer message="NO DATA FOUND " />
-  } else if(products && products.length > 0) {
-    content =  <div className="section container">
-    <SectionHeading heading="Our Auctions" subheading="Auctions" />
+  } else if (products && products.length > 0) {
+    content = <div className="section container">
+      <SectionHeading heading="Our Auctions" subheading="Auctions" />
 
-    <div className="grid h-auto grid-cols-1 gap-[17px] pt-[40px] md:grid-cols-2 lg:gap-[27px]">
-      <FeaturedCards data={products} isLoading={isLoading} />
+      <div className="grid h-auto grid-cols-1 gap-[17px] pt-[40px] md:grid-cols-2 lg:gap-[27px]">
+        <FeaturedCards data={products} isLoading={isLoading} />
 
-      <div className="space-y-4">
-        <BiddingCard product={products[4]} />
-        <JoinAsSeller />
+        <div className="space-y-4">
+          <BiddingCard product={products[4]} />
+          <JoinAsSeller />
+        </div>
       </div>
     </div>
-  </div>
   }
-  return  content
+  return content
 }
 
 const JoinAsSeller = () => {
@@ -121,7 +121,7 @@ const JoinAsSeller = () => {
         </h2>
         <p
           className="text-gradient dark:text-gradient-pink text-center text-[20px] font-medium"
-          
+
         >
           Join Our Marketplace Today
         </p>
