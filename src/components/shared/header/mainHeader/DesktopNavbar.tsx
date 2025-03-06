@@ -11,48 +11,59 @@ import AuctionList from "./AuctionList";
 // import Dropdown, { AuctionMobileMenu } from "./demonav";
 import PagesList from "./PagesList";
 import { Bell, CircleUser, Gift, Heart, ShoppingCart } from "lucide-react";
+import { useAppSelector } from "@/redux/store";
+import { useEffect, useState } from "react";
 
 interface DesktopNavbarProps {
   pathName: string;
   loggedin: boolean;
 }
 
-const Navicons = [
-  {
-    href: "/notifications",
-    icon: <Bell />,
-    alt: "bell-icon",
-    count: 4,
-    srOnlyText: "View notifications",
-  },
-  {
-    href: "/wishlist",
-    icon: <Heart />,
-    alt: "heart-icon",
-    srOnlyText: "View wishlist",
-  },
-  {
-    href: "/cart",
-    icon: <ShoppingCart />,
-    alt: "cart-icon",
-    count: 2,
-    srOnlyText: "View cart",
-  },
-  {
-    href: "/account",
-    icon: <CircleUser />,
-    alt: "user-icon",
-    srOnlyText: "View account",
-  },
-  {
-    href: "/rewards",
-    icon: <Gift />,
-    alt: "rewards",
-    srOnlyText: "View rewards",
-  }
-];
+
 
 function DesktopNavbar({ pathName, loggedin }: DesktopNavbarProps) {
+
+   const cartItems = useAppSelector((state) => state.cart.items);
+   const [itemCount, setItemCount] = useState(0);
+
+   useEffect(() => {
+     setItemCount(cartItems.length); // Ensure client-only data updates after hydration
+   }, [cartItems]);
+
+   const Navicons = [
+    {
+      href: "/notifications",
+      icon: <Bell />,
+      alt: "bell-icon",
+      count: 4,
+      srOnlyText: "View notifications",
+    },
+    {
+      href: "/wishlist",
+      icon: <Heart />,
+      alt: "heart-icon",
+      srOnlyText: "View wishlist",
+    },
+    {
+      href: "/cart",
+      icon: <ShoppingCart />,
+      alt: "cart-icon",
+      count: itemCount,
+      srOnlyText: "View cart",
+    },
+    {
+      href: "/account",
+      icon: <CircleUser />,
+      alt: "user-icon",
+      srOnlyText: "View account",
+    },
+    {
+      href: "/rewards",
+      icon: <Gift />,
+      alt: "rewards",
+      srOnlyText: "View rewards",
+    }
+  ];
   return (
     <nav
       aria-label="Global"

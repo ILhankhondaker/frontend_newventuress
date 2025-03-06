@@ -3,7 +3,6 @@
 import { Check, Heart, Minus, Plus } from "lucide-react";
 import Image from "next/image";
 import { StarRating } from "../clientReview/StarRating";
-// import { CartItem } from "@/types/cart";
 import { useState } from "react";
 import { CartItem } from "@/redux/features/cart/cartSlice";
 

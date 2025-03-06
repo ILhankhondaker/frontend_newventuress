@@ -29,7 +29,7 @@ export const ClientReviews: React.FC = () => {
 
   const session = useSession();
   const token = session.data?.user.token;
-  console.log({ token });
+  // console.log({ token });
   type ClientReviewResponse = {
   success: boolean;
   message: string;
@@ -65,7 +65,7 @@ export const ClientReviews: React.FC = () => {
   });
   
 
-  console.log("reviews data:", data);
+  // console.log("reviews data:", data);
   
 
   React.useEffect(() => {
