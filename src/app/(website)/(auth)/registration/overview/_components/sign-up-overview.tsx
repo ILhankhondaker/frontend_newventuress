@@ -1,5 +1,7 @@
 "use client"
 import { Button } from "@/components/ui/button";
+import { countriesData } from "@/data/countries";
+import { canadaProvinces, usStates } from "@/data/registration";
 import { cn } from "@/lib/utils";
 import { resetAuthSlice } from "@/redux/features/authentication/AuthSlice";
 import { useAppDispatch, useAppSelector } from "@/redux/store";
@@ -38,6 +40,38 @@ const SignUpOverview = () => {
       }
 
     }, [])
+
+    const countriesMap = countriesData.map((i) => ({name: i.country, allow: i.allow}))
+
+     const allStates = [...usStates, ...canadaProvinces, ...countriesMap];
+
+
+     const onRegistration = () => {
+      const updatedBusinessInfo = authState.businessInfo.map((item) => ({
+        ...item,
+        license: item.license.map((license) => {
+          // Find the matching state from allStates
+          const matchedState = allStates.find((state) => state.name === license.name);
+    
+          return {
+            ...license,
+            accept: matchedState ? matchedState.allow : [], // Set accept based on matched state's allow field
+          };
+        }),
+      }));
+
+      const latestRegistrationValue = {
+        ...authState,
+        businessInfo: updatedBusinessInfo
+      }
+
+      console.log(latestRegistrationValue)
+    
+      // Dispatch the updated business info to Redux
+      
+    };
+    
+    
 
 
 
@@ -114,9 +148,7 @@ const SignUpOverview = () => {
         
 
     </div>
-    <Button disabled={loading} className="mt-[20px]" onClick={() => {
-      setIsModalOpen(true);
-    }}>
+    <Button disabled={loading} className="mt-[20px]" onClick={onRegistration}>
     <span className="flex items-center gap-x-2">Next {loading ? <Loader2 className="animate-spin h-3 w-3" /> : "→"}</span></Button> <AdminApprovalModal
         isOpen={isModalOpen}
         message={approvalStatus == "pending" ? "Your licenses are “pending” and will require further review. We will send you an email once we approve" : approvalStatus == "one" ? "We were able to verify and approve one or more of your licenses, the remaining pending licenses will require further review. Please check your email to complete your registration." : "We were able to verify and approve your licenses. Please check your email to complete your registration."}

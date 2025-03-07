@@ -13,10 +13,10 @@ import NProgress from "@/components/providers/NProgress";
 import Footer from "@/components/shared/footer/mainFooter/footer";
 import NewsletterPage from "@/components/shared/footer/newsletter/newsletter";
 import Navbar from "@/components/shared/header/mainHeader/navbar";
+import SearchBerCategories from "@/components/shared/searchBerCategories/searchBerCategories";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/provider/theme-provider";
 import { Toaster } from "sonner";
-import SearchBerCategories from "@/components/shared/searchBerCategories/searchBerCategories";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -34,6 +34,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const session = await auth();
+
 
   return (
     <SessionProvider session={session}>
