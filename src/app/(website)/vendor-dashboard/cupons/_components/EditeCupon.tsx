@@ -1,38 +1,64 @@
 "use client"
 
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import { z } from "zod"
-import { ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Checkbox } from "@/components/ui/checkbox"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Textarea } from "@/components/ui/textarea"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useMutation, useQuery } from "@tanstack/react-query"
+import { ArrowRight, Loader2 } from "lucide-react"
+import { useEffect, useState } from "react"
+import { useForm } from "react-hook-form"
+import { toast } from "sonner"
+import { z } from "zod"
 // import Modal from "@/components/shared/modal/modal"
 
 const formSchema = z.object({
-  title: z.string().min(1, "Title is required"),
-  description: z.string(),
-  discountType: z.string(),
-  amount: z.string(),
-  startDate: z.string(),
-  expireDate: z.string(),
-  emailRestrictions: z.string(),
-  usageLimit: z.string(),
-  usageLimitPerUser: z.string(),
-  product: z.string(),
-  category: z.string(),
-  subCategory: z.string(),
-  saveInfo: z.boolean().default(false),
-})
+  title: z.string().min(1, { message: "Title is required" }),
+  description: z.string().min(1, { message: "Description cannot be empty" }),
+  discountType: z.string().min(1, { message: "Please select a discount type" }),
+  amount: z
+    .string()
+    .min(1, { message: "Amount is required" }),
+  store: z.string().min(1, { message: "Please select a store" }),
+  startDate: z.string().min(1, { message: "Start date is required" }),
+  expireDate: z.string().min(1, { message: "Expiration date is required" }),
+  usageLimit: z
+    .string()
+    .min(1, { message: "Usage limit is required" }),
+  product: z.string().min(1, { message: "Please select a product" }),
+  couponCode: z.string().min(1, { message: "Coupon code is required" }),
+});
+
+
+interface StoreResponse {
+  status: boolean;
+  message: string;
+  data?: {
+    storeID: string;
+    storeName: string
+  }[]
+}
+interface ProductResponse {
+  status: boolean;
+  message: string;
+  data?: {
+    _id: string;
+    title: string
+  }[]
+}
 
 interface EditCouponProps {
-    setIsOpen: (open: boolean) => void
+    setIsOpen: (open: boolean) => void;
+    userId: string
   }
-export default function EditeCupon({ setIsOpen }:EditCouponProps) {
+
+  type FormValues = z.infer<typeof formSchema>
+
+export default function EditeCupon({ setIsOpen, userId }:EditCouponProps) {
+  const [customError, setCustomError] = useState("")
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -42,24 +68,113 @@ export default function EditeCupon({ setIsOpen }:EditCouponProps) {
       amount: "",
       startDate: "",
       expireDate: "",
-      emailRestrictions: "",
       usageLimit: "",
-      usageLimitPerUser: "",
+      couponCode: "",
       product: "",
-      category: "",
-      subCategory: "",
-      saveInfo: false,
     },
   })
 
+  const storeId = form.watch("store");
+
+  const {isPending, mutate:createCoupon} = useMutation({
+    mutationKey: ["create-coupon"],
+    mutationFn: (body: FormValues) => fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/create-coupon`, {
+      method: "POST",
+      headers: {
+        'content-type': "application/json"
+      },
+      body: JSON.stringify({
+        ...body,
+        userID: userId
+      })
+    }).then((res) => res.json()),
+    onSuccess: (data) => {
+      if(!data.status) {
+        toast.error(data.message ?? "Failed to create coupon", {
+          position: "top-right",
+          richColors: true
+        });
+        return;
+      }
+
+      // handle success
+      toast.success(" Your discount coupon has been created successfully! 🎁 ", {
+        position: "top-right",
+        richColors: true
+      });
+
+      setIsOpen(false)
+    },
+    onError: (err) => {
+      toast.error(err.message ?? "Failed to create coupon", {
+        position: "top-right",
+        richColors: true
+      })
+    }
+  })
+
+
+  const { data: storeResponse, isError: isStoreGetError, error: storeError, isLoading: isStoreLoading } = useQuery<StoreResponse>({
+    queryKey: ["stores", userId],
+    queryFn: async () => fetch(
+
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user-all-store/${userId}`).then((res) => res.json())
+      
+    ,
+  });
+  const { data: productResponse, isError: isProductError, error: productError, isLoading: isProductLoading } = useQuery<ProductResponse>({
+    queryKey: ["store-products", storeId],
+    queryFn: async () => fetch(
+
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/store-all-product/${storeId}`).then((res) => res.json())
+      
+    ,
+  });
+
+  
+
+
+  useEffect(() => {
+
+    if(isStoreGetError) {
+      toast.error(storeError.message || "Failed to get store information", {
+        position: 'top-right',
+        richColors: true
+      })
+      setCustomError(storeError.message || "Failed to get store information")
+    }
+
+  }, [isStoreGetError, storeError?.message])
+  useEffect(() => {
+
+    if(isProductError) {
+      toast.error(productError.message || "Failed to get store information", {
+        position: 'top-right',
+        richColors: true
+      });
+      setCustomError(productError.message || "Failed to get store information")
+    }
+
+  }, [isProductError, productError?.message])
+
+  useEffect(() => {
+
+    if(productResponse?.data?.length === 0) {
+      setCustomError("No Product found on your choosen store. Please publish a product first")
+    }
+
+  }, [productResponse])
+
+
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values)
-    setIsOpen(false)
+    createCoupon(values)
   }
 
 function onBack ()  {
     setIsOpen(false)
 }
+
+const disabled = isProductError || isStoreGetError || isProductLoading || isStoreLoading || isPending
   return (
 
  <div className="">
@@ -78,12 +193,17 @@ function onBack ()  {
             Back to List <ArrowRight className="mr-2 h-4 w-4 dark:!text-[#6841A5]" />
           </Button>
         </div>
-        <ScrollArea className="h-[calc(100vh-200px)]">
+
+        {customError && <div className="px-[32px]">
+        <div className="bg-red-100 h-[40px] w-full rounded-lg text-rose-500 font-medium flex items-center px-5 text-[12px]">{customError}</div>
+        </div>}
+        <ScrollArea className="h-[calc(100vh-240px)]">
         <div className="">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 px-[32px] py-[16px]">
             
-              <FormField
+             <div className="grid gap-6 grid-cols-2">
+             <FormField
                 control={form.control}
                 name="title"
                 render={({ field }) => (
@@ -98,6 +218,34 @@ function onBack ()  {
                   </FormItem>
                 )}
               />
+              <FormField
+                control={form.control}
+                name="store"
+                render={({ field }) => (
+                  <FormItem >
+                    <FormLabel className="flex justify-start text-[#444444] text-[16px] font-normal">
+                      Store <span className="text-red-500">*</span>
+                    </FormLabel>
+                    <Select onValueChange={(value) => {
+                      field.onChange(value);
+                      setCustomError("")
+                    }} defaultValue={field.value} disabled={isStoreLoading}>
+                      <FormControl>
+                        <SelectTrigger className="border border-[#B0B0B0] dark:!text-[#9E9E9E] h-[41px]">
+                          <SelectValue placeholder="Select discount type"/>
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent className="dark:bg-white dark:border-none">
+                        {storeResponse?.data?.map((item) => (
+                          <SelectItem key={item.storeID} value={item.storeID}>{item.storeName}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+             </div>
 
               <FormField
                 control={form.control}
@@ -108,6 +256,7 @@ function onBack ()  {
                     <FormControl>
                       <Textarea placeholder="Type Description here" {...field} className="border border-[#B0B0B0] h-[91px] text-black dark:!text-black"/>
                     </FormControl>
+                    <FormMessage />
                   </FormItem>
                 )}
               />
@@ -119,9 +268,18 @@ function onBack ()  {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="flex justify-start text-[#444444] text-[16px] font-normal">Discount Type</FormLabel>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
                       <FormControl>
-                        <Input placeholder="Percentage discount" {...field} className="border border-[#B0B0B0] h-[51px] text-black dark:!text-black"/>
+                        <SelectTrigger className="border border-[#B0B0B0] dark:!text-[#9E9E9E] h-[41px]">
+                          <SelectValue placeholder="Select discount type"/>
+                        </SelectTrigger>
                       </FormControl>
+                      <SelectContent className="dark:bg-white dark:border-none">
+                        <SelectItem value="Percentage">Percentage</SelectItem>
+                        <SelectItem value="Price">Price</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
                     </FormItem>
                   )}
                 />
@@ -135,6 +293,7 @@ function onBack ()  {
                       <FormControl>
                         <Input placeholder="Percentage discount" {...field} className="border border-[#B0B0B0] h-[51px] text-black dark:!text-black"/>
                       </FormControl>
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
@@ -160,24 +319,15 @@ function onBack ()  {
                       <FormLabel className="flex justify-start text-[#444444] text-[16px] font-normal">Expire Date</FormLabel>
                       <FormControl>
                         <Input   type="date" {...field} className="border border-[#B0B0B0] h-[51px] dark:!text-[#9E9E9E]"/>
+                        
                       </FormControl>
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
               </div>
 
-              <FormField
-                control={form.control}
-                name="emailRestrictions"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="flex justify-start text-[#444444] text-[16px] font-normal">Email Restrictions</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Percentage discount" {...field} className="border border-[#B0B0B0] h-[51px] text-black dark:!text-black"/>
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
+        
 
               <div className="grid gap-6 md:grid-cols-2">
                 <FormField
@@ -187,21 +337,23 @@ function onBack ()  {
                     <FormItem>
                       <FormLabel className="flex justify-start text-[#444444] text-[16px] font-normal">Usage Limit</FormLabel>
                       <FormControl>
-                        <Input placeholder="Percentage discount" {...field} className="border border-[#B0B0B0] h-[51px] text-black dark:!text-black"/>
+                        <Input type="number" placeholder="Percentage discount" {...field} className="border border-[#B0B0B0] h-[51px] text-black dark:!text-black"/>
                       </FormControl>
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
 
                 <FormField
                   control={form.control}
-                  name="usageLimitPerUser"
+                  name="couponCode"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="flex justify-start text-[#444444] text-[16px] font-normal">Usage limit per user</FormLabel>
+                      <FormLabel className="flex justify-start text-[#444444] text-[16px] font-normal">Coupon Code</FormLabel>
                       <FormControl>
-                        <Input placeholder="Percentage discount" {...field} className="border border-[#B0B0B0] h-[51px] text-black dark:!text-black"/>
+                        <Input placeholder="Coupon Code" {...field} className="border border-[#B0B0B0] h-[51px] text-black dark:!text-black"/>
                       </FormControl>
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
@@ -220,76 +372,23 @@ function onBack ()  {
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent className="dark:bg-white dark:border-none">
-                        <SelectItem value="product1">Product 1</SelectItem>
-                        <SelectItem value="product2">Product 2</SelectItem>
+                        {productResponse?.data?.map((item) => (
+                          <SelectItem key={item._id} value={item._id}>{item.title}</SelectItem>
+                        ))}
                       </SelectContent>
                     </Select>
+                    <FormMessage />
                   </FormItem>
                 )}
               />
 
-              <div className="grid gap-6 md:grid-cols-2">
-                <FormField
-                  control={form.control}
-                  name="category"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="flex justify-start text-[#444444] text-[16px] font-normal">Category</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
-                        <FormControl>
-                          <SelectTrigger className="border border-[#B0B0B0] dark:!text-[#9E9E9E] h-[41px]">
-                            <SelectValue placeholder="Select category"/>
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent className="dark:bg-white dark:border-none">
-                          <SelectItem value="category1">Category 1</SelectItem>
-                          <SelectItem value="category2">Category 2</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </FormItem>
-                  )}
-                />
+              
 
-                <FormField
-                  control={form.control}
-                  name="subCategory"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="flex justify-start text-[#444444] text-[16px] font-normal">Sub-Category</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
-                        <FormControl>
-                          <SelectTrigger className="border border-[#B0B0B0] dark:!text-[#9E9E9E] h-[41px]">
-                            <SelectValue placeholder="Select sub-category"/>
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent className="dark:bg-white dark:border-none">
-                          <SelectItem value="sub1">Sub-Category 1</SelectItem>
-                          <SelectItem value="sub2">Sub-Category 2</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </FormItem>
-                  )}
-                />
-              </div>
-
-              <FormField
-                control={form.control}
-                name="saveInfo"
-                render={({ field }) => (
-                  <FormItem className="flex flex-row items-start space-x-3 space-y-0">
-                    <FormControl>
-                      <Checkbox checked={field.value} onCheckedChange={field.onChange} />
-                    </FormControl>
-                    <div className="space-y-1 leading-none">
-                      <FormLabel className="text-[#919792] text-[12px] font-normal">Save this information for faster Adding Products</FormLabel>
-                    </div>
-                  </FormItem>
-                )}
-              />
+            
 
              <div className=" flex justify-end">
-             <Button type="submit" className="w-[138px ] bg-[#1e2875] hover:bg-[#3c3c8f]">
-                Submit
+             <Button type="submit" className="w-[138px ] bg-[#1e2875] hover:bg-[#3c3c8f]" disabled={disabled}>
+                Submit {isPending && <Loader2 className="animate-spin" />}
               </Button>
              </div>
             </form>
