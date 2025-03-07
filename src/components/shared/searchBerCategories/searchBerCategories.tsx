@@ -1,9 +1,17 @@
+import { auth } from "@/auth";
 import Hideon from "@/provider/Hideon";
 import Categories from "../categories/categories";
 import SearchBer from "../searchBer/searchBer";
 import ThemeSwitcher from "./theme-switcher";
 
-function SearchBerCategories() {
+async function SearchBerCategories() {
+  const currentUser = await auth();
+
+  if(!currentUser) return;
+
+  console.log(currentUser.user.industry)
+
+
   return (
     <Hideon routes={["/vendor-dashboard", "/registration", "/login", "/forgot-password"]}>
       <div className="bg-[#E6EEF6] dark:bg-[#482D721A] pt-[9px]  md:py-[10px]">
@@ -15,7 +23,7 @@ function SearchBerCategories() {
             <SearchBer />
           </div>
           <div className="  w-[150px]   lg:w-[246px]  ">
-            <ThemeSwitcher />
+            <ThemeSwitcher industry={currentUser.user.industry} />
           </div>
         </div>
       </div>
