@@ -3,8 +3,6 @@
 // Packages
 import { PlusIcon } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
-import { toast } from "sonner";
 
 // Local imports
 import { Button } from "@/components/ui/button";
@@ -16,26 +14,21 @@ import {
   addBusinessField,
   addCannabisField,
   addMetrcField,
-  authSliceType,
-  resetAuthSlice,
   updateBusinessLicense,
   updateCannabisLicense,
   updateMetrcLicense
 } from "@/redux/features/authentication/AuthSlice";
 import { useAppDispatch, useAppSelector } from "@/redux/store";
-import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import FormHeader from "../../../../_components/form-header";
 
 export function BusinessInfoForm() {
   const [loading, setLoading] = useState<true | false>(false);
   const authState = useAppSelector((state) => state.auth);
-  const dispatch = useDispatch();
 
 
   const businesses = authState["businessInfo"];
 
-  console.log(businesses)
 
   const business1 = businesses
   .map((item, index) => ({
@@ -43,8 +36,6 @@ export function BusinessInfoForm() {
     businessIndex: index
   }))
   .filter(item => item.country === "United States" || item.country === "Canada");
-
-console.log(business1);
 
 
 
@@ -57,7 +48,6 @@ console.log(business1);
       }))
     );
 
-    console.log(business3)
 
     // const business5 = [...business1, ...business3]
 
@@ -98,94 +88,8 @@ console.log(business1);
     };
   }, []);
 
-  const { isPending } = useMutation({
-    mutationKey: ["registration"],
-    mutationFn: (data: authSliceType) =>
-      fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/register`, {
-        method: "POST",
-        headers: {
-          "content-type": "application/json",
-        },
-        body: JSON.stringify(data),
-      }).then((res) => res.json()),
-    onSuccess: (data) => {
-      setLoading(true);
-      if (data.status) {
-        // success mesage
-        toast.success(
-          "Your account has been created, and you're all set to log in. Welcome aboard! 🚀",
-          {
-            position: "top-right",
-            richColors: true,
-          }
-        );
+ 
 
-        dispatch(resetAuthSlice());
-
-        router.push("/login");
-      } else {
-        setLoading(false);
-        toast.success(
-          "Your account has been created, and you're all set to log in. Welcome aboard! 🚀",
-          {
-            position: "top-right",
-            richColors: true,
-          }
-        );
-        // toast.error(data.message, {
-        //   position: "top-right",
-        //   style: {
-        //     color: "red",
-        //   },
-        //   richColors: true,
-        // });
-      }
-    },
-    onError: () => {
-      setLoading(false);
-      toast.success(
-        "Your account has been created, and you're all set to log in. Welcome aboard! 🚀",
-        {
-          position: "top-right",
-          richColors: true,
-        }
-      );
-      // toast.error("Something went wrong", {
-      //   position: "top-center",
-      //   richColors: true,
-      // });
-    },
-  });
-
-  // Check if any business in the businessInfo array has an empty metrcLicense field
-  // const isAnyBusinessLicenseEmpty = authState.businessInfo.some((business) =>
-  //   business.license.some((liences) => liences.businessLicense.some((l) => !l.trim())))
-  //   ;
-  //   const isAnyFieldFilled = authState.businessInfo.some((business) =>
-  //     business.license.some((license) =>
-  //       license.cannabisLicense.some((l) => l.trim()) ||
-  //       license.metrcLicense.some((l) => l.trim())
-  //     )
-  //   );
-
-  // const isEveryStateValid = authState?.businessInfo?.every((business) =>
-  //   business?.license?.every((license) => {
-  //     const allowList = license?.allow ?? [];
-  //     const isOnlyHemp = allowList.length === 1 && allowList.includes("CBD/HEMP");
-  
-  //     if (isOnlyHemp) {
-  //       // If ONLY "CBD/HEMP", businessLicense is REQUIRED
-  //       return (license?.businessLicense ?? []).some((l) => l.trim());
-  //     }
-  
-  //     // If NOT only "CBD/HEMP", at least one license from any category is REQUIRED
-  //     return (
-  //       (license?.metrcLicense ?? []).some((l) => l.trim()) ||
-  //       (license?.cannabisLicense ?? []).some((l) => l.trim()) ||
-  //       (license?.businessLicense ?? []).some((l) => l.trim())
-  //     );
-  //   })
-  // );
 
   const isEveryStateValid = authState?.businessInfo?.every((business) =>
     business?.license?.every((license) => {
@@ -272,7 +176,7 @@ console.log(business1);
             type="submit"
             onClick={submitForm}
           >
-            {loading || isPending ? (
+            {loading  ? (
               <span>Processing...</span>
             ) : (
               <span>Next →</span>

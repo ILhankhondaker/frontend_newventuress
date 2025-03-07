@@ -24,6 +24,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
         const data: LoginResponse = await response.json();
 
+
+
         if (!response.ok || !data.status) {
           throw new Error(data.message || "Network issue");
         }

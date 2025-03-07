@@ -10,18 +10,25 @@ interface Props {
   industry: string;
 }
 
-const ThemeSwitcher = ({  }: Props) => {
+const ThemeSwitcher = ({ industry }: Props) => {
   const { as, modal, setModal } = useApplicationAs();
   const { setTheme } = useTheme();
 
   // Set theme based on selected tab value
   const handleTabChange = (theme: string) => {
-
-    setModal(true); 
-    return
+   
     if (theme === "CBD/HEMP") {
+    
       setTheme("light");
     } else if (theme === "RECREATIONAL") {
+
+      if(!industry.includes("Recreational Cannabis")) {
+        setModal(true);
+        return;
+      }
+
+      
+      
       setTheme("dark");
     }
   };
