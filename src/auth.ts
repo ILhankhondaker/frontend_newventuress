@@ -24,6 +24,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
         const data: LoginResponse = await response.json();
 
+
+
         if (!response.ok || !data.status) {
           throw new Error(data.message || "Network issue");
         }
@@ -64,5 +66,5 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       return token;
     },
   },
-  secret: process.env.NEXTAUTH_SECRET,
+  secret: process.env.AUTH_SECRET,
 });

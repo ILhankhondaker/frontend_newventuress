@@ -7,6 +7,9 @@ import { useState } from "react";
 // local import 
 import SectionHeading from "@/components/shared/SectionHeading/SectionHeading";
 import PacificPagination from "@/components/ui/PacificPagination";
+import {  AuctionProductResponse } from "@/types/auction";
+import { useQuery } from "@tanstack/react-query";
+import { useSession } from "next-auth/react";
 
 const AuctionCard = dynamic(
   () => import("@/components/shared/cards/auction-card/auction-card")
@@ -14,20 +17,42 @@ const AuctionCard = dynamic(
 
 const AllAuctionsContainer = () => {
   const [currentPage, setCurrentPage] = useState(1);
+
+ const session = useSession();
+  const token = session.data?.user.token;
+  console.log({ token });
+
+  const { data } = useQuery<AuctionProductResponse>({
+    queryKey: ["all-auctions", currentPage],
+    queryFn: () =>
+      fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auction/all?page=${currentPage}&limit=8`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }).then((res) => res.json()),
+  });
+
+
   return (
     <div className="py-[40px] md:py-[60px] lg:py-[80px]">
       <SectionHeading heading="Our All Auctions" subheading="" />
       <div className="mt-[40px] grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-[30px] container">
-        {[1, 2, 3, 4, 5, 6, 7, 8].map((n, index) => (
-          <AuctionCard key={n} isExpired={Boolean(n % 2 === 0)} index={index} />
-        ))}
+      {data?.data?.map((auction, index) => (
+  <AuctionCard key={auction._id} auction={auction} index={index} />
+))}
       </div>
       <div className="mt-[40px]">
-        <PacificPagination
-          currentPage={currentPage}
-          onPageChange={(page) => setCurrentPage(page)}
-          totalPages={7 }
-        />
+      {
+        data?.pagination && data?.pagination?.totalPages > 1 &&(
+          <PacificPagination
+            currentPage={currentPage}
+            onPageChange={(page) => setCurrentPage(page)}
+            totalPages={ data?.pagination?.totalPages}
+            />
+        )
+      }
       </div>
     </div>
   );

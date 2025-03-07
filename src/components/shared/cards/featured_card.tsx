@@ -8,17 +8,45 @@ import Image from "next/image";
 
 import { Button } from "@/components/ui/button";
 import { Rating } from "@/components/ui/Rating";
-import { FeatureCardType } from "@/data/featured";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { useState } from "react";
+import { useAppDispatch } from "@/redux/store";
+import { addToCart } from "@/redux/features/cart/cartSlice";
+import { Product } from "@/types/product";
 
 export default function FeaturedProductCard({
   product,
 }: {
-  product: FeatureCardType;
+  product: Product;
 }) {
   const [isWishlist, setIsWishlist] = useState(false);
+
+
+  const dispatch = useAppDispatch();
+
+  console.log({product})
+  const handleAddToCart = (e: { stopPropagation: () => void; preventDefault: () => void; }) => {
+    e.stopPropagation();
+    e.preventDefault();
+
+
+    // add data in redux 
+    dispatch(addToCart({ 
+      _id: product._id,
+      title: product.title,
+      discountPrice: product.discountPrice,
+      sellingPrice: product.selllingPrice,
+      stockStatus: product.stockStatus,
+      image: product.images[0] || "/assets/blogs/blogs.png", // Ensure there's an image
+      quantity: 1,
+    }));
+
+    console.log("Product added to cart:", product.title);
+  };
+
+
+
 
   const handleWishlistToggle = () => {
     setIsWishlist((prev) => !prev); // Toggle wishlist state
@@ -32,9 +60,7 @@ export default function FeaturedProductCard({
       <div className="overflow-hidden rounded-[8px]">
         <Image
           loading="lazy"
-          src={
-            "https://images.pexels.com/photos/1466335/pexels-photo-1466335.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-          }
+          src={product?.images[0] ??  "/assets/blogs/blogs.png"} 
           alt="Product image"
           width={300}
           height={100}
@@ -69,7 +95,7 @@ export default function FeaturedProductCard({
                 <div
                   className={cn(
                     "my-auto text-[12px] font-normal",
-                    product.stoke === "In Stock"
+                    product.stockStatus === "In Stock"
                       ? "text-[#2A6C2D]"
                       : "text-red-500",
                   )}
@@ -82,7 +108,7 @@ export default function FeaturedProductCard({
               <Rating productId={product._id} />
             </div>
           </div>
-          <div className="text-gradient mt-2 text-left text-[16px] font-medium leading-[19.2px]">
+          <div className="text-gradient dark:text-gradient-pink mt-2 text-left text-[16px] font-medium leading-[19.2px]">
             {product.title}
           </div>
           <div className="mt-2 flex items-end gap-1 self-start font-medium leading-tight">
@@ -94,13 +120,12 @@ export default function FeaturedProductCard({
             </div>
           </div>
         </div>
-        <Button
-          onClick={(e) => {
-            e.stopPropagation();
-            e.preventDefault();
 
-            console.log("add to cart");
-          }}
+
+
+        {/* ===========add to cart ===== */}
+        <Button
+         onClick={handleAddToCart}
           className="mt-[16px] w-full"
           aria-label="Add to cart"
         >

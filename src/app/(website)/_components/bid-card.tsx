@@ -7,12 +7,20 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Rating } from "@/components/ui/Rating";
-import { useCountdown } from "@/hooks/useCountDown";
+// import { useCountdown } from "@/hooks/useCountDown";
 import { Product } from "@/types/product";
+import dynamic from "next/dynamic";
+
+const AuctionCountDownTimer = dynamic(
+  () => import("@/components/shared/cards/auction-card/countdown-timer"),
+  { ssr: false }
+);
 
 export default function BiddingCard({ product }: { product: Product }) {
-  const endDate = new Date("2025-01-31T23:59:59");
-  const timeLeft = useCountdown(endDate);
+
+  
+  const endDate = new Date(product.endingTime);
+  const isExpired = new Date() > endDate;
 
   return (
     <Card className="relative p-[16px] shadow-none">
@@ -53,48 +61,22 @@ export default function BiddingCard({ product }: { product: Product }) {
           <span className="ml-2 text-[#9C9C9C]">8 Views</span>
         </div>
 
-        <h2 className="text-gradient mb-2 text-center text-[25px] font-semibold leading-[30px]">
+        <h2 className="text-gradient dark:text-gradient-pink mb-2 text-center text-[25px] font-semibold leading-[30px]">
           {product.title}
         </h2>
 
         <div className="mb-4 flex items-baseline justify-center gap-2">
-          <span className="text-xl font-bold">₿{product.discountPrice}</span>
+          <span className="text-xl font-bold">₿{product.startingPrice}</span>
           <span className="text-sm text-gray-400 line-through">
-            ₿{product.selllingPrice}
+            {/* ₿{product.selllingPrice} */}
           </span>
         </div>
 
-        <div className="mx-auto max-w-[275px] rounded-[8px] bg-[#E6EEF6] p-[12px]">
-          <p className="mb-2 text-center text-sm text-gray-500">
-            Hurry up! Offer ends in:
-          </p>
-          <div className="grid grid-cols-4 gap-2 text-center">
-            <div>
-              <div className="text-xl font-bold">
-                {String(timeLeft.days).padStart(2, "0")}
-              </div>
-              <div className="text-xs text-gray-500">Days</div>
-            </div>
-            <div>
-              <div className="text-xl font-bold">
-                {String(timeLeft.hours).padStart(2, "0")}
-              </div>
-              <div className="text-xs text-gray-500">Hours</div>
-            </div>
-            <div>
-              <div className="text-xl font-bold">
-                {String(timeLeft.minutes).padStart(2, "0")}
-              </div>
-              <div className="text-xs text-gray-500">Mins</div>
-            </div>
-            <div>
-              <div className="text-xl font-bold">
-                {String(timeLeft.seconds).padStart(2, "0")}
-              </div>
-              <div className="text-xs text-gray-500">Secs</div>
-            </div>
-          </div>
-        </div>
+     <div className="p-5">
+     {!isExpired && <AuctionCountDownTimer endDate={endDate} />}
+     </div>
+  
+      
       </CardContent>
     </Card>
   );

@@ -16,50 +16,56 @@ import {
 import { cn } from "@/lib/utils";
 import SectionHeading from "../SectionHeading/SectionHeading";
 import { ReviewCard } from "./ReviewCard";
+import { useSession } from "next-auth/react";
+import { useQuery } from "@tanstack/react-query";
+import ErrorContainer from "../ErrorContainer/ErrorContainer";
 
 // Review data this come from Backend **********************
-const reviewsData = [
-  {
-    name: "Robert Fox",
-    role: "vendor",
-    avatarSrc: "/assets/img/revDp.png",
-    rating: 2,
-    title: '"Good Experience"',
-    review:
-      '"Pacific Rim Fusion is an outstanding platform for the B2B surplus cannabis market, offering a seamless auction experience that enhances both buying and selling processes."',
-  },
-  {
-    name: "Robert Fox",
-    role: "Customer",
-    avatarSrc: "/assets/img/revDp.png",
-    rating: 4,
-    title: '"Good Experience"',
-    review:
-      '"Pacific Rim Fusion is an outstanding platform for the B2B surplus cannabis market, offering a seamless auction experience that enhances both buying and selling processes."',
-  },
-  {
-    name: "Robert Fox",
-    role: "Customer",
-    avatarSrc: "/assets/img/revDp.png",
-    rating: 2,
-    title: '"Good Experience"',
-    review:
-      '"Pacific Rim Fusion is an outstanding platform for the B2B surplus cannabis market, offering a seamless auction experience that enhances both buying and selling processes."',
-  },
-  {
-    name: "Robert Fox",
-    role: "Customer",
-    avatarSrc: "/assets/img/revDp.png",
-    rating: 2,
-    title: '"Good Experience"',
-    review:
-      '"Pacific Rim Fusion is an outstanding platform for the B2B surplus cannabis market, offering a seamless auction experience that enhances both buying and selling processes."',
-  },
-];
+
 
 export const ClientReviews: React.FC = () => {
   const [activeIndex, setActiveIndex] = React.useState(0);
   const [api, setApi] = React.useState<CarouselApi>();
+
+  const session = useSession();
+  const token = session.data?.user.token;
+  console.log({ token });
+  type ClientReviewResponse = {
+  success: boolean;
+  message: string;
+    data: {
+      _id: string;
+      userID: string;
+      rating: number;
+      comment: string;
+      createdAt: string;
+      fullName: string;
+      userImage: string;
+    }[];
+  };
+
+  const { data, isError, error, isLoading } = useQuery<ClientReviewResponse>({
+    queryKey: ["clientReview"],
+    queryFn: async () => {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/review/user/get`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (!response.ok) {
+        throw new Error("Network error");
+      }
+      return response.json();
+    },
+  });
+  
+
+  console.log("reviews data:", data);
   
 
   React.useEffect(() => {
@@ -72,11 +78,16 @@ export const ClientReviews: React.FC = () => {
     });
   }, [api]);
    
-  const totalSlides = reviewsData.length;
+  const totalSlides = data?.data?.length || 0;
   const visibleItems = 3;
-  const centerIndex =
-    (activeIndex + Math.floor(visibleItems / 2)) % totalSlides;
+  const centerIndex = (activeIndex + Math.floor(visibleItems / 2)) % totalSlides;
 
+  if(isError) {
+    return <ErrorContainer message={error.message} />
+  }
+  if(isLoading) {
+    return <div className="container">Loading...</div>
+  }
 
   return (
     <section className="flex flex-col items-center mb-12 mt-[90px]">
@@ -92,10 +103,10 @@ export const ClientReviews: React.FC = () => {
         setApi={setApi}
       >
         <CarouselContent>
-          {reviewsData.map((review, index) => (
+          {data?.data?.map((review, index) => (
             <CarouselItem
               key={index}
-              className="w-full flex justify-center md:basis-1/2 lg:basis-1/3"
+              className="w-full flex justify-center md:basis-1/2 lg:basis-1/3 h-full"
             >
               <div
                 className={`m-5 transition-shadow duration-300 rounded-lg ${

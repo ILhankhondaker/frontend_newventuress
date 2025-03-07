@@ -1,21 +1,82 @@
 "use client"
 import { Button } from "@/components/ui/button";
+import { countriesData } from "@/data/countries";
+import { canadaProvinces, usStates } from "@/data/registration";
 import { cn } from "@/lib/utils";
 import { resetAuthSlice } from "@/redux/features/authentication/AuthSlice";
 import { useAppDispatch, useAppSelector } from "@/redux/store";
+import { useMutation } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import { redirect, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 import { AdminApprovalModal } from "../../../_components/admin-aproval-modal";
 
 const SignUpOverview = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [loading,setLoading] = useState(false)
+
+    
+
+  // from dropdown 
+  const [state, setState] = useState("pending")  
+
+    // status from dropdown
+    const approvalStatus = state as "pending" | "approved" | "one";
+
+  const { isPending, mutate } = useMutation({
+    mutationKey: ["registration"],
+    mutationFn: (data: any) =>
+      fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/register`, {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify(data),
+      }).then((res) => res.json()),
+    onSuccess: (data) => {
+    
+      if (data.status) {
+        // success mesage
+        toast.success(
+          "Your account has been created, and you're all set to log in. Welcome aboard! 🚀",
+          {
+            position: "top-right",
+            richColors: true,
+          }
+        );
+
+        setState("pending")
+
+        setIsModalOpen(true)
+
+      } else {
+        setLoading(false);
+        toast.error(data.message, {
+          position: "top-right",
+          style: {
+            color: "red",
+          },
+          richColors: true,
+        });
+      }
+    },
+    onError: (err) => {
+      setLoading(false);
+     
+      toast.error(err.message || "Something went wrong", {
+        position: "top-center",
+        richColors: true,
+      });
+    },
+  });
+
     const authState = useAppSelector((state) => state.auth);
     const dispatch = useAppDispatch();
     const router = useRouter();
+   
 
-    const approvalStatus = "approved" as "pending" | "approved" | "one"
+
 
     const businessName = authState.businessName;
     const email = authState.email;
@@ -30,6 +91,39 @@ const SignUpOverview = () => {
       }
 
     }, [])
+
+    const countriesMap = countriesData.map((i) => ({name: i.country, allow: i.allow}))
+
+     const allStates = [...usStates, ...canadaProvinces, ...countriesMap];
+
+
+     const onRegistration = () => {
+      const updatedBusinessInfo = authState.businessInfo.map((item) => ({
+        ...item,
+        license: item.license.map((license) => {
+          // Find the matching state from allStates
+          const matchedState = allStates.find((state) => state.name === license.name);
+    
+          return {
+            ...license,
+            accept: matchedState ? matchedState.allow : [], // Set accept based on matched state's allow field
+          };
+        }),
+      }));
+
+      const latestRegistrationValue = {
+        ...authState,
+        businessInfo: updatedBusinessInfo
+      }
+
+     // finally registration
+     mutate(latestRegistrationValue)
+    
+      // Dispatch the updated business info to Redux
+      
+    };
+    
+    
 
 
 
@@ -56,6 +150,8 @@ const SignUpOverview = () => {
 
   return (
     <>
+{/* it will be remove when we will get data from API  */}
+
     <div className="w-full border-[#162866] border-[1px] rounded-[20px] p-[20px] mt-[40px]">
         <div className="text-[#444444] font-medium text-[20px] grid grid-cols-2 gap-x-[30px] gap-y-[20px]">
         <h3>Business Name: {businessName}</h3>
@@ -81,12 +177,12 @@ const SignUpOverview = () => {
            {item?.cannabisLicense.length > 0 && item.cannabisLicense.some((license) => license.trim() !== "") && (
   <h3 className="flex items-center gap-x-4 flex-wrap">
     Cannabis license No: {item.cannabisLicense.join(", ")}
-    <CustomBadge status="approved">Auto Approved</CustomBadge>
+    <CustomBadge status={approvalStatus === "approved" ? "approved" : "pending"}>{approvalStatus === "approved" ? "AUto Approved" : "Peending"}</CustomBadge>
   </h3>
 )}
 
             {item?.businessLicense.length > 0 && item.businessLicense.some((license) => license.trim() !== "") && (
-  <h3 className="flex items-center gap-x-4 flex-wrap">Business license No: {item.businessLicense.join(", ")}  <CustomBadge status="approved">Auto Approved</CustomBadge></h3>
+  <h3 className="flex items-center gap-x-4 flex-wrap">Business license No: {item.businessLicense.join(", ")}        <CustomBadge status={approvalStatus === "approved" ? "approved" : approvalStatus === "one" ? "approved" :  "pending"}>{approvalStatus === "approved" ? "Auto Approved" : approvalStatus === "one" ? "Auto Approved" : "Peending"}</CustomBadge></h3>
 )}
 
               </div>
@@ -103,16 +199,15 @@ const SignUpOverview = () => {
         
 
     </div>
-    <Button disabled={loading} className="mt-[20px]" onClick={() => {
-      setIsModalOpen(true);
-    }}>
-    <span className="flex items-center gap-x-2">Next {loading ? <Loader2 className="animate-spin h-3 w-3" /> : "→"}</span></Button> <AdminApprovalModal
+    <Button disabled={loading || isPending} className="mt-[20px]" onClick={onRegistration}>
+    <span className="flex items-center gap-x-2">Next {(loading || isPending) ? <Loader2 className="animate-spin h-3 w-3" /> : "→"}</span></Button> <AdminApprovalModal
         isOpen={isModalOpen}
         message={approvalStatus == "pending" ? "Your licenses are “pending” and will require further review. We will send you an email once we approve" : approvalStatus == "one" ? "We were able to verify and approve one or more of your licenses, the remaining pending licenses will require further review. Please check your email to complete your registration." : "We were able to verify and approve your licenses. Please check your email to complete your registration."}
         onClose={() => {
           setIsModalOpen(false);
           setLoading(true)
-          router.push("/")
+          dispatch(resetAuthSlice())
+          router.push("/login")
           
         }}
       /></>
