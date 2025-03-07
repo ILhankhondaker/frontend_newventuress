@@ -1,15 +1,20 @@
-import React from "react";
+import { auth } from "@/auth";
+import AddButon from "./_components/AddButon";
 import CuponContainer from "./_components/CuponContainer";
 import CuponFilter from "./_components/CuponFilter";
-import AddButon from "./_components/AddButon";
 
 
-const page = () => {
+const page = async () => {
+  const currentUser = await auth();
+
+  if(!currentUser) return;
+
+  const userId = currentUser.user.id
   return (
     <div>
 
       <AddButon />
-      <CuponFilter />
+      <CuponFilter userId={userId} />
       <CuponContainer />
     </div>
   );
