@@ -9,14 +9,15 @@ import { Inter } from "next/font/google";
 import { auth } from "@/auth";
 import AgeRestrictionGuard from "@/components/providers/AgeRestrictionGuard";
 import AppProvider from "@/components/providers/AppProvider";
+import CrispProvider from "@/components/providers/crisp-provider";
 import NProgress from "@/components/providers/NProgress";
 import Footer from "@/components/shared/footer/mainFooter/footer";
 import NewsletterPage from "@/components/shared/footer/newsletter/newsletter";
 import Navbar from "@/components/shared/header/mainHeader/navbar";
+import SearchBerCategories from "@/components/shared/searchBerCategories/searchBerCategories";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/provider/theme-provider";
 import { Toaster } from "sonner";
-import SearchBerCategories from "@/components/shared/searchBerCategories/searchBerCategories";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -56,6 +57,7 @@ export default async function RootLayout({
             <NProgress />
             <Toaster />
             </ThemeProvider>
+            <CrispProvider />
           </body>
         </html>
       </AppProvider>
