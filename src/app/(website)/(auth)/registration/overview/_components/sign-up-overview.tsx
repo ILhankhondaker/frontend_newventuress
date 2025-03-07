@@ -11,7 +11,6 @@ import { redirect, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { AdminApprovalModal } from "../../../_components/admin-aproval-modal";
-import StatusDropdown from "./StatusDropdown";
 
 const SignUpOverview = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -36,7 +35,7 @@ const SignUpOverview = () => {
         body: JSON.stringify(data),
       }).then((res) => res.json()),
     onSuccess: (data) => {
-      setLoading(true);
+    
       if (data.status) {
         // success mesage
         toast.success(
@@ -47,11 +46,10 @@ const SignUpOverview = () => {
           }
         );
 
+        setState("pending")
+
         setIsModalOpen(true)
 
-        dispatch(resetAuthSlice());
-
-        router.push("/login");
       } else {
         setLoading(false);
         toast.error(data.message, {
@@ -153,7 +151,6 @@ const SignUpOverview = () => {
   return (
     <>
 {/* it will be remove when we will get data from API  */}
-<StatusDropdown setState={setState} />
 
     <div className="w-full border-[#162866] border-[1px] rounded-[20px] p-[20px] mt-[40px]">
         <div className="text-[#444444] font-medium text-[20px] grid grid-cols-2 gap-x-[30px] gap-y-[20px]">
@@ -209,7 +206,8 @@ const SignUpOverview = () => {
         onClose={() => {
           setIsModalOpen(false);
           setLoading(true)
-          router.push("/")
+          dispatch(resetAuthSlice())
+          router.push("/login")
           
         }}
       /></>
