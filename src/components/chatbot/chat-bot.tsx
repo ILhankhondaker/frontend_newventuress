@@ -52,7 +52,7 @@ export function ChatBot() {
     setIsLoading(true)
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/chat`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/chatbot/chat`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
