@@ -432,15 +432,16 @@ const AuctionDetails = ({ auctionId }: { auctionId: string }) => {
                 {bidData?.data.map((bid, index) => (
                   <TableRow key={index}>
                     <TableCell className="border-r-[1px] border-black w-1/4">
-                      {bid.bidderName}
+                      {bid.userName}
                     </TableCell>
                     <TableCell className="border-r-[1px] border-black w-1/4">
-                      {new Date(bid.createdAt).toLocaleTimeString("en-US", {
+                      {/* {new Date(bid.createdAt).toLocaleTimeString("en-US", {
                         hour: "2-digit",
                         minute: "2-digit",
                         second: "2-digit",
                         hour12: false, // Change to `true` for AM/PM format
-                      })}
+                      })} */}
+                      {new Date(bid.createdAt).toLocaleString()}
                     </TableCell>
                     <TableCell className="border-r-[1px] border-black w-1/4">
                       {bid.bidValue}
