@@ -11,22 +11,18 @@ import { useParams } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import { TextAnimate } from "@/components/magicui/text-animate";
 import ErrorContainer from "@/components/ui/error-container";
-
-
-// Mock authentication function (Replace with actual auth logic)
-const useAuth = () => {
-  return {
-    fullName: "John Doe", // Replace with actual user data
-    usernameOrEmail: "monmoy@gmail.com", // Replace with actual user data
-  };
-};
-
+import { useSession } from "next-auth/react";
 
 
 function BlogComments() {
   const [commentText, setCommentText] = useState("");
   const { id: blogID } = useParams();
-  const { fullName, usernameOrEmail } = useAuth();
+  const session = useSession();
+  const usernameOrEmail = session.data?.user.email;
+  const fullName = session.data?.user.fullName;
+ 
+  
+
   const queryClient = useQueryClient();
 
  
@@ -51,7 +47,10 @@ function BlogComments() {
 
   // Submit New Comment
   const mutation = useMutation<void, unknown, { blogID: string | string[]; fullName: string; usernameOrEmail: string; comments: string }>({
+
     mutationFn: async (newComment) => {
+      console.log(newComment);
+      
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/blog/user/comments`,
         {
@@ -79,6 +78,8 @@ function BlogComments() {
     usernameOrEmail: string;
     comments: string;
   }
+ 
+  
 
   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
