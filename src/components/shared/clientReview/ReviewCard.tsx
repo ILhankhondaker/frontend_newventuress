@@ -15,13 +15,14 @@ export const ReviewCard: React.FC<ReviewCardProps> = ({
       fullName,
       userImage,
 }) => {
+  console.log(userImage)
   return (
     <Card className="flex-1 min-w-[370px] w-[202px]">
       <CardContent className="p-4">
         <div className="flex gap-5 items-center w-full">
           <div className="flex flex-1 gap-2 items-center">
           <Image
-            src={userImage}
+            src={userImage || ""}
             width={50}
             height={50}
             alt="Picture of the author"

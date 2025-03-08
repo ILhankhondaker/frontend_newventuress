@@ -17,7 +17,7 @@ const formSchema = z.object({
   fullName: z.string().min(1, "Full name is required"),
   username: z.string().min(1, "Username is required"),
   email: z.string().email("Invalid email address"),
-  phone: z.string().min(1, "Phone number is required"),
+  // phone: z.string().min(1, "Phone number is required"),
   country: z.string().min(1, "Country is required"),
   city: z.string().min(1, "City is required"),
   street: z.string().min(1, "Street address is required"),
@@ -42,7 +42,6 @@ export default function ProfileSettingsForm() {
       fullName: "",
       username: "",
       email: "",
-      phone: "",
       country: "",
       city: "",
       street: "",
@@ -157,8 +156,7 @@ export default function ProfileSettingsForm() {
               </FormItem>
             )}
           />
-
-          <FormField
+          {/* <FormField
             control={form.control}
             name="phone"
             render={({ field }) => (
@@ -175,7 +173,7 @@ export default function ProfileSettingsForm() {
                 <FormMessage />
               </FormItem>
             )}
-          />
+          /> */}
 
           <FormField
             control={form.control}
