@@ -8,9 +8,10 @@ import PlansPayment from "./plansPayment";
 
 interface Props {
   data: MembershipPlan;
+  userId: string | undefined
 }
 
-function PlansCard({ data }: Props) {
+function PlansCard({ data , userId}: Props) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -40,6 +41,7 @@ function PlansCard({ data }: Props) {
             isOpen={isOpen}
             onClose={() => setIsOpen(false)}
             data={data}
+            userId={userId}
           />
         </div>
       </div>

@@ -7,14 +7,15 @@ import { redirect, usePathname } from "next/navigation";
 // Local imports
 import ErrorContainer from "@/components/ui/error-container";
 import SkeletonWrapper from "@/components/ui/skeleton-wrapper";
-import PlansCard from "./plansCard";
 import { MembershipResponse } from "@/types/membership";
+import PlansCard from "./plansCard";
 
 interface Props {
   token: string | undefined;
+  userId: string | undefined
 }
 
-const PlansContainer = ({token}: Props) => {
+const PlansContainer = ({token, userId}: Props) => {
 
   const pathName = usePathname();
 
@@ -58,6 +59,8 @@ const PlansContainer = ({token}: Props) => {
                   store : 5,
                   time : "One Time",
                 }}
+
+                userId={userId}
               />
             </div>
           </SkeletonWrapper>
@@ -71,7 +74,7 @@ const PlansContainer = ({token}: Props) => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[30px]">
         {data?.map((item) => (
           <div className="w-full mx-auto" key={item._id}>
-            <PlansCard data={item} />
+            <PlansCard data={item} userId={userId} />
           </div>
         ))}
       </div>

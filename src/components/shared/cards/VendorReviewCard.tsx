@@ -2,6 +2,7 @@ import Image from "next/image";
 import React from "react";
 import { LuBox } from "react-icons/lu";
 import { StarRating } from "../clientReview/StarRating";
+import moment from "moment";
 
 interface CustomerReviewsCardProps {
   imageSrc: string; // Path to the image
@@ -40,7 +41,7 @@ const VendorReviewCard: React.FC<CustomerReviewsCardProps> = ({
                 {name} .
               </h2>
               <p className="text-[12px] lg:text-base text-[#B0B0B0] font-normal leading-[] lg:leading-[19.2px] pt-[11px] ml-[6px]">
-                {date}
+                {moment(date).format("YYYY-MM-DD")}
               </p>
             </div>
           </div>
