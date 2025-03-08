@@ -23,7 +23,7 @@ const Page = (props: { params: { id: string } }) => {
       <div className="container mx-auto px-4 py-8">
         <div className="text-center mb-12 text-[32px]">
           <SectionHeading
-            heading={"Our Latest News From Blogs"}
+            heading={"Our Latest News From Blogs "}
             subheading={"Blog"}
           />
         </div>
