@@ -6,6 +6,8 @@ import PlansContainer from "./_components/PlansContainer";
 const page = async () => {
   const currentuser = await auth();
 
+  
+
   const token = currentuser?.user.token;
 
   return (
@@ -25,7 +27,7 @@ const page = async () => {
       />
       <div className="container section px-4 my-[80px]">
         <SectionHeading heading="Membership Plans" subheading="Plans" />
-        <PlansContainer token={token} />
+        <PlansContainer token={token} userId={currentuser?.user.id} />
       </div>
     </>
   );

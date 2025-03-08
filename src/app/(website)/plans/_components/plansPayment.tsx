@@ -14,7 +14,6 @@ import { MembershipPlan } from "@/types/membership";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
-import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { useForm } from "react-hook-form";
 import { IoCheckmarkCircle } from "react-icons/io5";
@@ -54,16 +53,17 @@ interface PaymentModalProps {
   isOpen: boolean;
   onClose: () => void;
   data: MembershipPlan;
+  userId: string | undefined
 }
 
-function PlansPayment({ isOpen, onClose, data }: PaymentModalProps) {
-  const session = useSession();
+function PlansPayment({ isOpen, onClose, data, userId }: PaymentModalProps) {
+
 
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      paymentMethod: "credit-card",
+      paymentMethod: "paypal",
     },
   });
 
@@ -96,24 +96,21 @@ function PlansPayment({ isOpen, onClose, data }: PaymentModalProps) {
       });
     },
   });
+
+  const isDisabled = isPending
   
-
-    const isDisabled = isPending || session.status === "loading"
-
-    if(session.status === "unauthenticated") onClose()
 
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     const newSubmission = {
       amount: data.price, // Include the charged amount in the object
       currency: "USD",
-      userId: session.data?.user.id,
+      userId: userId,
       membershipId: data._id,
       paymentMethod: values.paymentMethod
     };
 
 
-    console.log("clicked")
     // Update the state with the new submission
     // setSubmittedData(newSubmission);
 if(newSubmission.paymentMethod === "paypal") {
@@ -124,7 +121,7 @@ if(newSubmission.paymentMethod === "paypal") {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="w-[96%] lg:min-w-[650px] h-[668px] lg:h-[751px] p-[12px] lg:p-[40px] bg-[#E6EEF6] dark:border-none rounded-[12px]">
+      <DialogContent className="w-[96%] lg:min-w-[650px] h-auto p-[12px] lg:p-[40px] bg-[#E6EEF6] dark:border-none rounded-[12px]">
         <div>
           <div className="bg-white rounded-[12px] p-[20px] mb-[30px] lg:mb-[40px]">
             <h3 className="text-[20px] lg:text-[26px] font-semibold text-[#444444]">{data?.planType}</h3>
