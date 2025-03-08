@@ -1,8 +1,6 @@
 "use client";
 
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import OrderSummary from "./OrderSummery";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -12,17 +10,19 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import OrderSummary from "./OrderSummery";
 
-import * as z from "zod";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Label } from "@/components/ui/label";
-import OrderTotal from "./OrderTotal";
-import Image from "next/image";
 import { Checkbox } from "@/components/ui/checkbox";
-import { useState } from "react";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Loader2 } from "lucide-react";
+import Image from "next/image";
+import { useState } from "react";
+import * as z from "zod";
 import OrderConfirmationModal from "./OrderConfirmationModal";
+import OrderTotal from "./OrderTotal";
 
 // Types
 type OrderItem = {
