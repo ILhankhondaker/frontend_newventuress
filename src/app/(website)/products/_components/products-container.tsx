@@ -15,74 +15,87 @@ import { ProductResponse } from "@/types/product";
 import ProductsSort from "./products-sort";
 import SidebarFilters from "./SidebarFilters";
 
-
-
 interface Props {
-  token: string
+  token: string;
 }
-const ProductsContainer = ({token} : Props) => {
+const ProductsContainer = ({ token }: Props) => {
   const [currentPage, setCurrentPage] = useState(1);
-  // const [products, setProducts] = useState([]);
+  const [priceRange, setPriceRange] = useState<[number, number]>([0, 1000]);
+  const [flowers, setFlowers] = useState<string[]>([]);
 
-  //? // Fetch products
-   //? // Fetch products
-     const { data, isError, error, isLoading } = useQuery<ProductResponse>({
-      queryKey: ["products"],
-      queryFn: async () => {
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/product`, {
-            headers: {
-              'Authorization': `Bearer ${token}`
-            }
-          });
-        if (!response.ok) {
-          throw new Error("Network error");
+  // Handle filter change
+  const onFilterChange = (filters: { priceRange: [number, number]; flowers: string[]; availability: string }) => {
+    setPriceRange(filters.priceRange); // Update price range state
+    setFlowers(filters.flowers); // Update flowers state
+    // You can also update other filters like availability if needed
+  };
+
+  // Fetch products based on filters
+  const { data, isError, error, isLoading } = useQuery<ProductResponse>({
+    queryKey: ["products", priceRange, flowers, currentPage],
+    queryFn: async () => {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/products/filter?minPrice=${priceRange[0]}&maxPrice=${priceRange[1]}&flowers=${flowers.join(
+          ","
+        )}&page=${currentPage}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
-        return response.json();
-      },
-    });
-  const products = data?.data;
+      );
+      if (!response.ok) {
+        throw new Error("Network error");
+      }
+      return response.json();
+    },
+  });
 
+  const products = data?.data;
 
   let content;
 
-  if(isLoading) {
-    content = <div className="mt-[52px] grid grid-cols-1 gap-4 md:grid-cols-3">
-      {[1,2,3,4,5,6].map((n) => (
-        <ProductCardSkeleton key={n} />
-      ))}
-    </div>
+  if (isLoading) {
+    content = (
+      <div className="mt-[52px] grid grid-cols-1 gap-4 md:grid-cols-3">
+        {[1, 2, 3, 4, 5, 6].map((n) => (
+          <ProductCardSkeleton key={n} />
+        ))}
+      </div>
+    );
   }
-
-
 
   if (isError) {
-    content = <div className="mt-[52px] flex flex-col gap-2 justify-center items-center  min-h-[40vh]  font-inter ">
-    <CircleOff className="h-7 w-7 text-red-600" />
-    <div className="max-w-[400px] text-center text-14px text-tourHub-gray">
-      <TextEffect per="char" preset="fade" variants={{}} className="" onAnimationComplete={() => {}}>
-        {error?.message || "something went wrong . Please try again"}
-      </TextEffect>
-    </div>
-  </div>
-  } else if(products?.length === 0 ) {
-    content = <div className="mt-[52px] w-full flex flex-col gap-2 justify-center items-center min-h-[40vh] font-inter">
-    <CircleAlert className="h-5 w-5" />
-    <p className="max-w-[400px] text-center text-14px text-tourHub-gray">
-      <TextEffect per="char" preset="fade" variants={{}} className="" onAnimationComplete={() => {}}>
-        No data available for the selected criteria. Please try different
-        filters or check your connection!
-      </TextEffect>
-    </p>
-  </div>
+    content = (
+      <div className="mt-[52px] flex flex-col gap-2 justify-center items-center min-h-[40vh] font-inter">
+        <CircleOff className="h-7 w-7 text-red-600" />
+        <div className="max-w-[400px] text-center text-14px text-tourHub-gray">
+          <TextEffect per="char" preset="fade" variants={{}} className="" onAnimationComplete={() => {}}>
+            {error?.message || "something went wrong. Please try again"}
+          </TextEffect>
+        </div>
+      </div>
+    );
+  } else if (products?.length === 0) {
+    content = (
+      <div className="mt-[52px] w-full flex flex-col gap-2 justify-center items-center min-h-[40vh] font-inter">
+        <CircleAlert className="h-5 w-5" />
+        <p className="max-w-[400px] text-center text-14px text-tourHub-gray">
+          <TextEffect per="char" preset="fade" variants={{}} className="" onAnimationComplete={() => {}}>
+            No data available for the selected criteria. Please try different filters or check your connection!
+          </TextEffect>
+        </p>
+      </div>
+    );
   } else if (products && products?.length > 0) {
-    content = <div className="mt-[52px] grid grid-cols-1 gap-4 md:grid-cols-3">
-    {products?.map((item: any) => (
-      <FeaturedProductCard key={item._id} product={item} />
-    ))}
-  </div>
+    content = (
+      <div className="mt-[52px] grid grid-cols-1 gap-4 md:grid-cols-3">
+        {products?.map((item: any) => (
+          <FeaturedProductCard key={item._id} product={item} />
+        ))}
+      </div>
+    );
   }
-
 
   return (
     <div className="section container lg:mb-[150px]">
@@ -98,25 +111,27 @@ const ProductsContainer = ({token} : Props) => {
       <div className="flex flex-wrap items-start gap-4">
         {/* Sidebar Filters */}
         <div className="w-full md:w-1/4">
-          <SidebarFilters />
+          <SidebarFilters onFilterChange={onFilterChange} priceRange={priceRange} />
         </div>
 
         {/* Products Grid */}
-        <div className="flex-1">
-        {content}
-        </div>
+        <div className="flex-1">{content}</div>
       </div>
 
       {/* Pagination */}
-      {!isLoading && !isError && <div className="mt-[40px]">
-        <PacificPagination
-          currentPage={currentPage}
-          onPageChange={(page) => setCurrentPage(page)}
-          totalPages={20} // Assuming 9 items per page
-        />
-      </div>}
+      {!isLoading && !isError && (
+        <div className="mt-[40px]">
+          <PacificPagination
+            currentPage={currentPage}
+            onPageChange={(page) => setCurrentPage(page)}
+            totalPages={20} // Assuming 9 items per page
+          />
+        </div>
+      )}
     </div>
   );
 };
+
+
 
 export default ProductsContainer;

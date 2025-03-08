@@ -60,6 +60,7 @@ export default function CartPage() {
     return <EmptyCart />;
   }
 
+  console.log(cartItems);
   return (
     <div className="container section md:border-b-[1px] border-[#C0CFE6]/50 pb-10">
       <div className="mt-[-10px]">
