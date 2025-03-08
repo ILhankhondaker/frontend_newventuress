@@ -17,7 +17,7 @@ import { CountdownTimer } from "./CountdownTimer";
 import { ProductImageGallery } from "./ProductImageGallery";
 import { ReviewForm } from "./ReviewForm";
 // import { StarRating } from "./StarRating";
-import {  ProductData } from "./types";
+
 import { useScroll, useTransform, motion } from "framer-motion";
 
 import { useQuery } from "@tanstack/react-query";
@@ -32,27 +32,27 @@ import { Heart } from "lucide-react";
 
 
 
-const productData: ProductData = {
-  title: "American Beauty",
-  store: "American Beauty",
-  rating: 5,
-  price: 7000.0,
-  originalPrice: 9250.0,
-  description:
-    "CBD products have seamlessly integrated into the wellness and lifestyle industry, appealing to a broad audience seeking natural alternatives for health support. Many people turn to CBD as part of their daily routine to promote balance and relaxation, often combining it with yoga, meditation, or fitness.",
-  sizes: [
-    { value: "25g", isSelected: false },
-    { value: "50g", isSelected: false },
-    { value: "100g", isSelected: true },
-    { value: "500g", isSelected: false },
-  ],
-  images: [
-    { src: "/assets/img/prodDetails.png", alt: "Product thumbnail 1" },
-    { src: "/assets/img/prodDetails.png", alt: "Product thumbnail 2" },
-    { src: "/assets/img/prodDetails.png", alt: "Product thumbnail 3" },
-  ],
-  mainImage: { src: "/assets/img/prodDetails.png", alt: "Product main image" },
-};
+// const productData: ProductData = {
+//   title: "American Beauty",
+//   store: "American Beauty",
+//   rating: 5,
+//   price: 7000.0,
+//   originalPrice: 9250.0,
+//   description:
+//     "CBD products have seamlessly integrated into the wellness and lifestyle industry, appealing to a broad audience seeking natural alternatives for health support. Many people turn to CBD as part of their daily routine to promote balance and relaxation, often combining it with yoga, meditation, or fitness.",
+//   sizes: [
+//     { value: "25g", isSelected: false },
+//     { value: "50g", isSelected: false },
+//     { value: "100g", isSelected: true },
+//     { value: "500g", isSelected: false },
+//   ],
+//   images: [
+//     { src: "/assets/img/prodDetails.png", alt: "Product thumbnail 1" },
+//     { src: "/assets/img/prodDetails.png", alt: "Product thumbnail 2" },
+//     { src: "/assets/img/orderProduct.png", alt: "Product thumbnail 3" },
+//   ],
+//   mainImage: { src: "/assets/img/prodDetails.png", alt: "Product main image" },
+// };
 // const bidsData: BidData[] = [
 //   {
 //     bidderName: "Osama Usmani",
@@ -199,7 +199,7 @@ const AuctionDetails = ({ auctionId }: { auctionId: string }) => {
       }).then((res) => res.json()),
   });
 
-  // console.log(data);
+  console.log(data);
 
   let content;
   if (isLoading) {
@@ -229,8 +229,8 @@ const AuctionDetails = ({ auctionId }: { auctionId: string }) => {
       <div >
         <div className="flex flex-wrap gap-8 w-full">
           <ProductImageGallery
-            thumbnails={productData.images}
-            mainImage={productData.mainImage}
+            thumbnails={data?.data.images}
+            mainImage={data?.data.images}
           />
           <div className="flex flex-col grow shrink justify-center min-w-[240px] w-[30%]">
             <div className="flex flex-col max-w-full">
