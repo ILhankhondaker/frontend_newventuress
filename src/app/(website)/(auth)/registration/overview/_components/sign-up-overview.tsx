@@ -107,6 +107,18 @@ const SignUpOverview = () => {
           return {
             ...license,
             accept: matchedState ? matchedState.allow : [], // Set accept based on matched state's allow field
+            businessLicense: license.businessLicense.map((license) => ({
+              license,
+              isVerified: false,
+            })),
+            cannabisLicense: license.cannabisLicense.map((license) => ({
+              license,
+              isVerified: false,
+            })),
+            metrcLicense: license.metrcLicense.map((license) => ({
+              license,
+              isVerified: false,
+            })),
           };
         }),
       }));
