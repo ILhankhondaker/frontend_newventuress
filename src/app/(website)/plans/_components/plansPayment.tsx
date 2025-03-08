@@ -12,26 +12,42 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { MembershipPlan } from "@/types/membership";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
+import { Loader2 } from "lucide-react";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { useForm } from "react-hook-form";
 import { IoCheckmarkCircle } from "react-icons/io5";
+import { toast } from "sonner";
 import { z } from "zod";
 
 const formSchema = z.object({
   paymentMethod: z.enum(["credit-card", "paypal"]),
-  cardholderName: z.string().min(2).optional(),
+
+  cardholderName: z.string().optional(),
+
   cardNumber: z
     .string()
-    .regex(/^\d{16}$/)
+    // .regex(/^\d{16}$/, "Card number must be 16 digits")
     .optional(),
+
   expDate: z
     .string()
-    .regex(/^(0[1-9]|1[0-2])\/([0-9]{2})$/)
+    // .regex(/^(0[1-9]|1[0-2])\/([0-9]{2})$/, "Expiration date must be MM/YY")
     .optional(),
+
   cvv: z
     .string()
-    .regex(/^\d{3,4}$/)
+    // .regex(/^\d{3,4}$/, "CVV must be 3 or 4 digits")
     .optional(),
+}).refine((data) => {
+  if (data.paymentMethod === "credit-card") {
+    return data.cardNumber && data.expDate && data.cvv;
+  }
+  return true;
+}, {
+  message: "Card number, expiration date, and CVV are required for credit card payments",
+  path: ["cardNumber"], // This will point to the first field in case of error
 });
 
 interface PaymentModalProps {
@@ -41,6 +57,9 @@ interface PaymentModalProps {
 }
 
 function PlansPayment({ isOpen, onClose, data }: PaymentModalProps) {
+  const session = useSession();
+
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -48,18 +67,61 @@ function PlansPayment({ isOpen, onClose, data }: PaymentModalProps) {
     },
   });
 
+  const { mutate: paypalPayment, isPending } = useMutation({
+    mutationKey: ["paypal-trans-plan"],
+    mutationFn: (body: any) =>
+      fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/paypal/create-order`, {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify(body),
+      }).then((res) => res.json()),
+  
+    onSuccess: (data) => {
+      if (data.status) {
+        window.location.href = data.approvalUrl; // Redirect user to PayPal checkout page
+      } else {
+        toast.error("Failed to retrieve PayPal approval URL", {
+          position: "top-right",
+          richColors: true,
+        });
+      }
+    },
+  
+    onError: (err) => {
+      toast.error(err.message, {
+        position: "top-right",
+        richColors: true,
+      });
+    },
+  });
+  
+
+    const isDisabled = isPending || session.status === "loading"
+
+    if(session.status === "unauthenticated") onClose()
+
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     const newSubmission = {
-      ...values,
-      chargedAmount: data.price, // Include the charged amount in the object
+      amount: data.price, // Include the charged amount in the object
+      currency: "USD",
+      userId: session.data?.user.id,
+      membershipId: data._id,
+      paymentMethod: values.paymentMethod
     };
 
+
+    console.log("clicked")
     // Update the state with the new submission
     // setSubmittedData(newSubmission);
-
-    console.log(newSubmission);
+if(newSubmission.paymentMethod === "paypal") {
+  paypalPayment(newSubmission)
+}
   };
+
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="w-[96%] lg:min-w-[650px] h-[668px] lg:h-[751px] p-[12px] lg:p-[40px] bg-[#E6EEF6] dark:border-none rounded-[12px]">
@@ -260,8 +322,8 @@ function PlansPayment({ isOpen, onClose, data }: PaymentModalProps) {
                 )}
               />
 
-              <Button type="submit" className="w-full">
-                Continue
+              <Button type="submit" className="w-full" disabled={isDisabled}>
+                Continue {isPending && <Loader2 className="animate-spin ml-2" />}
               </Button>
             </form>
           </Form>
