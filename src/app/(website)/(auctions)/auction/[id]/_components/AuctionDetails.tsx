@@ -18,17 +18,17 @@ import { ProductImageGallery } from "./ProductImageGallery";
 import { ReviewForm } from "./ReviewForm";
 // import { StarRating } from "./StarRating";
 
-import { useScroll, useTransform, motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 
-import { useQuery } from "@tanstack/react-query";
-import { AuctionResponse } from "@/types/auctiondetails";
-import ErrorContainer from "@/components/ui/error-container";
-import NotFound from "@/components/shared/NotFound/NotFound";
 import { AuctionDetailsSkeleton } from "@/components/shared/acutindetailsSkeletion/AcuctionDetailsSkeletion";
+import NotFound from "@/components/shared/NotFound/NotFound";
+import ErrorContainer from "@/components/ui/error-container";
+import { AuctionResponse } from "@/types/auctiondetails";
+import { BidsResponse } from "@/types/bids";
+import { useQuery } from "@tanstack/react-query";
+import { Heart } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { toast } from "sonner";
-import { BidsResponse } from "@/types/bids";
-import { Heart } from "lucide-react";
 
 
 
@@ -158,7 +158,7 @@ const AuctionDetails = ({ auctionId }: { auctionId: string }) => {
     }
 
     try {
-      const response = await fetch("http://localhost:8001/api/user/bid/create", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/bid/create`, {
         method: "POST", 
         headers: {
           "Content-Type": "application/json",
@@ -177,7 +177,7 @@ const AuctionDetails = ({ auctionId }: { auctionId: string }) => {
       }
 
       const result = await response.json();
-      console.log(result);
+   
       toast(result.message);
 
     } catch (error) {
@@ -199,7 +199,6 @@ const AuctionDetails = ({ auctionId }: { auctionId: string }) => {
       }).then((res) => res.json()),
   });
 
-  console.log(data);
 
   let content;
   if (isLoading) {
@@ -355,14 +354,14 @@ const AuctionDetails = ({ auctionId }: { auctionId: string }) => {
 
 
   const { data: bidData, isError: biderror, isLoading: isbidLoding,  } = useQuery<BidsResponse>({
-    queryKey: ["bids"],
+    queryKey: ["bids", auctionId],
     queryFn: () =>
       fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/auction/${auctionId}`, {
         method: "GET",
       }).then((res) => res.json()),
   });
  
-  console.log("data", bidData);
+
 
   
   
