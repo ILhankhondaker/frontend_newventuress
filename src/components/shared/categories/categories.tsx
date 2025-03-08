@@ -14,11 +14,15 @@ import { ChevronDown, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import NotFound from "../NotFound/NotFound";
+import { useApplicationAs } from "@/hooks/useApplicationAs";
 
 function Categories() {
   const [category, setCategory] = useState("All Categories ");
   const [isDropdownOpen, setDropdownOpen] = useState(false);
 
+  const { as } = useApplicationAs();
+
+  const categoryParam = as === "CBD/HEMP" ? "industry=hemp" : "industry=recreational";
 
   const linkVariants = {
     hidden: { opacity: 0, y: -20 },
@@ -27,9 +31,9 @@ function Categories() {
   };
 
   const { data, isLoading, isError } = useQuery<categoryDataResponse>({
-    queryKey: ["allcategory"],
+    queryKey: ["allcategory", categoryParam],
     queryFn: async (): Promise<categoryDataResponse> =>
-      fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/categories`, {
+      fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/categories?${categoryParam}`, {
         method: "GET",
 
       }).then((res) => res.json() as Promise<categoryDataResponse>),

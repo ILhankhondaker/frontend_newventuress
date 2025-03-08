@@ -7,6 +7,7 @@ import ThemeSwitcher from "./theme-switcher";
 async function SearchBerCategories() {
   const currentUser = await auth();
 
+
   if(!currentUser) return;
 
   console.log(currentUser.user.industry)
