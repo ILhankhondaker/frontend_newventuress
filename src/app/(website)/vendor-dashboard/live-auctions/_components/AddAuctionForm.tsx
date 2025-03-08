@@ -20,7 +20,9 @@ import { Checkbox } from "@/components/ui/checkbox";
 import ProductGallery from "@/components/shared/imageUpload/ProductGallery";
 
 import { DateTimePicker } from "@/components/ui/datetime-picker";
-
+import { useSession } from "next-auth/react";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "sonner";
 const formSchema = z.object({
   title: z.string().min(1, "Title is required"),
   description: z.string(),
@@ -32,12 +34,15 @@ const formSchema = z.object({
   stockQuantity: z.string().optional(),
   tags: z.array(z.string()).optional(),
   productType: z.enum(["CBD", "Recreational"]),
-   images: z.array(z.string()).optional(),
+   images: z.array(z.any()).optional(),
 });
 
 const AddAuctionForm: React.FC = () => {
     const [images, setImages] = useState<File[]>([]);
-    const [formValues, setFormValues] = useState({ /* your form values here */ });
+    const [formValues, setFormValues] = useState({ });
+
+    
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -64,10 +69,9 @@ const AddAuctionForm: React.FC = () => {
     },
     [tags, form,images, form.trigger]
   );
-  const onSubmit = (data: z.infer<typeof formSchema>) => {
-    console.log(data);
-  };
+  
   const handleImageChange = (images: File[]) => {
+
     setImages(images);
     setFormValues({ ...formValues, images }); // Update the form values
    
@@ -76,6 +80,60 @@ const AddAuctionForm: React.FC = () => {
 
   // const [date12, setDate12] = useState<Date | undefined>(undefined);
   const [date24, setDate24] = useState<Date | undefined>(undefined);
+
+
+  const session = useSession();
+    const token = session.data?.user.token;
+    console.log({token});
+
+    const {mutate} = useMutation<any, unknown, FormData>({
+      mutationKey : ["add-auction"],
+      mutationFn : (formData) => fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/vendor/auction/create`, {
+        method : "POST",
+        headers : {
+          Authorization : `Bearer ${token}`
+        },
+        body : formData
+      })
+      .then((res)=> res.json()),
+
+      onSuccess : (formData) => {
+        if(formData.status === false){
+          toast.error(formData.message, {
+            position : "top-right",
+            richColors : true
+          })
+          return ;
+        }
+        form.reset();
+        toast.success(formData.message, {
+          position : "top-right",
+          richColors : true
+        })
+      }
+    })
+
+  const onSubmit = (data: z.infer<typeof formSchema>) => {
+    const formData = new FormData();
+    formData.append("title", data.title);
+    formData.append("shortDescriptioin", data.description);
+    formData.append("category", data.category);
+    formData.append("startingPrice", data.startingPrice);
+    formData.append("startingTime", data.startingTime?.toString() || "");
+    formData.append("endingtime", data.endingTime?.toString() || "");
+    formData.append("sku", data.sku || "");
+    formData.append("productType", data.productType);
+    formData.append("stockQuantity", data.stockQuantity || "");
+    formData.append("tags", JSON.stringify(data.tags));
+    if(images.length > 0 ){
+      images.map((image)=>{
+        formData.append("images", image);
+      })
+    }
+    console.log(data);
+
+    mutate(formData );
+  };
   return (
     <section className="pb-[60px]">
       <div className="bg-white rounded-[24px] p-[32px]">

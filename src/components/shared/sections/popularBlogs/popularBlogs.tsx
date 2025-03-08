@@ -37,7 +37,7 @@ function PopularBlog() {
       ),
   });
 
-  console.log(resData)
+  // console.log(resData)
 
   const blogs = resData?.data;
 

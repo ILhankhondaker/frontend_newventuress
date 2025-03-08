@@ -12,6 +12,7 @@ interface Props {
 
 function PlansCard({ data }: Props) {
   const [isOpen, setIsOpen] = useState(false);
+
   return (
     <div className="w-full border border-[#A3A6AF] rounded-[16px] relative">
       {data.planType === "standard" && (

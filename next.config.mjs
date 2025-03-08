@@ -57,6 +57,14 @@ const nextConfig = {
         protocol: "https", // Also allow https for Cloudinary
         hostname: "res.cloudinary.com",
       },
+      {
+        protocol: "https", // Also allow https for Cloudinary
+        hostname: "public\temp\photos-1741250388257-744850-BG.jpg",
+      },
+      {
+        protocol: "https", // Also allow https for Cloudinary
+        hostname: "public\temp\photos-1741250447992-390147-BG.jpg",
+      },
     ],
   },
 };
