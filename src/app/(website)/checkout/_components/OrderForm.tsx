@@ -23,34 +23,7 @@ import { useState } from "react";
 import * as z from "zod";
 import OrderConfirmationModal from "./OrderConfirmationModal";
 import OrderTotal from "./OrderTotal";
-
-// Types
-type OrderItem = {
-  imageUrl: string;
-  name: string;
-  price: string;
-};
-
-const orderItems: OrderItem[] = [
-  {
-    imageUrl:
-      "https://cdn.builder.io/api/v1/image/assets/TEMP/309dd736e2d02bfcfc74ee46c760a0e066beefe835a72a816a1956521f87cc20?placeholderIfAbsent=true&apiKey=c0e37a4554bd4723b937f0c0a3d324f4",
-    name: "American Beauty",
-    price: "₿7,000.00",
-  },
-  {
-    imageUrl:
-      "https://cdn.builder.io/api/v1/image/assets/TEMP/309dd736e2d02bfcfc74ee46c760a0e066beefe835a72a816a1956521f87cc20?placeholderIfAbsent=true&apiKey=c0e37a4554bd4723b937f0c0a3d324f4",
-    name: "American Beauty",
-    price: "₿7,000.00",
-  },
-  {
-    imageUrl:
-      "https://cdn.builder.io/api/v1/image/assets/TEMP/309dd736e2d02bfcfc74ee46c760a0e066beefe835a72a816a1956521f87cc20?placeholderIfAbsent=true&apiKey=c0e37a4554bd4723b937f0c0a3d324f4",
-    name: "American Beauty",
-    price: "₿7,000.00",
-  },
-];
+import { useAppSelector } from "@/redux/store";
 
 const formSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -67,9 +40,23 @@ const formSchema = z.object({
   cvv: z.string(),
   coupon: z.string().optional(),
 });
+
 const OrderForm: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showModal, setShowModal] = useState(false);
+
+  const cartItems = useAppSelector((state) => state.cart.items);
+
+  const calculateTotals = () => {
+    const subtotal = cartItems.reduce(
+      (sum, item) => sum + item.discountPrice * item.quantity,
+      0
+    );
+    const shipping = subtotal > 0 ? 100 : 0;
+    const tax = subtotal * 0.01;
+    const total = subtotal + shipping + tax;
+    return { subtotal, shipping, tax, total };
+  };
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -98,12 +85,8 @@ const OrderForm: React.FC = () => {
     console.log(values);
   };
 
-  const shipping = 500;
-  const subtotal = orderItems.reduce((total, item) => {
-    const price = parseFloat(item.price.replace(/[^\d.-]/g, "")); // Remove currency symbol and parse as number
-    return total + price;
-  }, 0);
-
+ const { subtotal, shipping, total } = calculateTotals();
+ console.log(subtotal, total);
   return (
     <section className="w-[95%] mx-auto md:w-full px-[16px] md:px-0 py-[40px] md:py-[60px] lg:py-[80px]">
       {showModal && <OrderConfirmationModal />}
@@ -281,14 +264,14 @@ const OrderForm: React.FC = () => {
                 Order Summary
               </h1>
               <div>
-                {orderItems.map((item, index) => (
+                {cartItems.map((item, index) => (
                   <div key={index} className={index > 0 ? "mt-4" : ""}>
-                    <OrderSummary {...item} />
+                    <OrderSummary image={item.image} title={item.title} sellingPrice={item.sellingPrice} />
                   </div>
                 ))}
               </div>
 
-              <OrderTotal subtotal={subtotal} shippingCharge={shipping} />
+              <OrderTotal subtotal={subtotal} total={total} shippingCharge={shipping} />
 
               <FormField
                 control={form.control}
