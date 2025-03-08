@@ -2,13 +2,20 @@
 
 import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { ChevronDown } from "lucide-react"
 import { format } from "date-fns"
-import type { DateRange } from "react-day-picker"
+import { ChevronDown, Plus } from "lucide-react"
+import dynamic from "next/dynamic"
 import { useEffect, useState } from "react"
+import type { DateRange } from "react-day-picker"
 import DateRangePicker from "./DateRangePicker"
+const EditeCupon = dynamic(() => import("./EditeCupon"), {ssr: false})
 
-export default function CuponFilter() {
+interface Props {
+  userId: string
+}
+
+export default function CuponFilter({userId}: Props) {
+  const [showOpenModal, setShowDeleteModal] = useState(false);
   const [date, setDate] = useState<DateRange | undefined>()
   useEffect(() => {
     if (date) {
@@ -78,11 +85,19 @@ export default function CuponFilter() {
           />
         </div>
 
-      <div className="ml-auto">
+      <div className="ml-auto space-x-3">
         <Button variant="default" className="bg-primary text-white ">
           Bulk Delete
         </Button>
+        <Button
+        onClick={() => setShowDeleteModal(true)}
+      >
+        Add New <Plus />
+      </Button>
       </div>
+
+      {showOpenModal &&  <div className="fixed inset-0 w-full h-full flex justify-center items-center bg-black bg-opacity-30 backdrop-blur-sm z-50">
+         <EditeCupon setIsOpen={setShowDeleteModal} userId={userId} /> </div>}
     </div>
   )
 }

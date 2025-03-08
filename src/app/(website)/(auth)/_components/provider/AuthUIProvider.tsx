@@ -1,7 +1,6 @@
 // Packages
 import Image from "next/image";
 import Link from "next/link";
-import { getPlaiceholder } from "plaiceholder";
 import { ReactNode } from "react";
 
 // Local imports
@@ -22,12 +21,6 @@ const AuthUIProvider = async ({
   fullWidth,
   backButton = true,
 }: AuthUIProviderProps) => {
-  // generating a blur data url
-  const buffer = await fetch(sidebarImage, { cache: "no-store" }).then(
-    async (res) => Buffer.from(await res.arrayBuffer())
-  );
-
-  const { base64 } = await getPlaiceholder(buffer);
   return (
     <div className="min-h-screen  overflow-hidden">
       <div className="container ">
@@ -67,8 +60,7 @@ const AuthUIProvider = async ({
                   alt="CBD Products"
                   fill
                   className="object-cover object-center rounded-[16px]"
-                  placeholder="blur"
-                  blurDataURL={base64}
+                  
                 />
               </div>
             )}
