@@ -1,12 +1,12 @@
 import React, { FC } from 'react';
 
 interface OrderTotalProps {
+  total: number
   subtotal: number;
   shippingCharge?: number;
 }
 
-const OrderTotal: FC<OrderTotalProps> = ({ subtotal, shippingCharge = 0 }) => {
-  const total = subtotal + shippingCharge;
+const OrderTotal: FC<OrderTotalProps> = ({ total , subtotal, shippingCharge = 0}) => {
 
   return (
     <div className="flex flex-col mt-5 mb-5 w-full font-medium leading-tight whitespace-nowrap max-md:max-w-full">
