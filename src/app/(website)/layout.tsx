@@ -18,6 +18,7 @@ import SearchBerCategories from "@/components/shared/searchBerCategories/searchB
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/provider/theme-provider";
 import { Toaster } from "sonner";
+import { ChatBot } from "@/components/chatbot/chat-bot";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -58,7 +59,8 @@ export default async function RootLayout({
             <NProgress />
             <Toaster />
             </ThemeProvider>
-            <CrispProvider />
+            {/* <CrispProvider /> */}
+            <ChatBot/>
           </body>
         </html>
       </AppProvider>
