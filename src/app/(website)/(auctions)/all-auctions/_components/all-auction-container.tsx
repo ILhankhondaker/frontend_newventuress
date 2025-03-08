@@ -65,7 +65,7 @@ const AllAuctionsContainer = () => {
     content = (
         <div className="mt-[40px] grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-[30px] container">
           {data?.data?.map((auction, index) => (
-          <AuctionCard key={auction._id} auction={auction} index={index} />
+            <AuctionCard key={auction._id} auction={auction} index={index} />
         ))}
         </div>
     )
@@ -74,7 +74,7 @@ const AllAuctionsContainer = () => {
 
   return (
     <div className="py-[40px] md:py-[60px] lg:py-[80px]">
-      <SectionHeading heading="Our All Auctions" subheading="" />
+      <SectionHeading heading="Our All Auctions " subheading="" />
       {
         content
       }

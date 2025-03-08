@@ -1,12 +1,13 @@
-import React from 'react'
-import AuctionDetails from "./_components/AuctionDetails"
+import React from "react";
+import AuctionDetails from "./_components/AuctionDetails";
 
-const page = () => {
+const Page = ({ params }: { params: { id: string } }) => {
   return (
     <div>
-      <AuctionDetails/>
+      
+      <AuctionDetails auctionId={params.id} />
     </div>
-  )
-}
+  );
+};
 
-export default page
+export default Page;

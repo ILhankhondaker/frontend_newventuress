@@ -74,7 +74,7 @@ const PopularCategoriesCard = ({token}:Props) => {
           key={category._id}
           className="overflow-hidden w-full  lg:w-[270px] shadow-none bg-white border-0"
         >
-          <CardContent className=" p-[12px]">
+          <CardContent className=" p-[12px] space-y-2">
             <motion.div
               initial={{
                 opacity: 0,
@@ -101,7 +101,7 @@ const PopularCategoriesCard = ({token}:Props) => {
                 alt={category.categoryName}
                 fill
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                className="object-cover w-[246px] h-[204px]"
+                className="object-cover w-[246px] h-[204px] rounded-md"
               />
             </motion.div>
             <CardButtons />
