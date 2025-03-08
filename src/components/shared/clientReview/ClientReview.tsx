@@ -23,7 +23,8 @@ import ErrorContainer from "../ErrorContainer/ErrorContainer";
 // Review data this come from Backend **********************
 
 
-export const ClientReviews: React.FC = () => {
+export const 
+ClientReviews: React.FC = () => {
   const [activeIndex, setActiveIndex] = React.useState(0);
   const [api, setApi] = React.useState<CarouselApi>();
 
