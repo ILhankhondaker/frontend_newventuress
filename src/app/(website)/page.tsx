@@ -35,6 +35,7 @@ const Page = async () => {
         )}
 
         {loggedin && <PopularBlog />}
+
         {loggedin && <ClientReviews />}
 
         {!loggedin && <BestOffer />}
