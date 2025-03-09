@@ -1,12 +1,12 @@
 "use client";
 
 import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
+    Breadcrumb,
+    BreadcrumbItem,
+    BreadcrumbLink,
+    BreadcrumbList,
+    BreadcrumbPage,
+    BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
 import { getRegionByCountry } from "@/data/countries";
@@ -81,7 +81,7 @@ export function ProvienceSelector({ currentState, countries }: Props) {
   const business = authstate.businessInfo;
 
   const industries = authstate.industry;
-  const isOnlyHempCBD = industries.length === 1 && industries.includes("CBD/HEMP");
+  const isOnlyHempCBD = industries.length === 1 && industries.includes("HEMP/CBD");
 const isOnlyRecreational = industries.length === 1 && industries.includes("Recreational Cannabis");
 
 
@@ -109,7 +109,7 @@ const isOnlyRecreational = industries.length === 1 && industries.includes("Recre
 
     if (isOnlyHempCBD) {
       states = usStates.filter((i) => 
-        i.allow.includes("CBD/HEMP") || i.allow.includes("Select All")
+        i.allow.includes("HEMP/CBD") || i.allow.includes("Select All")
       );
     } else if (isOnlyRecreational) {
       states = usStates.filter((i) => 
@@ -124,7 +124,7 @@ const isOnlyRecreational = industries.length === 1 && industries.includes("Recre
     
     if (isOnlyHempCBD) {
       filteredcanadaProviences = canadaProvinces.filter((i) => 
-        i.allow.includes("CBD/HEMP") || i.allow.includes("Select All")
+        i.allow.includes("HEMP/CBD") || i.allow.includes("Select All")
       );
     } else if (isOnlyRecreational) {
       filteredcanadaProviences = canadaProvinces.filter((i) => 

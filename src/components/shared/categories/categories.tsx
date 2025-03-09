@@ -1,20 +1,20 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import { categoryDataResponse } from "@/data/categoryData";
 import { useQuery } from "@tanstack/react-query";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronDown, Loader2 } from "lucide-react";
 
+import { useApplicationAs } from "@/hooks/useApplicationAs";
 import Link from "next/link";
 import { useState } from "react";
 import NotFound from "../NotFound/NotFound";
-import { useApplicationAs } from "@/hooks/useApplicationAs";
 
 function Categories() {
   const [category, setCategory] = useState("All Categories ");
@@ -22,7 +22,7 @@ function Categories() {
 
   const { as } = useApplicationAs();
 
-  const categoryParam = as === "CBD/HEMP" ? "industry=hemp" : "industry=recreational";
+  const categoryParam = as === "HEMP/CBD" ? "industry=hemp" : "industry=recreational";
 
   const linkVariants = {
     hidden: { opacity: 0, y: -20 },

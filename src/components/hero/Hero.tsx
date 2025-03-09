@@ -10,17 +10,17 @@ const allImages = [
   {
     id: 1,
     img: "https://res.cloudinary.com/drdztqgcx/image/upload/v1741322809/hero1_nmouwb.png",
-    accept: "CBD/HEMP"
+    accept: "HEMP/CBD"
   },
   {
     id: 2,
     img: "https://res.cloudinary.com/drdztqgcx/image/upload/v1741322903/hero2_ivrerr.png",
-    accept: "CBD/HEMP"
+    accept: "HEMP/CBD"
   },
   {
     id: 3,
     img: "https://res.cloudinary.com/drdztqgcx/image/upload/v1741322942/hero3_jfdpad.png",
-    accept: "CBD/HEMP"
+    accept: "HEMP/CBD"
   },
   {
     id: 4,
@@ -62,8 +62,8 @@ const Hero = () => {
         >
           <div className="absolute inset-0 bg-black opacity-50"></div>
           <div className="relative container flex items-center justify-start h-full text-white">
-            {as === "CBD/HEMP" && <div className="md:w-[670px]">
-              {as == "CBD/HEMP" && (
+            {as === "HEMP/CBD" && <div className="md:w-[670px]">
+              {as == "HEMP/CBD" && (
                 <h1 className="text-[32px] leading-[38.4px] lg:text-[56px] lg:leading-[67.2px] font-semibold mb-4 ">
                 SHARE THE <br />
                 BALANCE
