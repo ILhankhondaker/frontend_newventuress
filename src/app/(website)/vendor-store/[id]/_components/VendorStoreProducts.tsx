@@ -42,11 +42,11 @@ const VendorStoreProducts = () => {
     return response.json();
   };
 
-  // ✅ `useQuery` সবসময় শীর্ষে থাকবে
+  // ✅ `useQuery` 
   const { data, error, isLoading } = useQuery({
     queryKey: ["products", productid],
     queryFn: fetchProducts,
-    enabled: !!token && !!productid, // ✅ শুধুমাত্র তখনই চলবে যখন token ও productid থাকবে
+    enabled: !!token && !!productid, 
   });
 
   if (status === "loading") {

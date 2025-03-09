@@ -21,7 +21,7 @@ export const CustomerListData: DemoTableItemsType[] = [
     moneySpent: 1500,
     lestOrder: "2 October 2024",
     userEmail: "johndoe@gmail.com",
-    userInfo: "Shaken Not Stirred - Adrian Jordan (#127 - 007Euro)",
+    userInfo: "Shaken Not Stirred - Test User (#127 - 007Euro)",
   },
   {
     id: 2,
@@ -33,7 +33,7 @@ export const CustomerListData: DemoTableItemsType[] = [
     moneySpent: 1500,
     lestOrder: "2 October 2024",
     userEmail: "johndoe@gmail.com",
-    userInfo: "Shaken Not Stirred - Adrian Jordan (#127 - 007Euro)",
+    userInfo: "Shaken Not Stirred - Test User (#127 - 007Euro)",
   },
   {
     id: 3,
@@ -45,7 +45,7 @@ export const CustomerListData: DemoTableItemsType[] = [
     moneySpent: 1500,
     lestOrder: "2 October 2024",
     userEmail: "johndoe@gmail.com",
-    userInfo: "Shaken Not Stirred - Adrian Jordan (#127 - 007Euro)",
+    userInfo: "Shaken Not Stirred - Test User (#127 - 007Euro)",
   },
   {
     id: 4,
@@ -57,7 +57,7 @@ export const CustomerListData: DemoTableItemsType[] = [
     moneySpent: 1500,
     lestOrder: "2 October 2024",
     userEmail: "johndoe@gmail.com",
-    userInfo: "Shaken Not Stirred - Adrian Jordan (#127 - 007Euro)",
+    userInfo: "Shaken Not Stirred - Test User (#127 - 007Euro)",
   },
   {
     id: 5,
@@ -69,7 +69,7 @@ export const CustomerListData: DemoTableItemsType[] = [
     moneySpent: 1500,
     lestOrder: "2 October 2024",
     userEmail: "johndoe@gmail.com",
-    userInfo: "Shaken Not Stirred - Adrian Jordan (#127 - 007Euro)",
+    userInfo: "Shaken Not Stirred - Test User (#127 - 007Euro)",
   },
   {
     id: 6,
@@ -81,7 +81,7 @@ export const CustomerListData: DemoTableItemsType[] = [
     moneySpent: 1500,
     lestOrder: "2 October 2024",
     userEmail: "johndoe@gmail.com",
-    userInfo: "Shaken Not Stirred - Adrian Jordan (#127 - 007Euro)",
+    userInfo: "Shaken Not Stirred - Test User (#127 - 007Euro)",
   },
   {
     id: 7,
@@ -93,7 +93,7 @@ export const CustomerListData: DemoTableItemsType[] = [
     moneySpent: 1500,
     lestOrder: "2 October 2024",
     userEmail: "johndoe@gmail.com",
-    userInfo: "Shaken Not Stirred - Adrian Jordan (#127 - 007Euro)",
+    userInfo: "Shaken Not Stirred - Test User (#127 - 007Euro)",
   },
   {
     id: 8,
@@ -105,6 +105,6 @@ export const CustomerListData: DemoTableItemsType[] = [
     moneySpent: 1500,
     lestOrder: "2 October 2024",
     userEmail: "johndoe@gmail.com",
-    userInfo: "Shaken Not Stirred - Adrian Jordan (#127 - 007Euro)",
+    userInfo: "Shaken Not Stirred - Test User (#127 - 007Euro)",
   },
 ];

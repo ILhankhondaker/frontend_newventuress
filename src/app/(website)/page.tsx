@@ -5,7 +5,7 @@ import FAQSection from "@/components/FAQSection/FAQSection";
 import Hero from "@/components/hero/Hero";
 import PopularCategories from "@/components/PopularCategories/PopularCategories";
 import { ClientReviews } from "@/components/shared/clientReview/ClientReview";
-import AboutSection from "@/components/shared/sections/about-section";
+// import AboutSection from "@/components/shared/sections/about-section";
 import PopularBlog from "@/components/shared/sections/popularBlogs/popularBlogs";
 import BestOffer from "./_components/best_offer";
 import DealOfTheDay from "./_components/deal_of_the_day";
@@ -25,9 +25,9 @@ const Page = async () => {
         <Hero />
         <PopularCategories loggedin={loggedin} token={token} />
         {!loggedin && <DealOfTheDay />}
-        {!loggedin && (
+        {/* {!loggedin && (
           <AboutSection image="https://utfs.io/f/HkyicnKv4pLkKb11IfnzkrEA5LwVvWx2Fbfe7a6P94u0gcjZ" />
-        )}
+        )} */}
         {!loggedin && (
           <div className="pb-[80px]">
             <FAQSection />
