@@ -9,6 +9,10 @@ const nextConfig = {
         protocol: "https",
         hostname: "images.pexels.com",
       },
+       {
+        protocol: "https",
+        hostname: "techhaven.com",
+      },
       {
         protocol: "https",
         hostname: "cdn.builder.io",
@@ -32,6 +36,10 @@ const nextConfig = {
       {
         protocol: "https",
         hostname: "media-cldnry.s-nbcnews.com",
+      },
+        {
+        protocol: "https",
+        hostname: "greenblisscbd.com",
       },
       {
         protocol: "https",
@@ -61,9 +69,10 @@ const nextConfig = {
         protocol: "https", // Also allow https for Cloudinary
         hostname: "public\temp\photos-1741250388257-744850-BG.jpg",
       },
+      
       {
         protocol: "https", // Also allow https for Cloudinary
-        hostname: "public\temp\photos-1741250447992-390147-BG.jpg",
+        hostname: "greenblisscbd.com",
       },
     ],
   },
