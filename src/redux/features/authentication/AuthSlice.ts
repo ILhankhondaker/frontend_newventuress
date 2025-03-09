@@ -18,7 +18,7 @@ interface Business {
 }
 
 export interface authSliceType {
-  industry: ("CBD/HEMP" | "Recreational Cannabis" | "Select All" )[];
+  industry: ("HEMP/CBD" | "Recreational Cannabis" | "Select All" )[];
 
   profession: string[];
   email: string;

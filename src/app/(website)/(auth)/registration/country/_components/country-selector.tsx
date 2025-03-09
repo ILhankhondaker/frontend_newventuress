@@ -192,10 +192,10 @@ const countries = filteredCountries.reduce((acc, { countryCode, country }) => {
           
           // Find country data and determine bgColor
           const countryData = countriesData.find((c) => c.country === country);
-          const bgColor = countryData?.allow.length === 1 && countryData.allow.includes("CBD/HEMP")
+          const bgColor = countryData?.allow.length === 1 && countryData.allow.includes("HEMP/CBD")
             ? "#2387b4"
             : "#007853";
-          const type = countryData?.allow.length === 1 && countryData.allow.includes("CBD/HEMP")
+          const type = countryData?.allow.length === 1 && countryData.allow.includes("HEMP/CBD")
             ? "HEMP/CBD"
             :
             countryData.allow.includes("Select All")

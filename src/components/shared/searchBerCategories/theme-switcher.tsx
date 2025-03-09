@@ -17,7 +17,7 @@ const ThemeSwitcher = ({ industry }: Props) => {
   // Set theme based on selected tab value
   const handleTabChange = (theme: string) => {
    
-    if (theme === "CBD/HEMP") {
+    if (theme === "HEMP/CBD") {
     
       setTheme("light");
     } else if (theme === "RECREATIONAL") {
@@ -43,7 +43,7 @@ const ThemeSwitcher = ({ industry }: Props) => {
       >
         <TabsList className="border-[1px] border-[#152764] dark:border-[#6841A5] h-[35px] md:h-[44px] !px-4 md:!px-2">
           <TabsTrigger
-            value="CBD/HEMP"
+            value="HEMP/CBD"
             className="text-[#152764] data-[state=active]:text-white text-[8px] lg:text-base"
           >
             HEMP/CBD

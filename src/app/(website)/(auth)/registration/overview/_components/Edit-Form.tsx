@@ -1,33 +1,33 @@
 "use client"
 import {
-  Button
+    Button
 } from "@/components/ui/button"
 import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage
 } from "@/components/ui/form"
 import {
-  Input
+    Input
 } from "@/components/ui/input"
 import {
-  MultiSelector,
-  MultiSelectorContent,
-  MultiSelectorInput,
-  MultiSelectorItem,
-  MultiSelectorList,
-  MultiSelectorTrigger
+    MultiSelector,
+    MultiSelectorContent,
+    MultiSelectorInput,
+    MultiSelectorItem,
+    MultiSelectorList,
+    MultiSelectorTrigger
 } from "@/components/ui/multi-select"
 import { setRegistrationValue } from "@/redux/features/authentication/AuthSlice"
 import { useAppDispatch, useAppSelector } from "@/redux/store"
 import {
-  zodResolver
+    zodResolver
 } from "@hookform/resolvers/zod"
 import {
-  useForm
+    useForm
 } from "react-hook-form"
 import * as z from "zod"
 import { professions } from "../../(a)/experiences/profession/_components/profession-checker"
@@ -60,17 +60,17 @@ export default function EditRegistrationForm({toggle}: Props) {
   })
 
     // const handleExperiencChange = (
-    //   type: "CBD/HEMP" | "Recreational Cannabis" | "Select All"
+    //   type: "HEMP/CBD" | "Recreational Cannabis" | "Select All"
     // ) => {
     //   const currentIndustries = Array.isArray(authState.industry) ? authState.industry : [];
-    //   let updatedIndustries: ("CBD/HEMP" | "Recreational Cannabis" | "Select All")[];
+    //   let updatedIndustries: ("HEMP/CBD" | "Recreational Cannabis" | "Select All")[];
     
     //   if (type === "Select All") {
     //     // If "Select All" is clicked, toggle between selecting all or clearing the selection
     //     updatedIndustries =
     //       currentIndustries.includes("Select All") // If "Select All" is already selected
     //         ? [] // Clear all selections
-    //         : ["CBD/HEMP", "Recreational Cannabis", "Select All"]; // Select all industries
+    //         : ["HEMP/CBD", "Recreational Cannabis", "Select All"]; // Select all industries
     //   } else {
     //     // Handle individual industry selection
     //     if (currentIndustries.includes(type)) {
@@ -85,12 +85,12 @@ export default function EditRegistrationForm({toggle}: Props) {
     //       // If the industry is not selected, add it
     //       updatedIndustries = [...currentIndustries, type];
     
-    //       // If both "CBD/HEMP" and "Recreational Cannabis" are now selected, automatically add "Select All"
+    //       // If both "HEMP/CBD" and "Recreational Cannabis" are now selected, automatically add "Select All"
     //       if (
-    //         updatedIndustries.includes("CBD/HEMP") &&
+    //         updatedIndustries.includes("HEMP/CBD") &&
     //         updatedIndustries.includes("Recreational Cannabis")
     //       ) {
-    //         updatedIndustries = ["CBD/HEMP", "Recreational Cannabis", "Select All"];
+    //         updatedIndustries = ["HEMP/CBD", "Recreational Cannabis", "Select All"];
     //       }
     //     }
     //   }
@@ -172,14 +172,14 @@ export default function EditRegistrationForm({toggle}: Props) {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Industry</FormLabel>
-              <Select onValueChange={(value) => handleExperiencChange(value as  "CBD/HEMP" | "Recreational Cannabis" | "Select All")} >
+              <Select onValueChange={(value) => handleExperiencChange(value as  "HEMP/CBD" | "Recreational Cannabis" | "Select All")} >
                 <FormControl>
                   <SelectTrigger>
                     <SelectValue placeholder="" />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value="CBD/HEMP" >HEMP/CBD</SelectItem>
+                  <SelectItem value="HEMP/CBD" >HEMP/CBD</SelectItem>
                   <SelectItem value="Recreational Cannabis">Recreational Cannabis</SelectItem>
                   <SelectItem value="Select All">Select All</SelectItem>
                 </SelectContent>
