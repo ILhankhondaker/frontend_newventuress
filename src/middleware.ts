@@ -16,20 +16,21 @@ export default auth((req) => {
 
   const isAuthRoute = authRoutes.includes(nextUrl.pathname);
 
-  return NextResponse.next();
 
   if (isApiAuthRoute || isPublicRoutes) {
     return NextResponse.next();
   }
-  return NextResponse.next();
+  
 
-  if (isAuthRoute) {
+  else if (isAuthRoute) {
     if (isLoggedin) {
       return Response.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
+    } else {
+      return NextResponse.next()
     }
   }
 
-  if (!isLoggedin && !isPublicRoutes) {
+  else if (!isLoggedin && !isPublicRoutes) {
     return Response.redirect(new URL("/login", nextUrl));
   }
 
