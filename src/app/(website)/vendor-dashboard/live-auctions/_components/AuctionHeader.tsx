@@ -9,10 +9,12 @@ interface AuctionHeaderProps {
   setShowAddAuction: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const AuctionHeader: React.FC<AuctionHeaderProps> = () => {
+const AuctionHeader: React.FC<AuctionHeaderProps> = ({
+  showAddAuction,
+  setShowAddAuction
+}) => {
   const [showBids, setShowBids] = React.useState(false);
 
- 
   return (
     <div className="h-[80px] w-full bg-white p-[8px] rounded-[12px] flex items-center justify-between">
       <div className="px-[10px] text-[12px] leading-[14.4px]">
@@ -23,13 +25,13 @@ const AuctionHeader: React.FC<AuctionHeaderProps> = () => {
         <span className="text-gradient dark:text-gradient-pink"> Archived (30) </span>
       </div>
       <div className="flex gap-4">
+        <Button onClick={() => setShowAddAuction((prev) => !prev)}>
+          {showAddAuction ? "Adding Auction" : "Add New Auction"}
+        </Button>
       <Button onClick={() => setShowBids(true)}> 
-           
             Bids Settings <Settings /> 
         </Button>
-        {/* <Button onClick={() => setShowAddAuction((prev) => !prev)}>
-          {showAddAuction ? "Auction List" : "Add New"} <Box />
-        </Button> */}
+        
       </div>
       <Bidsmodal isOpen={showBids} onClose={() => setShowBids(false)} />
     </div>

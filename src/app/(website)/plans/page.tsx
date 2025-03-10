@@ -29,6 +29,10 @@ const page = async () => {
         <SectionHeading heading="Membership Plans" subheading="Plans" />
         <PlansContainer token={token} userId={currentuser?.user.id} />
       </div>
+       <div className="container section px-4 my-[80px]">
+        <SectionHeading heading="Additional Plans" subheading="Plans" />
+        <PlansContainer token={token} userId={currentuser?.user.id} />
+      </div>
     </>
   );
 };
