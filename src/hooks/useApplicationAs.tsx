@@ -3,7 +3,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
 interface StoreState {
-  as: "CBD/HEMP" | "RECREATIONAL";
+  as: "HEMP/CBD" | "RECREATIONAL";
   setValue: (value: string) => void;
   modal: boolean;
   setModal: (v: boolean) => void;
@@ -12,10 +12,10 @@ interface StoreState {
 const useStore = create<StoreState>()(
   persist(
     (set) => ({
-      as: "CBD/HEMP", // Default value for light theme
+      as: "HEMP/CBD", // Default value for light theme
       modal: false,
       setModal: (v: boolean) => set({modal: v}),
-      setValue: (value: string) => set({ as: value as "CBD/HEMP" | "RECREATIONAL" }),
+      setValue: (value: string) => set({ as: value as "HEMP/CBD" | "RECREATIONAL" }),
     }),
     {
       name: "theme-store", // The name for the persisted state
@@ -32,8 +32,8 @@ export const useApplicationAs = () => {
   // Update `as` when the theme changes
   if (theme === "dark" && as !== "RECREATIONAL") {
     setValue("RECREATIONAL");
-  } else if (theme === "light" && as !== "CBD/HEMP") {
-    setValue("CBD/HEMP");
+  } else if (theme === "light" && as !== "HEMP/CBD") {
+    setValue("HEMP/CBD");
   }
 
   return { as, setValue, modal, setModal };

@@ -11,10 +11,9 @@ import { Button } from "@/components/ui/button";
 import HeaderIconMenu from "../headerIconMenu/headerIconMenu";
 // import Dropdown, { AuctionMobileMenu } from "./demonav";
 import { motion } from "framer-motion";
-import AuctionMobileNav from "./AuctionMobileNav";
-import PagesMobileNav from "./PagesMobileNav";
-import SearchBer from "../../searchBer/searchBer";
 import { Bell, CircleUser, Heart, ShoppingCart } from "lucide-react";
+import SearchBer from "../../searchBer/searchBer";
+import AuctionMobileNav from "./AuctionMobileNav";
 
 const Navicons = [
   {
@@ -72,13 +71,7 @@ function MobileTabletNavbar({ loggedin }: { loggedin: boolean }) {
 
   // Pages Mobile Links
 
-  const pagesMobileLinks = [
-    { href: "/about", label: "About Us" },
-    { href: "/faq", label: "FAQ" },
-    { href: "/plans", label: "Membership Plans" },
-    { href: "/vendor-store", label: "Vendor Store" },
-    { href: "/404", label: "404 Page" },
-  ];
+ 
 
   const sidebarVariants = {
     hidden: { y: "-100%", opacity: 0 },
@@ -181,17 +174,32 @@ function MobileTabletNavbar({ loggedin }: { loggedin: boolean }) {
                 >
                   Blog
                 </Link>
-                <PagesMobileNav
+                <Link
+                  href="/about"
+                  onClick={closeMobileMenu}
+                  className="text-[20px] block py-2 px-6 font-normal text-black hover:bg-[#E6EEF6] dark:hover:bg-[#482D721A]"
+                >
+                  About US
+                </Link>
+                {/* <PagesMobileNav
                   label="Page"
                   links={pagesMobileLinks}
                   onClose={closeMobileMenu}
-                />
+                /> */}
+
                 <Link
                   href="/contact"
                   onClick={closeMobileMenu}
                   className="text-[20px] block py-2 px-6 font-normal text-black hover:bg-[#E6EEF6] dark:hover:bg-[#482D721A]"
                 >
                   Contact
+                </Link>
+                <Link
+                  href="/plans"
+                  onClick={closeMobileMenu}
+                  className="text-[20px] block py-2 px-6 font-normal text-black hover:bg-[#E6EEF6] dark:hover:bg-[#482D721A]"
+                >
+                  Membership Plan
                 </Link>
               </div>
 

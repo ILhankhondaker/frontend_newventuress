@@ -31,17 +31,17 @@ export function ExperienceForm() {
   }
 
    const handleExperiencChange = (
-    type: "CBD/HEMP" | "Recreational Cannabis" | "Select All"
+    type: "HEMP/CBD" | "Recreational Cannabis" | "Select All"
   ) => {
     const currentIndustries = Array.isArray(authState.industry) ? authState.industry : [];
-    let updatedIndustries: ("CBD/HEMP" | "Recreational Cannabis" | "Select All")[];
+    let updatedIndustries: ("HEMP/CBD" | "Recreational Cannabis" | "Select All")[];
   
     if (type === "Select All") {
       // If "Select All" is clicked, toggle between selecting all or clearing the selection
       updatedIndustries =
         currentIndustries.includes("Select All") // If "Select All" is already selected
           ? [] // Clear all selections
-          : ["CBD/HEMP", "Recreational Cannabis", "Select All"]; // Select all industries
+          : ["HEMP/CBD", "Recreational Cannabis", "Select All"]; // Select all industries
     } else {
       // Handle individual industry selection
       if (currentIndustries.includes(type)) {
@@ -56,12 +56,12 @@ export function ExperienceForm() {
         // If the industry is not selected, add it
         updatedIndustries = [...currentIndustries, type];
   
-        // If both "CBD/HEMP" and "Recreational Cannabis" are now selected, automatically add "Select All"
+        // If both "HEMP/CBD" and "Recreational Cannabis" are now selected, automatically add "Select All"
         if (
-          updatedIndustries.includes("CBD/HEMP") &&
+          updatedIndustries.includes("HEMP/CBD") &&
           updatedIndustries.includes("Recreational Cannabis")
         ) {
-          updatedIndustries = ["CBD/HEMP", "Recreational Cannabis", "Select All"];
+          updatedIndustries = ["HEMP/CBD", "Recreational Cannabis", "Select All"];
         }
       }
     }
@@ -71,7 +71,7 @@ export function ExperienceForm() {
   };
 
  // Check if a specific checkbox is checked
- const isChecked = (type: "CBD/HEMP" | "Recreational Cannabis" | "Select All") => {
+ const isChecked = (type: "HEMP/CBD" | "Recreational Cannabis" | "Select All") => {
   return Array.isArray(authState.industry) && authState.industry.includes(type);
 };
 
@@ -95,8 +95,8 @@ console.log(isButtonDisabled)
             <div className="flex items-center space-x-2 cursor-pointer">
               <Checkbox
                 id="HEMP/CBD"
-                checked={isChecked("CBD/HEMP")}
-                onCheckedChange={() => handleExperiencChange("CBD/HEMP")}
+                checked={isChecked("HEMP/CBD")}
+                onCheckedChange={() => handleExperiencChange("HEMP/CBD")}
               />
               <label
                 htmlFor="HEMP/CBD"

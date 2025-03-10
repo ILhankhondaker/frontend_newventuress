@@ -1,59 +1,73 @@
-"use client";
+"use client"
 
-// Packages
-import { useQuery } from "@tanstack/react-query";
-import { CircleAlert, CircleOff } from "lucide-react";
-import { useState } from "react";
+import { useQuery } from "@tanstack/react-query"
+import { CircleAlert, CircleOff } from "lucide-react"
+import { useState } from "react"
 
-// Local imports
-import FeaturedProductCard from "@/components/shared/cards/featured_card";
-import SectionHeading from "@/components/shared/SectionHeading/SectionHeading";
-import ProductCardSkeleton from "@/components/shared/skeletons/productCardSkeleton";
-import PacificPagination from "@/components/ui/PacificPagination";
-import { TextEffect } from "@/components/ui/text-effect";
-import { ProductResponse } from "@/types/product";
-import ProductsSort from "./products-sort";
-import SidebarFilters from "./SidebarFilters";
+import FeaturedProductCard from "@/components/shared/cards/featured_card"
+import SectionHeading from "@/components/shared/SectionHeading/SectionHeading"
+import ProductCardSkeleton from "@/components/shared/skeletons/productCardSkeleton"
+import PacificPagination from "@/components/ui/PacificPagination"
+import { TextEffect } from "@/components/ui/text-effect"
+import type { ProductResponse } from "@/types/product"
+import ProductsSort from "./products-sort"
+import SidebarFilters from "./SidebarFilters"
 
 interface Props {
-  token: string;
+  token: string
 }
+
 const ProductsContainer = ({ token }: Props) => {
-  const [currentPage, setCurrentPage] = useState(1);
-  const [priceRange, setPriceRange] = useState<[number, number]>([0, 1000]);
-  const [flowers, setFlowers] = useState<string[]>([]);
+  const [currentPage, setCurrentPage] = useState(1)
+  const [priceRange, setPriceRange] = useState<[number, number]>([0, 1000])
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([])
+  const [selectedAvailability, setSelectedAvailability] = useState<string[]>([])
 
   // Handle filter change
-  const onFilterChange = (filters: { priceRange: [number, number]; flowers: string[]; availability: string }) => {
-    setPriceRange(filters.priceRange); // Update price range state
-    setFlowers(filters.flowers); // Update flowers state
-    // You can also update other filters like availability if needed
-  };
+  const onFilterChange = (filters: {
+    priceRange: [number, number]
+    categories: string[]
+    availability: string[]
+  }) => {
+    setPriceRange(filters.priceRange)
+    setSelectedCategories(filters.categories)
+    setSelectedAvailability(filters.availability)
+  }
 
   // Fetch products based on filters
   const { data, isError, error, isLoading } = useQuery<ProductResponse>({
-    queryKey: ["products", priceRange, flowers, currentPage],
+    queryKey: ["products", priceRange, selectedCategories, selectedAvailability, currentPage],
     queryFn: async () => {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/products/filter?minPrice=${priceRange[0]}&maxPrice=${priceRange[1]}&flowers=${flowers.join(
-          ","
-        )}&page=${currentPage}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      if (!response.ok) {
-        throw new Error("Network error");
+      const params = new URLSearchParams({
+        minPrice: priceRange[0].toString(),
+        maxPrice: priceRange[1].toString(),
+        page: currentPage.toString(),
+      })
+
+      if (selectedCategories.length > 0) {
+        params.append("categories", selectedCategories.join(","))
       }
-      return response.json();
+
+      if (selectedAvailability.length > 0) {
+        params.append("availability", selectedAvailability.join(","))
+      }
+
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/products/filter?${params}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+
+      if (!response.ok) {
+        throw new Error("Network error")
+      }
+      return response.json()
     },
-  });
+  })
 
-  const products = data?.data;
+  const products = data?.data
 
-  let content;
+  let content
 
   if (isLoading) {
     content = (
@@ -62,7 +76,7 @@ const ProductsContainer = ({ token }: Props) => {
           <ProductCardSkeleton key={n} />
         ))}
       </div>
-    );
+    )
   }
 
   if (isError) {
@@ -75,7 +89,7 @@ const ProductsContainer = ({ token }: Props) => {
           </TextEffect>
         </div>
       </div>
-    );
+    )
   } else if (products?.length === 0) {
     content = (
       <div className="mt-[52px] w-full flex flex-col gap-2 justify-center items-center min-h-[40vh] font-inter">
@@ -86,7 +100,7 @@ const ProductsContainer = ({ token }: Props) => {
           </TextEffect>
         </p>
       </div>
-    );
+    )
   } else if (products && products?.length > 0) {
     content = (
       <div className="mt-[52px] grid grid-cols-1 gap-4 md:grid-cols-3">
@@ -94,7 +108,7 @@ const ProductsContainer = ({ token }: Props) => {
           <FeaturedProductCard key={item._id} product={item} />
         ))}
       </div>
-    );
+    )
   }
 
   return (
@@ -118,20 +132,20 @@ const ProductsContainer = ({ token }: Props) => {
         <div className="flex-1">{content}</div>
       </div>
 
+
       {/* Pagination */}
       {!isLoading && !isError && (
-        <div className="mt-[40px]">
-          <PacificPagination
-            currentPage={currentPage}
-            onPageChange={(page) => setCurrentPage(page)}
-            totalPages={20} // Assuming 9 items per page
-          />
-        </div>
-      )}
+    <div className="mt-[40px]">
+      <PacificPagination
+        currentPage={currentPage}
+        onPageChange={(page) => setCurrentPage(page)}
+        totalPages={20} // Assuming 9 items per page
+      />
     </div>
-  );
-};
+  )}
+    </div>
+  )
+}
 
+export default ProductsContainer
 
-
-export default ProductsContainer;

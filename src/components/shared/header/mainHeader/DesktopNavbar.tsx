@@ -9,9 +9,8 @@ import { cn } from "@/lib/utils";
 import HeaderIconMenu from "../headerIconMenu/headerIconMenu";
 import AuctionList from "./AuctionList";
 // import Dropdown, { AuctionMobileMenu } from "./demonav";
-import PagesList from "./PagesList";
-import { Bell, CircleUser, Gift, Heart, ShoppingCart } from "lucide-react";
 import { useAppSelector } from "@/redux/store";
+import { Bell, CircleUser, Gift, Heart, ShoppingCart } from "lucide-react";
 import { useEffect, useState } from "react";
 
 interface DesktopNavbarProps {
@@ -128,8 +127,19 @@ function DesktopNavbar({ pathName, loggedin }: DesktopNavbarProps) {
         >
          Products
         </Link>
+         {/* <Link
+          href="/about"
+          className={cn(
+            "text-[20px] font-medium hover:text-primary-blue-main dark:hover:text-primary-pink-main",
+            pathName === "/about"
+              ? "text-primary-blue-main dark:text-primary-pink-main"
+              : "text-black font-normal"
+          )}
+        >
+         About Us
+        </Link> */}
        
-        <Link
+        {/* <Link
           href=""
           className={cn(
             "text-[20px] font-medium hover:text-primary-blue-main dark:hover:text-primary-pink-main",
@@ -137,7 +147,7 @@ function DesktopNavbar({ pathName, loggedin }: DesktopNavbarProps) {
           )}
         >
           <PagesList />
-        </Link>
+        </Link> */}
          <Link
           href="/blogs"
           className={cn(
@@ -147,14 +157,27 @@ function DesktopNavbar({ pathName, loggedin }: DesktopNavbarProps) {
         >
           Blog
         </Link>
-        <Link
-          href="/contact"
+        {loggedin ?(
+
+          <Link
+          href="/vendor-dashboard"
           className={cn(
             "text-[20px] font-medium hover:text-primary-blue-main dark:hover:text-primary-pink-main",
-            pathName === "/contact" ? "text-primary-blue-main dark:text-primary-pink-main" : "text-black font-normal"
+            pathName === "/vendor-dashboard" ? "text-primary-blue-main dark:text-primary-pink-main" : "text-black font-normal"
+          )}
+          >
+          My Store
+        </Link>
+        ): null}
+
+        <Link
+          href="/plans"
+          className={cn(
+            "text-[20px] font-medium hover:text-primary-blue-main dark:hover:text-primary-pink-main",
+            pathName === "/plans" ? "text-primary-blue-main dark:text-primary-pink-main" : "text-black font-normal"
           )}
         >
-          Contact
+          Membership
         </Link>
       </PopoverGroup>
       <div>

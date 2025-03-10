@@ -34,7 +34,7 @@ export const StoreListData: DemoTableItemsType[] = [
     verification: "/assets/svg/tic.png",
     variantPrice: 700.0,
     userName: "johndoe@gmail.com",
-    userStatus: "Shaken Not Stirred - Adrian Jordan (#127 - 007Euro)",
+    userStatus: "Shaken Not Stirred - Test User (#127 - 007Euro)",
     grossSales: 0.25,
   
   },
@@ -52,7 +52,7 @@ export const StoreListData: DemoTableItemsType[] = [
     verification: "/assets/svg/cross.png",
     variantPrice: 700.0,
     userName: "johndoe@gmail.com",
-    userStatus: "Shaken Not Stirred - Adrian Jordan (#127 - 007Euro)",
+    userStatus: "Shaken Not Stirred - Test User (#127 - 007Euro)",
     grossSales: 0.25,
   },
   {
@@ -69,7 +69,7 @@ export const StoreListData: DemoTableItemsType[] = [
     verification: "/assets/svg/tic.png",
     variantPrice: 700.0,
     userName: "johndoe@gmail.com",
-    userStatus: "Shaken Not Stirred - Adrian Jordan (#127 - 007Euro)",
+    userStatus: "Shaken Not Stirred - Test User (#127 - 007Euro)",
     grossSales: 0.25,
   },
   {
@@ -86,7 +86,7 @@ export const StoreListData: DemoTableItemsType[] = [
     verification: "/assets/svg/tic.png",
     variantPrice: 700.0,
     userName: "johndoe@gmail.com",
-    userStatus: "Shaken Not Stirred - Adrian Jordan (#127 - 007Euro)",
+    userStatus: "Shaken Not Stirred - Test User (#127 - 007Euro)",
     grossSales: 0.25,
   },
   {
@@ -103,7 +103,7 @@ export const StoreListData: DemoTableItemsType[] = [
     verification: "/assets/svg/tic.png",
     variantPrice: 700.0,
     userName: "johndoe@gmail.com",
-    userStatus: "Shaken Not Stirred - Adrian Jordan (#127 - 007Euro)",
+    userStatus: "Shaken Not Stirred - Test User (#127 - 007Euro)",
     grossSales: 0.25,
   },
   {
@@ -120,7 +120,7 @@ export const StoreListData: DemoTableItemsType[] = [
     verification: "/assets/svg/tic.png",
     variantPrice: 700.0,
     userName: "johndoe@gmail.com",
-    userStatus: "Shaken Not Stirred - Adrian Jordan (#127 - 007Euro)",
+    userStatus: "Shaken Not Stirred - Test User (#127 - 007Euro)",
     grossSales: 0.25,
   },
   {
@@ -137,7 +137,7 @@ export const StoreListData: DemoTableItemsType[] = [
     verification: "/assets/svg/tic.png",
     variantPrice: 700.0,
     userName: "johndoe@gmail.com",
-    userStatus: "Shaken Not Stirred - Adrian Jordan (#127 - 007Euro)",
+    userStatus: "Shaken Not Stirred - Test User (#127 - 007Euro)",
     grossSales: 0.25,
   },
 ];

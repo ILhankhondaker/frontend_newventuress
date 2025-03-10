@@ -1,7 +1,7 @@
 "use client";
 
 // Package imports
-import { Mail, MapPin, MoveRight, Phone } from "lucide-react";
+import { MoveRight } from "lucide-react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
@@ -19,7 +19,7 @@ export function VendorCard({ vendor }: VendorCardProps) {
 
   // Extract first available settings
   const storeDetails = vendor.generalSetting?.[0] || {};
-  const billingDetails = vendor.billingAddress?.[0] || {};
+  // const billingDetails = vendor.billingAddress?.[0] || {};
   // const shippingDetails = vendor.shippingAddress?.[0] || {};
 
   return (
@@ -29,9 +29,9 @@ export function VendorCard({ vendor }: VendorCardProps) {
         <div className="flex items-center justify-center mb-4">
           <div className="w-[130px] h-[130px] rounded-lg flex items-center justify-center">
             <Image
-              src={storeDetails.storeLogo || "https://media.istockphoto.com/id/597643860/photo/hemp-leaves.jpg?b=1&s=612x612&w=0&k=20&c=KQq9VxVqVzAvY5bAx7mSR0XWJIjniD3HAbgsZd40GX0="}
+              src={"https://images.pexels.com/photos/3756001/pexels-photo-3756001.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load"}
               alt={"not found image"}
-              className="w-full h-full"
+              className="w-full h-full object-cover"
               loading="lazy"
               width={130}
               height={130}
@@ -76,26 +76,26 @@ export function VendorCard({ vendor }: VendorCardProps) {
           {/* Store Contact Details */}
           <div className="space-y-3 text-sm">
             {/* Address */}
-            {billingDetails.address && (
+            {/* {billingDetails.address && (
               <div className="flex items-start gap-3 md:text-xl">
                 <MapPin className="w-5 h-5 text-[#0057A8] shrink-0 mt-0.5" />
                 <span className="text-gray-700">{billingDetails.address}</span>
               </div>
-            )}
+            )} */}
             {/* Phone */}
-            {vendor?.customerSupport?.[0]?.phone && (
+            {/* {vendor?.customerSupport?.[0]?.phone && (
               <div className="flex items-center gap-3 md:text-xl">
                 <Phone className="w-5 h-5 text-[#0057A8]" />
                 <span className="text-gray-700">{vendor.customerSupport[0].phone}</span>
               </div>
-            )}
+            )} */}
             {/* Email */}
-            {storeDetails.storeEmail && (
+            {/* {storeDetails.storeEmail && (
               <div className="flex items-center gap-3 md:text-xl">
                 <Mail className="w-5 h-5 text-[#0057A8]" />
                 <span className="text-gray-700">{storeDetails.storeEmail}</span>
               </div>
-            )}
+            )} */}
           </div>
         </div>
       </CardContent>

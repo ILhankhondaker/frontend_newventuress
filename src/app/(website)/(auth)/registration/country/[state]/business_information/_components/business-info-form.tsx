@@ -11,12 +11,12 @@ import { Accordion, AccordionItem } from "@/components/ui/motion-accordion";
 import { countriesData } from "@/data/countries";
 import { canadaProvinces, usStates } from "@/data/registration";
 import {
-  addBusinessField,
-  addCannabisField,
-  addMetrcField,
-  updateBusinessLicense,
-  updateCannabisLicense,
-  updateMetrcLicense
+    addBusinessField,
+    addCannabisField,
+    addMetrcField,
+    updateBusinessLicense,
+    updateCannabisLicense,
+    updateMetrcLicense
 } from "@/redux/features/authentication/AuthSlice";
 import { useAppDispatch, useAppSelector } from "@/redux/store";
 import { useRouter } from "next/navigation";
@@ -96,14 +96,14 @@ export function BusinessInfoForm() {
       const stateData = usStates.find((state) => state.name === license.name); // Get state data
       const allowList = stateData?.allow ?? []; // Extract allow list from state
   
-      const isOnlyHemp = allowList.length === 1 && allowList.includes("CBD/HEMP");
+      const isOnlyHemp = allowList.length === 1 && allowList.includes("HEMP/CBD");
   
       if (isOnlyHemp) {
-        // If ONLY "CBD/HEMP", businessLicense is REQUIRED
+        // If ONLY "HEMP/CBD", businessLicense is REQUIRED
         return (license?.businessLicense ?? []).some((l) => l.trim());
       }
   
-      // If NOT only "CBD/HEMP", at least one license from any category is REQUIRED
+      // If NOT only "HEMP/CBD", at least one license from any category is REQUIRED
       return (
         (license?.metrcLicense ?? []).some((l) => l.trim()) ||
         (license?.cannabisLicense ?? []).some((l) => l.trim()) ||
@@ -236,12 +236,12 @@ const LicenseGroup = ({ country, index, metrcLicense = [""], cannabisLicense = [
 
   const state = allStates.find((state) => state.name === title);
 
-  const isOnlyHempSelected = JSON.stringify(state?.allow) === JSON.stringify(["CBD/HEMP"])
+  const isOnlyHempSelected = JSON.stringify(state?.allow) === JSON.stringify(["HEMP/CBD"])
 
 
 
 
-  const isIndustryHempSelectedOrBoth = JSON.stringify(authState.industry) === JSON.stringify(["CBD/HEMP"]) || JSON.stringify(authState.industry) === JSON.stringify(["CBD/HEMP", "Recreational Cannabis", "Select All"])
+  const isIndustryHempSelectedOrBoth = JSON.stringify(authState.industry) === JSON.stringify(["HEMP/CBD"]) || JSON.stringify(authState.industry) === JSON.stringify(["HEMP/CBD", "Recreational Cannabis", "Select All"])
 
 
 

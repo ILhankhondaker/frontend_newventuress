@@ -1,69 +1,129 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-"use client";
+"use client"
 
-import { useState } from "react";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Slider } from "@/components/ui/slider";
-// import CategoryFilter from "./category-filter/category-filter"; // adjust import if needed
-import { Select } from "@/components/ui/select";
+import { useQuery } from "@tanstack/react-query"
+import { useState } from "react"
+import { Checkbox } from "@/components/ui/checkbox"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Slider } from "@/components/ui/slider"
 
-export default function SidebarFilters({
-  onFilterChange,
-  priceRange,
-}: {
-  onFilterChange: (filters: any) => void;
-  priceRange: [number, number];
-}) {
-  const [flowers, setFlowers] = useState<string[]>([]);
-  const [availability, setAvailability] = useState<string>("in stock");
+interface Category {
+  _id: string
+  categoryName: string
+  image: string
+  slug: string
+  industry?: string
+  subCategory?: string
+  shortDescription?: string
+}
 
-  // const flowerOptions = ["Indica", "Sativa", "Hybrid"];
+interface CategoryResponse {
+  status: boolean
+  message: string
+  data: Category[]
+  meta: {
+    currentPage: number
+    totalPages: number
+    totalItems: number
+    itemsPerPage: number
+  }
+}
+
+interface FilterState {
+  priceRange: [number, number]
+  categories: string[] // Now storing category IDs
+  availability: string[]
+}
+
+interface SidebarFiltersProps {
+  onFilterChange: (filters: FilterState) => void
+  priceRange: [number, number]
+}
+
+export default function SidebarFilters({ onFilterChange, priceRange }: SidebarFiltersProps) {
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([])
+  const [selectedAvailability, setSelectedAvailability] = useState<string[]>([])
+
+  // Fetch categories from API
+  const { data: categoriesData, isLoading: isCategoriesLoading } = useQuery<CategoryResponse>({
+    queryKey: ["categories"],
+    queryFn: async () => {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/categories`)
+      if (!response.ok) {
+        throw new Error("Failed to fetch categories")
+      }
+      return response.json()
+    },
+  })
+
+  const availabilityOptions = ["In Stock", "Out Of Stock"]
 
   // Handle slider changes for price
   const handlePriceChange = (value: number[]) => {
     if (value[0] <= value[1]) {
-      onFilterChange({ priceRange: value, flowers, availability }); // Pass the updated price range
+      onFilterChange({
+        priceRange: value as [number, number],
+        categories: selectedCategories,
+        availability: selectedAvailability,
+      })
     }
-  };
+  }
 
   // Handle input field changes for price
   const handleInputChange = (index: number, newValue: number) => {
-    const updatedRange = [...priceRange];
-    updatedRange[index] = newValue;
+    const updatedRange = [...priceRange]
+    updatedRange[index] = newValue
     if (updatedRange[0] <= updatedRange[1]) {
-      onFilterChange({ priceRange: updatedRange as [number, number], flowers, availability }); // Pass the updated price range
+      onFilterChange({
+        priceRange: updatedRange as [number, number],
+        categories: selectedCategories,
+        availability: selectedAvailability,
+      })
     }
-  };
+  }
 
-  // Toggle flower selection
-  // const handleFlowerToggle = (flower: string) => {
-  //   setFlowers((prev) =>
-  //     prev.includes(flower) ? prev.filter((f) => f !== flower) : [...prev, flower]
-  //   );
-  // };
+  // Handle category selection (now using category ID)
+  const handleCategoryChange = (categoryId: string) => {
+    setSelectedCategories((prev) => {
+      const updated = prev.includes(categoryId) ? prev.filter((id) => id !== categoryId) : [...prev, categoryId]
 
-  // Handle availability changes
-  // const handleAvailabilityChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-  //   setAvailability(e.target.value);
-  //   onFilterChange({ priceRange, flowers, availability: e.target.value }); // Pass availability filter
-  // };
+      onFilterChange({
+        priceRange,
+        categories: updated,
+        availability: selectedAvailability,
+      })
+
+      return updated
+    })
+  }
+
+  // Handle availability selection
+  const handleAvailabilityChange = (status: string) => {
+    setSelectedAvailability((prev) => {
+      const updated = prev.includes(status) ? prev.filter((s) => s !== status) : [...prev, status]
+
+      onFilterChange({
+        priceRange,
+        categories: selectedCategories,
+        availability: updated,
+      })
+
+      return updated
+    })
+  }
 
   return (
     <aside className="w-[270px] space-y-4 mt-[52px]">
       {/* Price Filter */}
       <div className="rounded-lg bg-[#E6EEF6] dark:bg-[#482D721A] p-4">
-        <h2 className="text-[28px] font-bold text-gradient dark:text-gradient-pink mb-4">
-          Filter by Price
-        </h2>
+        <h2 className="text-[28px] font-bold text-gradient dark:text-gradient-pink mb-4">Filter by Price</h2>
         <Slider
-          value={priceRange} // bind to local state
+          value={priceRange}
           max={1000}
           min={0}
           step={1}
           minStepsBetweenThumbs={5}
-          onValueChange={handlePriceChange} // update price range state
+          onValueChange={handlePriceChange}
           className="my-4"
         />
         <div className="flex gap-4 items-center">
@@ -88,40 +148,52 @@ export default function SidebarFilters({
         </div>
       </div>
 
-      {/* Shop by Flowers */}
-      {/* <div className="rounded-lg bg-[#E6EEF6] dark:bg-[#482D721A] p-4">
-        <h2 className="text-[28px] leading-[30px] font-bold text-gradient dark:text-gradient-pink mb-4">
-          Shop by Flowers
-        </h2>
-        <p className="text-[18px] text-[#434851] mb-3">Sub Categories List</p>
+      {/* Categories */}
+      <div className="rounded-lg bg-[#E6EEF6] dark:bg-[#482D721A] p-4">
+        <h2 className="text-[28px] leading-[30px] font-bold text-gradient dark:text-gradient-pink mb-4">Categories</h2>
         <div className="space-y-3">
-          {flowerOptions.map((flower) => (
-            <div key={flower} className="flex items-center space-x-2">
-              <Checkbox
-                id={flower}
-                checked={flowers.includes(flower)}
-                onChange={() => handleFlowerToggle(flower)}
-              />
-            </div>
-          ))}
+          {isCategoriesLoading ? (
+            <div className="text-sm text-gray-500">Loading categories...</div>
+          ) : categoriesData && categoriesData.data && categoriesData.data.length > 0 ? (
+            categoriesData.data.map((category) => (
+              <div key={category._id} className="flex items-center space-x-2">
+                <Checkbox
+                  id={category._id}
+                  checked={selectedCategories.includes(category._id)}
+                  onCheckedChange={() => handleCategoryChange(category._id)}
+                />
+                <Label htmlFor={category._id} className="text-[#434851]">
+                  {category.categoryName}
+                </Label>
+              </div>
+            ))
+          ) : (
+            <div className="text-sm text-gray-500">No categories available</div>
+          )}
         </div>
-      </div> */}
+      </div>
 
       {/* Availability Filter */}
-      {/* <div className="rounded-lg bg-[#E6EEF6] dark:bg-[#482D721A] p-4">
+      <div className="rounded-lg bg-[#E6EEF6] dark:bg-[#482D721A] p-4">
         <h2 className="text-[28px] leading-[30px] font-bold text-gradient dark:text-gradient-pink mb-4">
           Availability
         </h2>
-        <Select
-          options={[
-            { value: "in stock", label: "In stock" },
-            { value: "out of stock", label: "Out of stock" },
-          ]}
-          value={availability}
-          onChange={handleAvailabilityChange}
-        />
-      </div> */}
+        <div className="space-y-3">
+          {availabilityOptions.map((option) => (
+            <div key={option} className="flex items-center space-x-2">
+              <Checkbox
+                id={option}
+                checked={selectedAvailability.includes(option)}
+                onCheckedChange={() => handleAvailabilityChange(option)}
+              />
+              <Label htmlFor={option} className="text-[#434851]">
+                {option}
+              </Label>
+            </div>
+          ))}
+        </div>
+      </div>
     </aside>
-  );
+  )
 }
 

@@ -46,7 +46,7 @@ const StateContainer = ({
   return (
     <div className="flex gap-4 flex-wrap justify-center">
       {displayedStates.map((state) => {
-       const isOnlyHempCBD = state.allow.length === 1 && state.allow.includes("CBD/HEMP");
+       const isOnlyHempCBD = state.allow.length === 1 && state.allow.includes("HEMP/CBD");
 
         return <button
         key={state.name}

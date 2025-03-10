@@ -1,7 +1,7 @@
 "use client"
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { Box, Settings } from "lucide-react";
+import { Settings } from "lucide-react";
 import { Bidsmodal } from "./Bidsmodal";
 
 interface AuctionHeaderProps {
@@ -9,7 +9,7 @@ interface AuctionHeaderProps {
   setShowAddAuction: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const AuctionHeader: React.FC<AuctionHeaderProps> = ({ showAddAuction, setShowAddAuction }) => {
+const AuctionHeader: React.FC<AuctionHeaderProps> = () => {
   const [showBids, setShowBids] = React.useState(false);
 
  
@@ -27,9 +27,9 @@ const AuctionHeader: React.FC<AuctionHeaderProps> = ({ showAddAuction, setShowAd
            
             Bids Settings <Settings /> 
         </Button>
-        <Button onClick={() => setShowAddAuction((prev) => !prev)}>
+        {/* <Button onClick={() => setShowAddAuction((prev) => !prev)}>
           {showAddAuction ? "Auction List" : "Add New"} <Box />
-        </Button>
+        </Button> */}
       </div>
       <Bidsmodal isOpen={showBids} onClose={() => setShowBids(false)} />
     </div>

@@ -6,6 +6,7 @@ import Link from "next/link";
 import Modal from "@/components/shared/modal/modal";
 import { Loader2 } from "lucide-react";
 import { signOut } from "next-auth/react";
+import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 
 interface Props {
@@ -14,6 +15,7 @@ interface Props {
 
 const LogOutModal = ({ onModalClose }: Props) => {
   const [loading, setLoading] = useState<true | false>(false);
+  const {setTheme} = useTheme()
 
   useEffect(() => {
     return () => {
@@ -21,9 +23,13 @@ const LogOutModal = ({ onModalClose }: Props) => {
     };
   }, []);
 
-  const onLogout = () => {
+  const onLogout = async () => {
     setLoading(true);
-    signOut({ redirectTo: "/" });
+    setTheme("light");
+
+    await signOut({redirectTo: "/"})
+    
+    
   };
 
   return (
