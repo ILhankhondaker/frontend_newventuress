@@ -27,14 +27,18 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { useMutation } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { toast } from "sonner";
 import {
   productFormSchema,
   type ProductFormValues,
 } from "./product-form-schema";
 
-export function AddListingForm() {
+interface Props {
+  setShowAddAuction: Dispatch<SetStateAction<boolean>>;
+}
+
+export function AddListingForm({setShowAddAuction}: Props) {
   const [images, setImages] = useState<File[]>([]);
   const [formValues, setFormValues] = useState({ /* your form values here */ });
   const [tags, setTags] = React.useState<string[]>([]);
@@ -63,6 +67,7 @@ export function AddListingForm() {
       form.reset();
       setTags([]);
       setImages([])
+      setShowAddAuction(false)
 
     }
   })
