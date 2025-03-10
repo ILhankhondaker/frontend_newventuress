@@ -22,8 +22,14 @@ import { useAppSelector } from "@/redux/store"
 import Script from "next/script"
 import type { Dropin, Options } from "braintree-web-drop-in"
 
-// Braintree configuration
-// const BRAINTREE_API_URL = "https://your-mongodb-api-url/api/braintree" // Replace with your MongoDB API endpoint
+// Update these to match your backend API endpoints
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8001"
+const CLIENT_TOKEN_ENDPOINT = `${BASE_URL}/api/venmo/client-token`
+const PROCESS_PAYMENT_ENDPOINT = `${BASE_URL}/api/venmo/process-payment`
+
+// User and membership IDs - replace with your actual values or fetch them dynamically
+const USER_ID = "67b6c411623c23ad35c861ea" // This should come from your auth system
+const MEMBERSHIP_ID = "6795c54178167faa8ba7084c" // This might be selected by the user or determined by your app
 
 const formSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -48,6 +54,7 @@ const OrderForm: React.FC = () => {
   const [braintreeInstance, setBraintreeInstance] = useState<Dropin | null>(null)
   const [scriptLoaded, setScriptLoaded] = useState(false)
   const [venmoContainerVisible, setVenmoContainerVisible] = useState(false)
+  const [tokenError, setTokenError] = useState<string | null>(null)
 
   // Reference to the Braintree container
   const dropinContainerRef = useRef<HTMLDivElement>(null)
@@ -100,15 +107,26 @@ const OrderForm: React.FC = () => {
   useEffect(() => {
     const fetchClientToken = async () => {
       try {
-        // In a real implementation, you would fetch this from your MongoDB API
-        // const response = await fetch(`${BRAINTREE_API_URL}/client-token`);
-        // const data = await response.json();
-        // setClientToken(data.clientToken);
+        setTokenError(null)
+        console.log("Fetching client token from:", CLIENT_TOKEN_ENDPOINT)
 
-        // For demo purposes, using a mock token
-        setClientToken("sandbox_g42y39zw_348pk9cgf3bgyw2b")
+        const response = await fetch(CLIENT_TOKEN_ENDPOINT)
+
+        if (!response.ok) {
+          throw new Error(`Failed to fetch client token: ${response.status}`)
+        }
+
+        const data = await response.json()
+
+        if (data.clientToken) {
+          console.log("Client token received successfully")
+          setClientToken(data.clientToken)
+        } else {
+          throw new Error("No client token in response")
+        }
       } catch (error) {
         console.error("Failed to fetch client token:", error)
+        setTokenError(error instanceof Error ? error.message : "Unknown error fetching token")
       }
     }
 
@@ -190,31 +208,48 @@ const OrderForm: React.FC = () => {
       if (values.paymentMethod === "venmo" && braintreeInstance) {
         // Get payment method nonce from Braintree
         const { nonce } = await braintreeInstance.requestPaymentMethod()
+        console.log("Payment nonce received:", nonce)
 
-        // In a real implementation, you would send this to your MongoDB API
-        // const response = await fetch(`${BRAINTREE_API_URL}/process-payment`, {
-        //   method: "POST",
-        //   headers: { "Content-Type": "application/json" },
-        //   body: JSON.stringify({
-        //     paymentMethodNonce: nonce,
-        //     amount: calculateTotals().total.toFixed(2),
-        //     ...values
-        //   })
-        // });
-        // const result = await response.json();
+        // Prepare the payload according to your backend API requirements
+        const paymentData = {
+          paymentMethodNonce: nonce,
+          amount: calculateTotals().total,
+          userId: USER_ID,
+          membershipId: MEMBERSHIP_ID,
+          paymentMethod: "venmo",
+        }
 
-        // For demo purposes, simulating a successful payment
-        await new Promise((resolve) => setTimeout(resolve, 2000))
-        console.log("Payment processed with nonce:", nonce)
+        console.log("Sending payment data to backend:", paymentData)
+
+        // Process the payment with your backend
+        const response = await fetch(PROCESS_PAYMENT_ENDPOINT, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(paymentData),
+        })
+
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}))
+          throw new Error(errorData.error || `Payment failed with status: ${response.status}`)
+        }
+
+        const result = await response.json()
+        console.log("Payment result:", result)
+
+        // Show success modal
+        setShowModal(true)
       } else {
         // Handle other payment methods as before
         await new Promise((resolve) => setTimeout(resolve, 2000))
+        setShowModal(true)
       }
 
-      setShowModal(true)
-      console.log("form values", values)
+      console.log("Form values:", values)
     } catch (error) {
       console.error("Payment processing error:", error)
+      alert(`Payment failed: ${error instanceof Error ? error.message : "Unknown error"}`)
     } finally {
       setIsSubmitting(false)
     }
@@ -548,14 +583,20 @@ const OrderForm: React.FC = () => {
 
                           {field.value === "venmo" && (
                             <div className="space-y-3 mt-3 border rounded-md p-4">
-                              {/* Braintree Venmo Drop-in UI Container */}
-                              <div ref={dropinContainerRef} className="min-h-[150px] w-full">
-                                {!scriptLoaded && (
-                                  <div className="flex justify-center items-center h-[150px]">
-                                    <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                              {tokenError ? (
+                                <div className="text-red-500 p-3 text-sm">Error loading Venmo: {tokenError}</div>
+                              ) : (
+                                <>
+                                  {/* Braintree Venmo Drop-in UI Container */}
+                                  <div ref={dropinContainerRef} className="min-h-[150px] w-full">
+                                    {(!scriptLoaded || !clientToken) && (
+                                      <div className="flex justify-center items-center h-[150px]">
+                                        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                                      </div>
+                                    )}
                                   </div>
-                                )}
-                              </div>
+                                </>
+                              )}
                             </div>
                           )}
                         </div>
