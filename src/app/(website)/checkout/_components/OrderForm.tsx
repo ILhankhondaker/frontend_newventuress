@@ -25,6 +25,14 @@ import OrderConfirmationModal from "./OrderConfirmationModal";
 import OrderTotal from "./OrderTotal";
 import { useAppSelector } from "@/redux/store";
 
+
+
+
+///////////
+
+import { Card, CardContent } from "@/components/ui/card"
+import { AlertCircle,  CreditCard } from "lucide-react"
+
 const formSchema = z.object({
   name: z.string().min(1, "Name is required"),
   country: z.string().min(1, "Country is required"),
@@ -44,6 +52,21 @@ const formSchema = z.object({
 const OrderForm: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showModal, setShowModal] = useState(false);
+
+  // venmo  
+
+  const [amount, setAmount] = useState("00.00")
+  const [cardNumber, setCardNumber] = useState("")
+  const [expirationDate, setExpirationDate] = useState("")
+  const [cardError, setCardError] = useState(true)
+
+  const handleCardNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.replace(/\D/g, "")
+    setCardNumber(value)
+    setCardError(!value)
+  }
+
+
 
   const cartItems = useAppSelector((state) => state.cart.items);
 
@@ -401,6 +424,8 @@ const OrderForm: React.FC = () => {
                           )}
                         </div>
 
+
+{/* paypal */}
                         <Label
                           htmlFor="paypal"
                           className={`w-full border cursor-pointer rounded-lg flex items-center justify-between px-4 py-4 ${
@@ -470,74 +495,81 @@ const OrderForm: React.FC = () => {
                           </Label>
 
                           {field.value === "venmo" && (
-                            <div className="space-y-3 mt-3">
-                              <FormField
-                                control={form.control}
-                                name="cardholderName"
-                                render={({ field }) => (
-                                  <FormItem>
-                                    <FormControl>
-                                      <Input
-                                        placeholder="Cardholder Name"
-                                        {...field}
-                                        className="h-[48px] border border-[#B0B0B0]"
-                                      />
-                                    </FormControl>
-                                    <FormMessage />
-                                  </FormItem>
-                                )}
-                              />
-                              <FormField
-                                control={form.control}
-                                name="cardNumber"
-                                render={({ field }) => (
-                                  <FormItem>
-                                    <FormControl>
-                                      <Input
-                                        placeholder="Card Number"
-                                        {...field}
-                                        className="h-[48px] border border-[#B0B0B0]"
-                                      />
-                                    </FormControl>
-                                    <FormMessage />
-                                  </FormItem>
-                                )}
-                              />
-                              <div className="grid grid-cols-2 gap-3">
-                                <FormField
-                                  control={form.control}
-                                  name="expDate"
-                                  render={({ field }) => (
-                                    <FormItem>
-                                      <FormControl>
-                                        <Input
-                                          placeholder="Exp.Date"
-                                          {...field}
-                                          className="h-[48px] border border-[#B0B0B0]"
-                                        />
-                                      </FormControl>
-                                      <FormMessage />
-                                    </FormItem>
-                                  )}
-                                />
-                                <FormField
-                                  control={form.control}
-                                  name="cvv"
-                                  render={({ field }) => (
-                                    <FormItem>
-                                      <FormControl>
-                                        <Input
-                                          placeholder="CVV"
-                                          {...field}
-                                          className="h-[48px] border border-[#B0B0B0]"
-                                        />
-                                      </FormControl>
-                                      <FormMessage />
-                                    </FormItem>
-                                  )}
-                                />
-                              </div>
-                            </div>
+                         <Card className="w-full max-w-md border rounded-lg shadow-sm">
+                         <CardContent className="p-6">
+                           <div className="space-y-6">
+                             <div>
+                               <h2 className="text-xl font-semibold text-gray-900">Venmo Payment</h2>
+                             </div>
+                   
+                             <div className="space-y-2">
+                               <label htmlFor="amount" className="block text-sm font-medium text-gray-900">
+                                 Amount ($)
+                               </label>
+                               <Input
+                                 id="amount"
+                                 type="text"
+                                 value={amount}
+                                 onChange={(e) => setAmount(e.target.value)}
+                                 className="w-full"
+                               />
+                             </div>
+                   
+                         
+                   
+                             <div className="border rounded-md overflow-hidden">
+                               <div className="p-4 border-b flex items-center gap-3">
+                                 <CreditCard className="h-5 w-5 text-gray-500" />
+                                 <span className="font-medium">Pay with card</span>
+                               </div>
+                   
+                               <div className="p-4 border-b">
+                                
+                   
+                                 <div className="space-y-4">
+                                   <div className="space-y-1">
+                                     <label htmlFor="cardNumber" className="block text-sm font-medium text-gray-900">
+                                       Card Number
+                                     </label>
+                                     <div className="relative">
+                                       <Input
+                                         id="cardNumber"
+                                         type="text"
+                                         placeholder="•••• •••• •••• ••••"
+                                         value={cardNumber}
+                                         onChange={handleCardNumberChange}
+                                         className={`w-full pr-10 ${cardError ? "border-red-500" : ""}`}
+                                       />
+                                       {cardError && (
+                                         <div className="absolute inset-y-0 right-0 flex items-center pr-3">
+                                           <AlertCircle className="h-5 w-5 text-red-500" />
+                                         </div>
+                                       )}
+                                     </div>
+                                     {cardError && <p className="text-sm text-red-500">Please fill out a card number.</p>}
+                                   </div>
+                   
+                                   <div className="space-y-1">
+                                     <label htmlFor="expirationDate" className="block text-sm font-medium text-gray-900">
+                                       Expiration Date <span className="text-gray-400">(MM/YY)</span>
+                                     </label>
+                                     <Input
+                                       id="expirationDate"
+                                       type="text"
+                                       placeholder="MM/YY"
+                                       value={expirationDate}
+                                       onChange={(e) => setExpirationDate(e.target.value)}
+                                       className="w-full"
+                                     />
+                                   </div>
+                                 </div>
+                               </div>
+                             </div>
+                   
+                             <Button className="w-full bg-black text-white hover:bg-gray-800">Pay ${amount}</Button>
+                           </div>
+                         </CardContent>
+                       </Card>
                           )}
                         </div>
 
