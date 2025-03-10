@@ -23,11 +23,12 @@ const LogOutModal = ({ onModalClose }: Props) => {
     };
   }, []);
 
-  const onLogout = () => {
+  const onLogout = async () => {
     setLoading(true);
     setTheme("light");
 
-    signOut({redirectTo: "/"})
+    await signOut({redirectTo: "/"})
+    
     
   };
 
