@@ -36,17 +36,17 @@ const VendorStoreProducts = () => {
     );
 
     if (!response.ok) {
-      throw new Error("Network error");
+      throw new Error(data.message || "Network error")
     }
 
     return response.json();
   };
 
-  // ✅ `useQuery` সবসময় শীর্ষে থাকবে
+
   const { data, error, isLoading } = useQuery({
     queryKey: ["products", productid],
     queryFn: fetchProducts,
-    enabled: !!token && !!productid, // ✅ শুধুমাত্র তখনই চলবে যখন token ও productid থাকবে
+    enabled: !!token && !!productid, 
   });
 
   if (status === "loading") {
@@ -64,7 +64,7 @@ const VendorStoreProducts = () => {
   }
 
   if (error) {
-    return <div>Error: {error.message}</div>;
+    return <div> {"no data"}</div>;
   }
 
   const uniqueCategories = Array.from(
