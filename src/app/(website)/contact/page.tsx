@@ -7,14 +7,14 @@ const Contact: React.FC = () => {
   return (
     <div>
       <PageHeader
-                  title="Contact Us"
+                  title="Contact"
                   items={[
                     {
                     label: "Home",
                     href: "/",
                   },
                   {
-                  label: "Contact Us",
+                  label: "Contact",
                   href: "/contact",
                 },
               ]}

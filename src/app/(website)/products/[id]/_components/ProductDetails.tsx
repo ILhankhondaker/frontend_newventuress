@@ -223,11 +223,11 @@ const ProductDetails = ({ productId }: props) => {
                   </div>
                   <div className="mt-2 flex items-end gap-1 self-start font-medium leading-tight">
                     <div className="self-stretch whitespace-nowrap text-lg text-zinc-900">
-                      ₿{productData.price.toFixed(2)}
+                      ${productData.price.toFixed(2)}
                     </div>
                     <div className="self-stretch text-sm text-[#9C9C9C]">
                       <span className="line-through">
-                        ₿{productData.originalPrice.toFixed(2)}
+                        ${productData.originalPrice.toFixed(2)}
                       </span>
                     </div>
                   </div>

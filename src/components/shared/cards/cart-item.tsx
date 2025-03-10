@@ -75,10 +75,10 @@ export function CartItemCard({ item, onUpdateQuantity, onRemove }: CartItemProps
           <div className="flex items-end justify-between pt-[4px]">
             <div className="flex items-center gap-2">
               <div className="text-base leading-[19px] font-medium text-[#1A1A1A]">
-                ₿{item.discountPrice.toLocaleString()}
+                ${item.discountPrice.toLocaleString()}
               </div>
               <div className="text-sm font-medium leading-[14px] text-[#9C9C9C] line-through">
-                ₿{item.sellingPrice.toLocaleString()}
+                ${item.sellingPrice.toLocaleString()}
               </div>
             </div>
           </div>

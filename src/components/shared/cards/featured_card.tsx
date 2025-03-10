@@ -106,10 +106,10 @@ export default function FeaturedProductCard({ product }: { product: Product }) {
           </div>
           <div className="mt-2 flex items-end gap-1 self-start font-medium leading-tight">
             <div className="self-stretch whitespace-nowrap text-[16px] text-base leading-[19.2px] text-[#1A1A1A]">
-              ₿{product.discountPrice}
+              ${product.discountPrice}
             </div>
             <div className="self-stretch text-[12px] font-medium leading-[14.4px] text-[#9C9C9C]">
-              <span className="line-through">₿{product.selllingPrice}</span>
+              <span className="line-through">${product.selllingPrice}</span>
             </div>
           </div>
         </div>
