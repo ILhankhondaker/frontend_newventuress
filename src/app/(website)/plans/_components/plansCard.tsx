@@ -25,13 +25,13 @@ function PlansCard({ data , userId}: Props) {
       )}
       <div className="px-6 gap-[40px] pt-[75.5px]">
         <h2 className="text-xl text-gradient dark:text-gradient-pink font-semibold leading-[24px]">
-          {data.planType}
+          {data?.planType}
         </h2>
         <p className="text-base text-[#696767] font-normal leading-[19.2px] mt-2">
-          {data.description}
+          {data?.description}
         </p>
         <h4 className="text-[22px] text-[#1A1A1A] font-bold leading-[26.4px] mt-6">
-          ${data.price}
+          ${data?.price}
         </h4>
         <div className="mt-[24px]">
           <Button onClick={() => setIsOpen(true)} className="w-full  ">
@@ -59,7 +59,7 @@ function PlansCard({ data , userId}: Props) {
           </div>
           <div>
             <p className="text-sm text-gradient dark:text-gradient-pink font-bold leading-[16.8px]">
-              {data.numberOfAuction}
+              {data?.numberOfAuction}
             </p>
           </div>
         </div>
@@ -75,7 +75,7 @@ function PlansCard({ data , userId}: Props) {
           </div>
           <div>
             <p className="text-sm text-gradient dark:text-gradient-pink font-bold leading-[16.8px]">
-              {data.numberOfBids}
+              {data?.numberOfBids}
             </p>
           </div>
         </div>
