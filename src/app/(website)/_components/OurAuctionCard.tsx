@@ -108,7 +108,7 @@ export default function OurAuctionCard({ auction, index }: Props) {
           </div>
           <div className="flex gap-1 items-end self-start mt-2 font-medium leading-tight">
             <div className="self-stretch text-base text-[16px] leading-[19.2px] text-[#1A1A1A]">
-              ₿{auction.startingPrice}
+              ${auction.startingPrice}
             </div>
           </div>
         </div>
