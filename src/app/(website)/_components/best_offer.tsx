@@ -3,6 +3,7 @@ import Image from "next/image";
 import React from "react";
 import { FaArrowRightLong } from "react-icons/fa6";
 import { StarRating } from "../cart/_components/star-rating";
+import Link from "next/link";
 
 interface BestOfferData {
   id: number;
@@ -95,12 +96,12 @@ const BestOffer: React.FC = () => {
       <div className="w-full flex items-center justify-between  pt-[25px] md:pt-[33px] lg:pt-[41px]">
         <div className="">
           <Button> 
-            Shop Now
+            <Link href="/cart">Shop Now</Link>
           </Button>
         </div>
 
         <button className="group flex items-center text-gradient dark:text-gradient-pink gap-[14px]">
-          See All
+          <Link href="/products">See All</Link>
           <FaArrowRightLong className="w-[20px] h-[20px] !text-[#152764] dark:!text-[#6841A5] transform group-hover:translate-x-2 transition-all duration-400" />
         </button>
 

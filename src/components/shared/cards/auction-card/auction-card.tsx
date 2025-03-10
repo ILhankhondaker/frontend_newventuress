@@ -122,7 +122,8 @@ export default function AuctionCard({ auction, index }: Props) {
               : "bg-gradient-to-br from-[#121D42] via-[#152764] to-[#4857BD] text-base font-medium leading-[19px] text-white"
           }`}
         >
-          {isExpired ? "Expired" : "Bid Now"}
+          {isExpired ? "Expired" : 
+          <Link href={`/auction/${auction._id}`}>Bid Now</Link>}
         </Button>
       </div>
     </div>

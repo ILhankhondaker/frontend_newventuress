@@ -127,7 +127,7 @@ function DesktopNavbar({ pathName, loggedin }: DesktopNavbarProps) {
         >
          Products
         </Link>
-         <Link
+         {/* <Link
           href="/about"
           className={cn(
             "text-[20px] font-medium hover:text-primary-blue-main dark:hover:text-primary-pink-main",
@@ -137,7 +137,7 @@ function DesktopNavbar({ pathName, loggedin }: DesktopNavbarProps) {
           )}
         >
          About Us
-        </Link>
+        </Link> */}
        
         {/* <Link
           href=""
@@ -157,20 +157,24 @@ function DesktopNavbar({ pathName, loggedin }: DesktopNavbarProps) {
         >
           Blog
         </Link>
-        <Link
-          href="/contact"
+        {loggedin ?(
+
+          <Link
+          href="/vendor-dashboard"
           className={cn(
             "text-[20px] font-medium hover:text-primary-blue-main dark:hover:text-primary-pink-main",
-            pathName === "/contact" ? "text-primary-blue-main dark:text-primary-pink-main" : "text-black font-normal"
+            pathName === "/vendor-dashboard" ? "text-primary-blue-main dark:text-primary-pink-main" : "text-black font-normal"
           )}
-        >
-          Contact
+          >
+          My Store
         </Link>
+        ): null}
+
         <Link
           href="/plans"
           className={cn(
             "text-[20px] font-medium hover:text-primary-blue-main dark:hover:text-primary-pink-main",
-            pathName === "/contact" ? "text-primary-blue-main dark:text-primary-pink-main" : "text-black font-normal"
+            pathName === "/plans" ? "text-primary-blue-main dark:text-primary-pink-main" : "text-black font-normal"
           )}
         >
           Membership
