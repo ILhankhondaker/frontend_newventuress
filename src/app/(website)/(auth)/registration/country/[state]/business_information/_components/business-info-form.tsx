@@ -11,12 +11,12 @@ import { Accordion, AccordionItem } from "@/components/ui/motion-accordion";
 import { countriesData } from "@/data/countries";
 import { canadaProvinces, usStates } from "@/data/registration";
 import {
-    addBusinessField,
-    addCannabisField,
-    addMetrcField,
-    updateBusinessLicense,
-    updateCannabisLicense,
-    updateMetrcLicense
+  addBusinessField,
+  addCannabisField,
+  addMetrcField,
+  updateBusinessLicense,
+  updateCannabisLicense,
+  updateMetrcLicense
 } from "@/redux/features/authentication/AuthSlice";
 import { useAppDispatch, useAppSelector } from "@/redux/store";
 import { useRouter } from "next/navigation";
@@ -117,7 +117,6 @@ export function BusinessInfoForm() {
     !isEveryStateValid || // If any state is invalid, disable the button
     loading;
   
-  console.log("Is Next Disabled:", isNextDisabled);
   
   
   

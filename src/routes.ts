@@ -15,6 +15,7 @@ export const publicRoutes = ["/", "/age-alert"];
 export const authRoutes = [
   "/login",
   "/registration",
+  "/registration/overview",
   "/registration/experiences",
   "/registration/experiences/profession",
   "/registration/country",
