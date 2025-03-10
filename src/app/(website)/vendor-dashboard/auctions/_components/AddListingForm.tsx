@@ -532,7 +532,7 @@ export function AddListingForm() {
               </div>
 
               <div className="w-[600px] h-full mt-[16px] border border-[#9C9C9C] dark:border-[#B0B0B0] rounded-lg  ">
-                <ProductGallery onImageChange={handleImageChange}  />
+                <ProductGallery onImageChange={handleImageChange} files={images}  />
               </div>
             </div>
             <div className="flex justify-end ">
