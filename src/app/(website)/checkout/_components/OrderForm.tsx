@@ -82,7 +82,7 @@ const OrderForm: React.FC = () => {
     await new Promise((resolve) => setTimeout(resolve, 2000));
     setIsSubmitting(false);
     setShowModal(true);
-    console.log(values);
+    console.log("form values", values);
   };
 
  const { subtotal, shipping, total } = calculateTotals();
