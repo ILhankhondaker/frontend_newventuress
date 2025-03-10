@@ -15,7 +15,7 @@ export default function CartPage() {
   const dispatch = useAppDispatch();
 
   const cartItems = useAppSelector((state) => state.cart.items);
-
+console.log('Cart Item ',cartItems)
   useEffect(() => {
     setIsClient(true); // Ensure this runs only on the client
   }, []);

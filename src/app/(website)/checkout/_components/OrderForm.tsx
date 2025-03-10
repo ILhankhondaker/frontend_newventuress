@@ -82,7 +82,7 @@ const OrderForm: React.FC = () => {
     await new Promise((resolve) => setTimeout(resolve, 2000));
     setIsSubmitting(false);
     setShowModal(true);
-    console.log(values);
+    console.log("form values", values);
   };
 
  const { subtotal, shipping, total } = calculateTotals();
@@ -285,6 +285,8 @@ const OrderForm: React.FC = () => {
                         defaultValue={field.value}
                         className="flex flex-col gap-3"
                       >
+
+{/* creditCard */}
                         <div>
                           <Label
                             htmlFor="creditCard"
@@ -428,6 +430,119 @@ const OrderForm: React.FC = () => {
                             width={60}
                           />
                         </Label>
+
+{/* venmo  */}
+<div>
+                          <Label
+                            htmlFor="venmo"
+                            className={`w-full border cursor-pointer rounded-lg flex items-center justify-between px-4 py-3 ${
+                              field.value === "venmo"
+                                ? "bg-[#E6EEF6] border-[#121D42] dark:border-[#6841A5]"
+                                : "border-zinc-200"
+                            }`}
+                          >
+                            <div className="flex items-center gap-2">
+                              <RadioGroupItem
+                              
+                                id="venmo"
+                                value="venmo"
+                                className="h-5 w-5 border-[#121D42] dark:border-[#6841A5] text-[#121D42] before:bg-[#121D42] data-[state=checked]:border-[#121D42] data-[state=checked]:text-[#121D42]"
+                              />
+                              <span
+                                className={`text-sm dark:text-gradient-pink ${
+                                  field.value === "creditCard"
+                                    ? "text-gradient dark:text-gradient-pink"
+                                    : ""
+                                }`}
+                              >
+                                Venmo
+                              </span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <Image
+                                src="/assets/img/venmo.svg"
+                                alt="PayPal"
+                                height={25}
+                                width={40}
+                              />
+                           
+                            </div>
+                          </Label>
+
+                          {field.value === "venmo" && (
+                            <div className="space-y-3 mt-3">
+                              <FormField
+                                control={form.control}
+                                name="cardholderName"
+                                render={({ field }) => (
+                                  <FormItem>
+                                    <FormControl>
+                                      <Input
+                                        placeholder="Cardholder Name"
+                                        {...field}
+                                        className="h-[48px] border border-[#B0B0B0]"
+                                      />
+                                    </FormControl>
+                                    <FormMessage />
+                                  </FormItem>
+                                )}
+                              />
+                              <FormField
+                                control={form.control}
+                                name="cardNumber"
+                                render={({ field }) => (
+                                  <FormItem>
+                                    <FormControl>
+                                      <Input
+                                        placeholder="Card Number"
+                                        {...field}
+                                        className="h-[48px] border border-[#B0B0B0]"
+                                      />
+                                    </FormControl>
+                                    <FormMessage />
+                                  </FormItem>
+                                )}
+                              />
+                              <div className="grid grid-cols-2 gap-3">
+                                <FormField
+                                  control={form.control}
+                                  name="expDate"
+                                  render={({ field }) => (
+                                    <FormItem>
+                                      <FormControl>
+                                        <Input
+                                          placeholder="Exp.Date"
+                                          {...field}
+                                          className="h-[48px] border border-[#B0B0B0]"
+                                        />
+                                      </FormControl>
+                                      <FormMessage />
+                                    </FormItem>
+                                  )}
+                                />
+                                <FormField
+                                  control={form.control}
+                                  name="cvv"
+                                  render={({ field }) => (
+                                    <FormItem>
+                                      <FormControl>
+                                        <Input
+                                          placeholder="CVV"
+                                          {...field}
+                                          className="h-[48px] border border-[#B0B0B0]"
+                                        />
+                                      </FormControl>
+                                      <FormMessage />
+                                    </FormItem>
+                                  )}
+                                />
+                              </div>
+                            </div>
+                          )}
+                        </div>
+
+{/* venmo end  */}
+
 
                         <Label
                           htmlFor="cashOnDelivery"
