@@ -66,7 +66,7 @@ export default function BiddingCard({ product }: { product: Product }) {
         </h2>
 
         <div className="mb-4 flex items-baseline justify-center gap-2">
-          <span className="text-xl font-bold">₿{product.startingPrice}</span>
+          <span className="text-xl font-bold">${product.startingPrice}</span>
           <span className="text-sm text-gray-400 line-through">
             {/* ₿{product.selllingPrice} */}
           </span>
