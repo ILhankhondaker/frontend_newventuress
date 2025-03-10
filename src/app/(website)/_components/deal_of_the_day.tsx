@@ -58,7 +58,7 @@ const DealOfTheDay = () => {
       </section>
       <div className="mt-[10px]">
         <Button className="w-full " asChild>
-          <Link href="/live-auctions" className="w-full h-full">
+          <Link href="/products" className="w-full h-full">
           Shop Now
           </Link>
          
