@@ -6,7 +6,7 @@ import dynamic from "next/dynamic";
 
 import SectionHeading from "@/components/shared/SectionHeading/SectionHeading";
 import ProductCardSkeleton from "@/components/shared/skeletons/productCardSkeleton";
-import { Button } from "@/components/ui/button";
+// import { Button } from "@/components/ui/button";
 import ErrorContainer from "@/components/ui/error-container";
 import { ProductResponse } from "@/types/product";
 
@@ -14,7 +14,7 @@ import { Product } from "@/types/product";
 
 
 import { useQuery } from "@tanstack/react-query";
-import Image from "next/image";
+// import Image from "next/image";
 import OurAuctionCard from "./OurAuctionCard";
 
 interface FeaturedCardsProps {
@@ -104,7 +104,7 @@ export default function OurAuction({ token }: Props) {
 
         <div className="space-y-4">
           <BiddingCard product={products[4]} />
-          <JoinAsSeller />
+          {/* <JoinAsSeller /> */}
         </div>
       </div>
     </div>
@@ -112,32 +112,32 @@ export default function OurAuction({ token }: Props) {
   return content
 }
 
-const JoinAsSeller = () => {
-  return (
-    <div className="h-fit space-y-7 rounded-xl bg-white p-6">
-      <div>
-        <h2 className="text-gradient dark:text-gradient-pink mb-2 text-center text-[22px] font-semibold">
-          Partner with Us. Grow Your Business on
-        </h2>
-        <p
-          className="text-gradient dark:text-gradient-pink text-center text-[20px] font-medium"
+// const JoinAsSeller = () => {
+//   return (
+//     <div className="h-fit space-y-7 rounded-xl bg-white p-6">
+//       <div>
+//         <h2 className="text-gradient dark:text-gradient-pink mb-2 text-center text-[22px] font-semibold">
+//           Partner with Us. Grow Your Business on
+//         </h2>
+//         <p
+//           className="text-gradient dark:text-gradient-pink text-center text-[20px] font-medium"
 
-        >
-          Join Our Marketplace Today
-        </p>
-        <Image
-          className="mx-auto mt-2"
-          src="/assets/img/Line.png"
-          width={80}
-          height={80}
-          style={{
-            width: "auto",
-            height: "auto",
-          }}
-          alt="Picture of the author"
-        />
-      </div>
-      <Button className="s mb-4 w-full py-2">Join As a Sellers</Button>
-    </div>
-  );
-};
+//         >
+//           Join Our Marketplace Today
+//         </p>
+//         <Image
+//           className="mx-auto mt-2"
+//           src="/assets/img/Line.png"
+//           width={80}
+//           height={80}
+//           style={{
+//             width: "auto",
+//             height: "auto",
+//           }}
+//           alt="Picture of the author"
+//         />
+//       </div>
+//       <Button className="s mb-4 w-full py-2">Join As a Sellers</Button>
+//     </div>
+//   );
+// };
