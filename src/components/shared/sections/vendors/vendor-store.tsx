@@ -5,6 +5,10 @@ import { SearchBar } from "@/components/shared/sections/vendors/search-bar";
 import { VendorCard } from "@/components/shared/cards/vendor-card";
 import { useQuery } from "@tanstack/react-query";
 import { vedorestoreDataResponse } from "@/types/vendorstore";
+import NotFound from "../../NotFound/NotFound";
+import ErrorContainer from "@/components/ui/error-container";
+import VendorStoreskeleton from "@/components/storeSkeleton/StoreSkeleton";
+
 
 export default function VendorStore() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -32,12 +36,43 @@ export default function VendorStore() {
     );
   }, [searchQuery, data]);
 
+  let content;
   if (isLoading) {
-    return <div className="text-center text-gray-500">Loading vendors...</div>;
+    content = (
+      <div className="container ">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mx-auto">
+          <VendorStoreskeleton />
+          <VendorStoreskeleton />
+          <VendorStoreskeleton />
+          <VendorStoreskeleton />
+          <VendorStoreskeleton />
+          <VendorStoreskeleton />
+        </div>
+      </div>
+    )
   }
-
-  if (isError) {
-    return <div className="text-center text-red-500">Error: {error?.message}</div>;
+  else if (isError) {
+    content = (
+      <div className="container">
+        <ErrorContainer message={error?.message || "something went wrong"} />
+      </div>
+    )
+  }
+  else if (data && data?.data && data?.data?.length === 0) {
+    content = (
+      <div className="container">
+        <NotFound message="Oops! No data available. Modify your filters or check your internet connection." />
+      </div>
+    )
+  }
+  else if (data && data?.data) {
+    content = (
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mx-auto">
+        {filteredVendors.map(vendor => (
+          <VendorCard key={vendor._id} vendor={vendor} />
+        ))}
+      </div>
+    )
   }
 
   return (
@@ -47,11 +82,7 @@ export default function VendorStore() {
         totalResults={filteredVendors.length}
       />
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mx-auto">
-        {filteredVendors.map(vendor => (
-          <VendorCard key={vendor._id} vendor={vendor} />
-        ))}
-      </div>
+      {content}
     </div>
   );
 }
