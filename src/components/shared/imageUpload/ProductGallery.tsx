@@ -46,10 +46,7 @@ export default function ProductGallery({onImageChange}: any) {
     fileInputRef.current?.click()
   }
 
-  const handleImageConfirmation = () => {
-    console.log("Confirmed images:", files)
-    // handleDropimage.setValue("images", files)
-  }
+
 
   return (
     <div className="w-full max-w-2xl p-6 bg-white rounded-lg shadow-sm">
@@ -108,14 +105,14 @@ export default function ProductGallery({onImageChange}: any) {
         </Button>
       </div>
 
-      <div className="flex gap-2 justify-end">
+      {/* <div className="flex gap-2 justify-end">
         <button type="button" className="px-8 border border-[#B0B0B0] rounded-lg text-gradient dark:text-gradient-pink">
           Update
         </button>
         <Button type="button" onClick={handleImageConfirmation}>
           Confirm
         </Button>
-      </div>
+      </div> */}
     </div>
   )
 }
