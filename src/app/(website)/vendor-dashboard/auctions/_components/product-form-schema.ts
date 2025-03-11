@@ -18,6 +18,7 @@ export const productFormSchema = z.object({
   coa: z.boolean().default(false),
   tags: z.array(z.string()),
   photos: z.array(z.instanceof(File)),
+  video: z.instanceof(File).optional(), // Single video file (optional)
 })
 
 export type ProductFormValues = z.infer<typeof productFormSchema>
