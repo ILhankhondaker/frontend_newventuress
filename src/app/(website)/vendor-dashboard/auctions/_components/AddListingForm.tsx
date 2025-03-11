@@ -411,7 +411,7 @@ export function AddListingForm({setShowAddAuction}: Props) {
                           </FormControl>
                           <SelectContent className="dark:bg-white dark:border-none">
                             {subcategoriesRes && subcategoriesRes.data.length > 0 && subcategoriesRes.data.map((item) => (
-                              <SelectItem value={item._id}>{item.subCategoryName}</SelectItem>
+                              <SelectItem value={item._id} key={item._id}>{item.subCategoryName}</SelectItem>
                             ))}
                             
                           </SelectContent>
