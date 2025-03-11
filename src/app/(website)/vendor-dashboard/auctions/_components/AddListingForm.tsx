@@ -24,9 +24,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import SkeletonWrapper from "@/components/ui/skeleton-wrapper";
 import { Textarea } from "@/components/ui/textarea";
 import VideoUploader from "@/components/ui/video-uploader";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -39,10 +40,50 @@ interface Props {
   setShowAddAuction: Dispatch<SetStateAction<boolean>>;
 }
 
+
+type CategoriesResponse = {
+  status: boolean;
+  message: string;
+  data: {
+    _id: string;
+    categoryName: string
+  }[]
+}
+
 export function AddListingForm({setShowAddAuction}: Props) {
   const [images, setImages] = useState<File[]>([]);
   const [formValues, setFormValues] = useState({ /* your form values here */ });
   const [tags, setTags] = React.useState<string[]>([]);
+
+  const form = useForm<ProductFormValues>({
+    resolver: zodResolver(productFormSchema),
+    defaultValues: {
+      title: "",
+      shortDescription: "",
+      description: "",
+      productType: "cbd",
+      stockStatus: "in stock",
+      storeId: "6795fbc52288a452214d2371",
+      category: "6794b3a0bf6abc36ff944cec",
+      subCategory: "6794c42e9bf73edbb82f688a",
+      purchasedPrice: "",
+      selllingPrice: "",
+      discountPrice: "",
+      size: "",
+      quantity: "",
+      sku: "",
+      coa: false,
+      tags: [],
+      photos: [],
+    },
+  });
+
+  const productType = form.watch("productType")
+
+  const {data, isLoading: isCategoryLoading} = useQuery<CategoriesResponse>({
+    queryKey: ["categories", productType],
+    queryFn: () => fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/categories/${productType}`).then((res) => res.json())
+  })
 
   const {mutate: createProduct, isPending} = useMutation({
     mutationKey: ["auction_listing_create"],
@@ -74,28 +115,7 @@ export function AddListingForm({setShowAddAuction}: Props) {
   })
 
 
-  const form = useForm<ProductFormValues>({
-    resolver: zodResolver(productFormSchema),
-    defaultValues: {
-      title: "",
-      shortDescription: "",
-      description: "",
-      productType: "cbd",
-      stockStatus: "in stock",
-      storeId: "6795fbc52288a452214d2371",
-      category: "6794b3a0bf6abc36ff944cec",
-      subCategory: "6794c42e9bf73edbb82f688a",
-      purchasedPrice: "",
-      selllingPrice: "",
-      discountPrice: "",
-      size: "",
-      quantity: "",
-      sku: "",
-      coa: false,
-      tags: [],
-      photos: [],
-    },
-  });
+  
 
   
   useEffect(() => {
@@ -337,20 +357,23 @@ export function AddListingForm({setShowAddAuction}: Props) {
                         <FormLabel className="text-base text-[#444444] font-normal">
                           Category <span className="text-red-500">*</span>
                         </FormLabel>
+                        <SkeletonWrapper isLoading={isCategoryLoading}>
                         <Select
                           onValueChange={field.onChange}
                           defaultValue={field.value}
                         >
                           <FormControl className="h-[51px] border-[1px] border-[#B0B0B0] dark:border-[#B0B0B0]">
-                            <SelectTrigger className="dark:text-[#444444]">
+                            <SelectTrigger className="dark:text-[#444444]" >
                               <SelectValue placeholder="Select category" />
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent className="dark:bg-white dark:border-none">
-                            <SelectItem value="6794b3a0bf6abc36ff944cec">Category 1</SelectItem>
-                            <SelectItem value="6794b3a0bf6abc36ff944cec">Category 2</SelectItem>
+                            {data && data.data.length > 0 && data.data.map((item) => (
+                              <SelectItem value={item._id} key={item._id}>{item.categoryName}</SelectItem>
+                            ))}
                           </SelectContent>
                         </Select>
+                        </SkeletonWrapper>
                         <FormMessage />
                       </FormItem>
                     )}
