@@ -200,31 +200,26 @@ const AddAuctionForm: React.FC = () => {
                       </FormLabel>
                       <FormControl>
                         <div className="space-y-2">
-                          {["CBD", "Recreational"].map(type =>
-                            <div
-                              key={type}
-                              className="flex items-center space-x-2"
-                            >
+                          {["CBD", "Recreational"].map((type) => (
+                            <div key={type} className="flex items-center space-x-2">
                               <Checkbox
                                 id={type}
                                 checked={field.value === type}
-                                onCheckedChange={checked => {
+                                onCheckedChange={(checked) => {
                                   if (checked) {
-                                    field.onChange(type); // Ensures only one checkbox is selected at a time
+                                    field.onChange(type); // Use correct title-case
                                   } else {
-                                    field.onChange(""); // Clears the selection
+                                    field.onChange("");
                                   }
                                 }}
                                 className="h-4 w-4 border-[#C5C5C5]"
                               />
-                              <Label
-                                htmlFor={type}
-                                className="leading-[19.2px] text-[#9C9C9C] text-[16px] font-medium"
-                              >
+                              <Label htmlFor={type} className="text-[16px] font-medium text-[#9C9C9C]">
                                 {type}
                               </Label>
                             </div>
-                          )}
+                          ))}
+
                         </div>
                       </FormControl>
                       <FormMessage />

@@ -2,10 +2,12 @@
 
 import type React from "react"
 
-import { useRef, useState } from "react"
-import { Trash2, Plus, ImageIcon } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { ImageIcon, Plus, Trash2 } from "lucide-react"
 import Image from "next/image"
+import { useRef, useState } from "react"
+
+
 
 export default function ProductGallery({onImageChange}: any) {
   const [files, setFiles] = useState<File[]>([])

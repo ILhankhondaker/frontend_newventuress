@@ -29,7 +29,8 @@ const ContactForm: React.FC = () => {
 
   const session = useSession();
   const token = session.data?.user.token;
-  console.log({token})
+  const email = session.data?.user.email;
+  const fullName = session.data?.user.fullName;
 
   const {mutate} = useMutation<any, unknown, FormData>({
     mutationKey : ["contact"],
@@ -64,8 +65,8 @@ const ContactForm: React.FC = () => {
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema), // Use Zod resolver for validation
     defaultValues: {
-      name: "",
-      email: "",
+      name: fullName || "",
+      email: email || "",
       subject: "",
       message: "",
     },

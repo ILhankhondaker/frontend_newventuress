@@ -32,6 +32,7 @@ function BlogComments() {
     isLoading,
     data: comments,
     isError,
+    error
   } = useQuery({
     queryKey: ["blog-comments", blogID],
     queryFn: async () => {
@@ -39,7 +40,15 @@ function BlogComments() {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/blog/comments?blogID=${blogID}`
       );
-      if (!response.ok) throw new Error("Failed to fetch comments");
+      if (!response.ok) {
+        if (response.status === 404) {
+          const errorData = await response.json();
+          if (errorData.message === "No comments") {
+            throw new Error("No comments found.");
+          }
+        }
+        throw new Error("Failed to fetch comments");
+      }
       return response.json();
     },
     enabled: !!blogID,
@@ -103,7 +112,18 @@ function BlogComments() {
       </div>
     );
   } else if (isError) {
-    content = <ErrorContainer message="Failed to load comments. Please try again!" />;
+    // Display custom error message when there are no comments
+    if (error instanceof Error && error.message === "No comments found.") {
+      content = (
+        <div className="py-5 text-center">
+          <TextAnimate animation="slideUp" by="word">
+            No comments found on this blog!
+          </TextAnimate>
+        </div>
+      );
+    } else {
+      content = <ErrorContainer message="Failed to load comments. Please try again!" />;
+    }
   } else if (comments?.data.length <= 0 ) {
     content = (
       <div className="py-5 text-center">

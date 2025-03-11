@@ -107,7 +107,7 @@ export default function AuctionCard({ auction, index }: Props) {
           </div>
           <div className="flex gap-1 items-end self-start mt-2 font-medium leading-tight">
             <div className="self-stretch text-base text-[16px] leading-[19.2px] text-[#1A1A1A]">
-              ₿{auction.startingPrice}
+              ${auction.startingPrice}
             </div>
           </div>
         </div>
@@ -122,7 +122,8 @@ export default function AuctionCard({ auction, index }: Props) {
               : "bg-gradient-to-br from-[#121D42] via-[#152764] to-[#4857BD] text-base font-medium leading-[19px] text-white"
           }`}
         >
-          {isExpired ? "Expired" : "Bid Now"}
+          {isExpired ? "Expired" : 
+          <Link href={`/auction/${auction._id}`}>Bid Now</Link>}
         </Button>
       </div>
     </div>
