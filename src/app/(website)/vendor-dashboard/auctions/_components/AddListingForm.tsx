@@ -25,6 +25,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import VideoUploader from "@/components/ui/video-uploader";
 import { useMutation } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
@@ -131,6 +132,7 @@ export function AddListingForm({setShowAddAuction}: Props) {
     formData.append("quantity", data.quantity);
     formData.append("sku", data.sku);
     formData.append("coa", data.coa.toString()); // COA is a boolean, so convert to string
+    formData.append("photos", data.video!)
     
     // Log formData to inspect it if needed
     createProduct(formData)
@@ -538,7 +540,19 @@ export function AddListingForm({setShowAddAuction}: Props) {
 
               <div className="w-[600px] h-full mt-[16px] border border-[#9C9C9C] dark:border-[#B0B0B0] rounded-lg  ">
                 <ProductGallery onImageChange={handleImageChange} files={images}  />
+                <FormField
+          control={form.control}
+          name="video"
+          render={({ field }) => (
+            <FormItem className="p-6">
+              <FormLabel>Upload Video</FormLabel>
+              <VideoUploader value={field.value} onChange={field.onChange} error={form.formState.errors.video?.message} />
+              <FormMessage />
+            </FormItem>
+          )}
+        />
               </div>
+              
             </div>
             <div className="flex justify-end ">
               <Button type="submit" className="py-[12px] px-[24px]" disabled={isPending}>
