@@ -49,6 +49,14 @@ type CategoriesResponse = {
     categoryName: string
   }[]
 }
+type SubCategoriesResponse = {
+  status: boolean;
+  message: string;
+  data: {
+    _id: string;
+    subCategoryName: string
+  }[]
+}
 
 export function AddListingForm({setShowAddAuction}: Props) {
   const [images, setImages] = useState<File[]>([]);
@@ -83,6 +91,10 @@ export function AddListingForm({setShowAddAuction}: Props) {
   const {data, isLoading: isCategoryLoading} = useQuery<CategoriesResponse>({
     queryKey: ["categories", productType],
     queryFn: () => fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/categories/${productType}`).then((res) => res.json())
+  })
+  const {data:subcategoriesRes, isLoading: isSubCategoryLoading} = useQuery<SubCategoriesResponse>({
+    queryKey: ["categories", productType],
+    queryFn: () => fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/subcategories/nameid`).then((res) => res.json())
   })
 
   const {mutate: createProduct, isPending} = useMutation({
@@ -387,6 +399,7 @@ export function AddListingForm({setShowAddAuction}: Props) {
                         <FormLabel className="text-base text-[#444444] font-normal">
                           Sub-Category <span className="text-red-500">*</span>
                         </FormLabel>
+                        <SkeletonWrapper isLoading={isSubCategoryLoading}>
                         <Select
                           onValueChange={field.onChange}
                           defaultValue={field.value}
@@ -397,10 +410,13 @@ export function AddListingForm({setShowAddAuction}: Props) {
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent className="dark:bg-white dark:border-none">
-                            <SelectItem value="6794c42e9bf73edbb82f688a">Sub-category 1</SelectItem>
-                            <SelectItem value="6794c42e9bf73edbb82f688a">Sub-category 2</SelectItem>
+                            {subcategoriesRes && subcategoriesRes.data.length > 0 && subcategoriesRes.data.map((item) => (
+                              <SelectItem value={item._id}>{item.subCategoryName}</SelectItem>
+                            ))}
+                            
                           </SelectContent>
                         </Select>
+                        </SkeletonWrapper>
                         <FormMessage />
                       </FormItem>
                     )}
