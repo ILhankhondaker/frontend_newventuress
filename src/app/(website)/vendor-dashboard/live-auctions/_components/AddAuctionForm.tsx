@@ -21,8 +21,10 @@ import ProductGallery from "@/components/shared/imageUpload/ProductGallery";
 
 import { DateTimePicker } from "@/components/ui/datetime-picker";
 import { useSession } from "next-auth/react";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { CategoryResponse } from "@/types/category";
+import PacificDropdownSelector from "@/components/ui/PacificDropdownSelector";
 const formSchema = z.object({
   title: z.string().min(1, "Title is required"),
   description: z.string(),
@@ -33,7 +35,7 @@ const formSchema = z.object({
   sku: z.string().optional(),
   stockQuantity: z.string().optional(),
   tags: z.array(z.string()).optional(),
-  productType: z.enum(["CBD", "Recreational"]),
+  productType: z.enum(["cbd", "recreational"]),
    images: z.array(z.any()).optional(),
 });
 
@@ -48,14 +50,14 @@ const AddAuctionForm: React.FC = () => {
     defaultValues: {
       title: "",
       description: "",
-      category: "",
+      category: "All",
       startingPrice: "",
       startingTime: new Date(),
       endingTime: new Date(),
       sku: "",
       stockQuantity: "",
       tags: [],
-      productType: "CBD",
+      productType: "cbd",
       images: [],
     }
   });
@@ -86,6 +88,42 @@ const AddAuctionForm: React.FC = () => {
     const token = session.data?.user.token;
     console.log({token});
 
+    // category api call 
+    const {data} = useQuery<CategoryResponse>({
+      queryKey : ["category"],
+      queryFn : () => fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/categories`, {
+        method : "GET",
+        headers : {
+          Authorization : `Bearer ${token}`
+        }
+      })
+      .then((res)=> res.json()),
+    })
+
+    // console.log({data})
+    // const filterCategory = data?.data?.filter((data) => data.categoryName);
+    // console.log({filterCategory})
+
+    // const filterCategory =
+    // data?.data?.map((cat) => ({
+    //   name: cat.categoryName,
+    //   value: cat._id,
+    // })) || [];
+
+    const filterCategory = [
+      { name : "All", value : "all"},
+      ...(data?.data?.map((cat) => ({
+        name: cat.categoryName,
+        value: cat._id,
+      }))) || [],
+    ]
+
+
+
+    console.log({filterCategory})
+
+
+    // auction api call 
     const {mutate} = useMutation<any, unknown, FormData>({
       mutationKey : ["add-auction"],
       mutationFn : (formData) => fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/vendor/auction/create`, {
@@ -200,7 +238,7 @@ const AddAuctionForm: React.FC = () => {
                       </FormLabel>
                       <FormControl>
                         <div className="space-y-2">
-                          {["CBD", "Recreational"].map((type) => (
+                          {["cbd", "recreational"].map((type) => (
                             <div key={type} className="flex items-center space-x-2">
                               <Checkbox
                                 id={type}
@@ -235,10 +273,11 @@ const AddAuctionForm: React.FC = () => {
                         Category<span className="text-red-500">*</span>
                       </FormLabel>
                       <FormControl>
-                        <Input
-                          className="py-6 border-[1px] border-[#B0B0B0] text-black text-[16px] dark:!text-black "
-                          type=""
-                          {...field}
+                        <PacificDropdownSelector
+                        list={filterCategory}
+                        selectedValue={field?.value || "All"}
+                        onValueChange={(value)=> field.onChange(value || "All")}
+                        className="bg-white text-[#444444] py-3 border-[#9E9E9E] "
                         />
                       </FormControl>
 
