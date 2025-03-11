@@ -23,7 +23,7 @@ const FilterByCtegoryList = [
 ];
 const AllProductTypesList = [
   { id: 1, name: "All Product Types", value: "All Product Types" },
-  { id: 2, name: "CBD/HEMP", value: "cbd/hemp" },
+  { id: 2, name: "CBD/HEMP", value: "cbd" },
   { id: 3, name: "Recreational", value: "recreational" },
 ];
 const AllAuctionsList = [
