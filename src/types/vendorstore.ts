@@ -66,3 +66,40 @@ export type vedorestoreDataResponse = {
     status:boolean
   data: StoreData[];
 };
+
+export type Product = {
+  photos: string[];
+  _id: string;
+  title: string;
+  shortDescription: string;
+  description: string;
+  images: string[];
+  productType: string;
+  stockStatus: 'in stock' | 'out of stock'  // You can extend stock status if needed
+  category: string;
+  subCategory: string;
+  purchasedPrice: number;
+  sellingPrice: number;
+  discountPrice: number;
+  size: string;
+  quantity: string; // You may want to consider changing this to a number if it's always numeric
+  sku: string;
+  coa: boolean;
+  tags: string[];
+  review: string[];
+  __v: number;
+  purchases: number;
+  storeID: string;
+};
+
+export type VendorAuctionListingResponse = {
+  success: boolean;
+  message: string;
+  data: Product[],
+  meta: {
+    totalProducts: number;
+    totalPages: number;
+    currentPage: number
+  }
+}
+

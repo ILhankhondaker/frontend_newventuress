@@ -3,7 +3,9 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
+import ProductGallery from "@/components/shared/imageUpload/ProductGallery";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Form,
   FormControl,
@@ -13,7 +15,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import { InputWithTags } from "@/components/ui/input-with-tags";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -21,20 +24,44 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Checkbox } from "@/components/ui/checkbox";
+import SkeletonWrapper from "@/components/ui/skeleton-wrapper";
+import { Textarea } from "@/components/ui/textarea";
+import VideoUploader from "@/components/ui/video-uploader";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { Loader2 } from "lucide-react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { toast } from "sonner";
 import {
   productFormSchema,
   type ProductFormValues,
 } from "./product-form-schema";
-import ProductGallery from "@/components/shared/imageUpload/ProductGallery";
-import React, { useEffect, useState } from "react";
-import { InputWithTags } from "@/components/ui/input-with-tags";
-import { Label } from "@/components/ui/label";
 
-export function AddListingForm() {
+interface Props {
+  setShowAddAuction: Dispatch<SetStateAction<boolean>>;
+}
+
+
+type CategoriesResponse = {
+  status: boolean;
+  message: string;
+  data: {
+    _id: string;
+    categoryName: string
+  }[]
+}
+type SubCategoriesResponse = {
+  status: boolean;
+  message: string;
+  data: {
+    _id: string;
+    subCategoryName: string
+  }[]
+}
+
+export function AddListingForm({setShowAddAuction}: Props) {
   const [images, setImages] = useState<File[]>([]);
   const [formValues, setFormValues] = useState({ /* your form values here */ });
-
+  const [tags, setTags] = React.useState<string[]>([]);
 
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(productFormSchema),
@@ -42,36 +69,111 @@ export function AddListingForm() {
       title: "",
       shortDescription: "",
       description: "",
-      productType: "CBD",
-      stockStatus: "In Stock",
-      store: "",
-      category: "",
-      subCategory: "",
-      purchasePrice: "",
-      sellingPrice: "",
+      productType: "cbd",
+      stockStatus: "in stock",
+      storeId: "6795fbc52288a452214d2371",
+      category: "6794b3a0bf6abc36ff944cec",
+      subCategory: "6794c42e9bf73edbb82f688a",
+      purchasedPrice: "",
+      selllingPrice: "",
       discountPrice: "",
-      sizeKG: "",
+      size: "",
       quantity: "",
       sku: "",
       coa: false,
       tags: [],
-      images: [],
+      photos: [],
     },
   });
 
-  const [tags, setTags] = React.useState<string[]>([]);
+  const productType = form.watch("productType")
+
+  const {data, isLoading: isCategoryLoading} = useQuery<CategoriesResponse>({
+    queryKey: ["categories", productType],
+    queryFn: () => fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/categories/${productType}`).then((res) => res.json())
+  })
+  const {data:subcategoriesRes, isLoading: isSubCategoryLoading} = useQuery<SubCategoriesResponse>({
+    queryKey: ["categories", productType],
+    queryFn: () => fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/subcategories/nameid`).then((res) => res.json())
+  })
+
+  const {mutate: createProduct, isPending} = useMutation({
+    mutationKey: ["auction_listing_create"],
+    mutationFn: (body: FormData) => fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/product`, {
+      method: "POST",
+      body: body
+    }).then((res) => res.json()),
+    onSuccess: (data) => {
+      if(!data.status) {
+        toast.error(data.message, {
+          position: "top-right",
+          richColors: true
+        });
+        return;
+      }
+
+      // handle success
+      toast.success(data.message, {
+        position: "top-right",
+        richColors: true
+      });
+
+      form.reset();
+      setTags([]);
+      setImages([])
+      setShowAddAuction(false)
+
+    }
+  })
+
+
+  
+
+  
   useEffect(() => {
     form.setValue("tags", tags); // Update the 'tags' field in the form
     form.trigger("tags");
-    form.setValue("images", images.map((image) => image.name));
+    
     
   }, [tags, form,images, form.trigger]);
-  function onSubmit(data: ProductFormValues) {
-    console.log(data);
-    console.log(images);
+  const onSubmit = (data: ProductFormValues) => {
+    const formData = new FormData();
+  
+    // Append images to the formData
+    images.forEach((image) => {
+      formData.append("photos", image ); // Append each image file
+    });
+  
+    // Append other fields using 'data' from the form
+    tags.forEach((tag) => {
+      formData.append("tags", tag)
+    })
+    
+    formData.append("title", data.title);
+    formData.append("shortDescription", data.shortDescription);
+    formData.append("description", data.description);
+    formData.append("productType", data.productType);
+    formData.append("stockStatus", data.stockStatus);
+    formData.append("storeId", data.storeId);
+    formData.append("category", data.category);
+    formData.append("subCategory", data.subCategory);
+    formData.append("purchasedPrice", data.purchasedPrice);
+    formData.append("selllingPrice", data.selllingPrice);
+    formData.append("discountPrice", data.discountPrice || ""); // Use empty string if no discount price
+    formData.append("size", data.size);
+    formData.append("quantity", data.quantity);
+    formData.append("sku", data.sku);
+    formData.append("coa", data.coa.toString()); // COA is a boolean, so convert to string
+    formData.append("photos", data.video!)
+    
+    // Log formData to inspect it if needed
+    createProduct(formData)
+  
+    // After creating the formData, you can submit it using fetch or axios:
    
- 
-  }
+  };
+
+  
   const handleImageChange = (images: File[]) => {
     setImages(images);
     setFormValues({ ...formValues, images }); // Update the form values
@@ -158,7 +260,7 @@ export function AddListingForm() {
                         </FormLabel>
                         <FormControl>
                           <div className="space-y-2">
-                            {["CBD", "Recreational"].map(type =>
+                            {["cbd", "recreational"].map(type =>
                               <div
                                 key={type}
                                 className="flex items-center space-x-2"
@@ -191,7 +293,7 @@ export function AddListingForm() {
 
                   <FormField
                     control={form.control}
-                    name="productType"
+                    name="stockStatus"
                     render={({ field }) =>
                       <FormItem>
                         <FormLabel className="leading-[19.2px] text-base text-[#444444] font-normal">
@@ -199,7 +301,7 @@ export function AddListingForm() {
                         </FormLabel>
                         <FormControl>
                           <div className="space-y-2">
-                            {["In Stoke", "Out of Stoke"].map(type =>
+                            {["in stock", "out of stock"].map(type =>
                               <div
                                 key={type}
                                 className="flex items-center space-x-2"
@@ -234,7 +336,7 @@ export function AddListingForm() {
                 <div className="grid grid-cols-3 gap-6">
                   <FormField
                     control={form.control}
-                    name="store"
+                    name="storeId"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel className="text-base text-[#444444] font-normal">
@@ -250,8 +352,8 @@ export function AddListingForm() {
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent className="dark:bg-white dark:border-none">
-                            <SelectItem value="store1">Store 1</SelectItem>
-                            <SelectItem value="store2">Store 2</SelectItem>
+                            <SelectItem value="6795fbc52288a452214d2371">Store 1</SelectItem>
+                            <SelectItem value="6795fbc52288a452214d2371">Store 2</SelectItem>
                           </SelectContent>
                         </Select>
                         <FormMessage />
@@ -267,20 +369,23 @@ export function AddListingForm() {
                         <FormLabel className="text-base text-[#444444] font-normal">
                           Category <span className="text-red-500">*</span>
                         </FormLabel>
+                        <SkeletonWrapper isLoading={isCategoryLoading}>
                         <Select
                           onValueChange={field.onChange}
                           defaultValue={field.value}
                         >
                           <FormControl className="h-[51px] border-[1px] border-[#B0B0B0] dark:border-[#B0B0B0]">
-                            <SelectTrigger className="dark:text-[#444444]">
+                            <SelectTrigger className="dark:text-[#444444]" >
                               <SelectValue placeholder="Select category" />
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent className="dark:bg-white dark:border-none">
-                            <SelectItem value="category1">Category 1</SelectItem>
-                            <SelectItem value="category2">Category 2</SelectItem>
+                            {data && data.data.length > 0 && data.data.map((item) => (
+                              <SelectItem value={item._id} key={item._id}>{item.categoryName}</SelectItem>
+                            ))}
                           </SelectContent>
                         </Select>
+                        </SkeletonWrapper>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -294,6 +399,7 @@ export function AddListingForm() {
                         <FormLabel className="text-base text-[#444444] font-normal">
                           Sub-Category <span className="text-red-500">*</span>
                         </FormLabel>
+                        <SkeletonWrapper isLoading={isSubCategoryLoading}>
                         <Select
                           onValueChange={field.onChange}
                           defaultValue={field.value}
@@ -304,10 +410,13 @@ export function AddListingForm() {
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent className="dark:bg-white dark:border-none">
-                            <SelectItem value="sub1">Sub-category 1</SelectItem>
-                            <SelectItem value="sub2">Sub-category 2</SelectItem>
+                            {subcategoriesRes && subcategoriesRes.data.length > 0 && subcategoriesRes.data.map((item) => (
+                              <SelectItem value={item._id} key={item._id}>{item.subCategoryName}</SelectItem>
+                            ))}
+                            
                           </SelectContent>
                         </Select>
+                        </SkeletonWrapper>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -317,11 +426,11 @@ export function AddListingForm() {
                 <div className="grid grid-cols-3 gap-6">
                   <FormField
                     control={form.control}
-                    name="purchasePrice"
+                    name="purchasedPrice"
                     render={({ field }) => (
                       <FormItem className="flex flex-col ">
                         <FormLabel className=" leading-tight text-[#444444] text-[16px] font-normal ">
-                          Starting Price
+                          Purchased Price
                         </FormLabel>
                         <div className="flex justify-between mt-2 w-full whitespace-nowrap rounded-md border border-solid border-neutral-400 h-[51px] dark:border-[#B0B0B0]">
                           <div className="gap-3 self-stretch dark:bg-[#482D721A] px-4 text-sm font-semibold leading-tight text-[#0057A8] dark:!text-[#6841A5] bg-gray-200 rounded-l-lg h-[49px] w-[42px] flex items-center justify-center">
@@ -343,11 +452,11 @@ export function AddListingForm() {
 
                   <FormField
                     control={form.control}
-                    name="sellingPrice"
+                    name="selllingPrice"
                     render={({ field }) => (
                       <FormItem className="flex flex-col ">
                         <FormLabel className=" leading-tight text-[#444444] text-[16px] font-normal">
-                          Starting Price
+                          Selling Price
                         </FormLabel>
                         <div className="flex justify-between mt-2 w-full whitespace-nowrap rounded-md border border-solid border-neutral-400 h-[51px] dark:border-[#B0B0B0]">
                           <div className="gap-3 self-stretch px-4 text-sm font-semibold leading-tight text-[#0057A8] dark:!text-[#6841A5] bg-gray-200 dark:bg-[#482D721A] rounded-l-lg h-[49px] w-[42px] flex items-center justify-center">
@@ -373,7 +482,7 @@ export function AddListingForm() {
                     render={({ field }) => (
                       <FormItem className="flex flex-col ">
                         <FormLabel className=" leading-tight text-[#444444] text-[16px] font-normal">
-                          Starting Price
+                          Discount Price
                         </FormLabel>
                         <div className="flex justify-between mt-2 w-full whitespace-nowrap rounded-md border border-solid border-neutral-400 h-[51px] dark:border-[#B0B0B0]">
                           <div className="gap-3 self-stretch px-4 text-sm font-semibold leading-tight text-[#0057A8] dark:!text-[#6841A5] dark:bg-[#482D721A] bg-gray-200 rounded-l-lg h-[49px] w-[42px] flex items-center justify-center">
@@ -397,7 +506,7 @@ export function AddListingForm() {
                 <div className="grid grid-cols-3 gap-6">
                   <FormField
                     control={form.control}
-                    name="sizeKG"
+                    name="size"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel className="text-base text-[#444444] font-normal">Size (KG)</FormLabel>
@@ -469,12 +578,24 @@ export function AddListingForm() {
               </div>
 
               <div className="w-[600px] h-full mt-[16px] border border-[#9C9C9C] dark:border-[#B0B0B0] rounded-lg  ">
-                <ProductGallery onImageChange={handleImageChange}  />
+                <ProductGallery onImageChange={handleImageChange} files={images}  />
+                <FormField
+          control={form.control}
+          name="video"
+          render={({ field }) => (
+            <FormItem className="p-6">
+              <FormLabel>Upload Video</FormLabel>
+              <VideoUploader value={field.value} onChange={field.onChange} error={form.formState.errors.video?.message} />
+              <FormMessage />
+            </FormItem>
+          )}
+        />
               </div>
+              
             </div>
             <div className="flex justify-end ">
-              <Button type="submit" className="py-[12px] px-[24px]">
-                Submit
+              <Button type="submit" className="py-[12px] px-[24px]" disabled={isPending}>
+                Create {isPending && <Loader2 className="animate-spin" />}
               </Button>
             </div>
           </form>
