@@ -45,8 +45,6 @@ function CountrySelector() {
     industry.some(i => country.allow.includes(i))
   );
   
-  
-  console.log(filteredCountries);
 
   // Define the countries you want to include
 const countries = filteredCountries.reduce((acc, { countryCode, country }) => {
@@ -173,12 +171,16 @@ const countries = filteredCountries.reduce((acc, { countryCode, country }) => {
 
   const isContinueDisble = businesses.length == 0
 
-  const countriesLists = selectedCountries.join("_")
+  const joinedCountries = selectedCountries.join("_")
+
+
 
   const redirectUrl =
       selectedCountries.includes("United States") || selectedCountries.includes("Canada")
-        ? `/registration/country/${countriesLists}`
-        : `/registration/country/${countriesLists}/business_information`;
+        ? `/registration/country/${joinedCountries}`
+        : `/registration/country/${joinedCountries}/business_information`;
+
+    console.log(redirectUrl)
 
   return (
    <>
