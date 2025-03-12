@@ -86,15 +86,16 @@ export function AddListingForm({setShowAddAuction}: Props) {
     },
   });
 
-  const productType = form.watch("productType")
+  const productType = form.watch("productType");
+  const categoryId = form.watch("category")
 
   const {data, isLoading: isCategoryLoading} = useQuery<CategoriesResponse>({
     queryKey: ["categories", productType],
     queryFn: () => fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/categories/${productType}`).then((res) => res.json())
   })
   const {data:subcategoriesRes, isLoading: isSubCategoryLoading} = useQuery<SubCategoriesResponse>({
-    queryKey: ["categories", productType],
-    queryFn: () => fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/subcategories/nameid`).then((res) => res.json())
+    queryKey: ["categories", categoryId],
+    queryFn: () => fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/subcategories/${categoryId}`).then((res) => res.json())
   })
 
   const {mutate: createProduct, isPending} = useMutation({
