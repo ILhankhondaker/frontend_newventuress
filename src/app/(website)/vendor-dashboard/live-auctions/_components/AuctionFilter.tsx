@@ -23,8 +23,8 @@ const FilterByCtegoryList = [
 ];
 const AllProductTypesList = [
   { id: 1, name: "All Product Types", value: "All Product Types" },
-  { id: 2, name: "Sales", value: "sales" },
-  { id: 3, name: "Rentals", value: "rentals" },
+  { id: 2, name: "CBD/HEMP", value: "cbd" },
+  { id: 3, name: "Recreational", value: "recreational" },
 ];
 const AllAuctionsList = [
   { id: 1, name: "All Auctions", value: "All Auctions" },
@@ -32,11 +32,10 @@ const AllAuctionsList = [
   { id: 3, name: "Rentals", value: "rentals" },
 ];
 
-function AuctionFilter() {
+function AuctionFilter({productType, setProductType}:any) {
     const [show, setShow] = useState<string>("all"); // Default to "all"
       const [stores, setStores] = useState<string>("Chose stores"); // Default to "auctions"
       const [ctegorys, setCtegorys] = useState<string>("Filter By category"); // Default to "auctions"
-      const [products, setProducts] = useState<string>("All Product Types"); // Default to "auctions"
       const [auctions, setAuctions] = useState<string>("All Auctions"); // Default to "auctions"
   return (
     <div className="  bg-white w-full flex items-center justify-between rounded-[12px] py-[23px] px-5">
@@ -75,8 +74,8 @@ function AuctionFilter() {
             
             <PacificDropdownSelector
             list={AllProductTypesList}
-            selectedValue={products}
-            onValueChange={setProducts}
+            selectedValue={productType}
+            onValueChange={setProductType}
             />
         </div>
         <div className="h-full flex items-center gap-2">

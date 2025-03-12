@@ -1,7 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import PacificDropdownSelector from "@/components/ui/PacificDropdownSelector";
-import { useState } from "react";
+import { useVendorAuctionListingState } from "@/zustand/vendor-management/auction-listing";
 
 // Demo lists for the dropdowns
 const showList = [
@@ -11,12 +11,12 @@ const showList = [
 ];
 
 const StoreLists = [
-  { id: 1, name: "Chose stores", value: "all" },
+  { id: 1, name: "All Store", value: "all" },
   { id: 2, name: "CBD", value: "cbd" },
   { id: 3, name: "Recreational", value: "recreational" },
 ];
 const FilterByCtegoryList = [
-  { id: 1, name: "Filter By Ctegory", value: "all" },
+  { id: 1, name: "All", value: "all" },
   { id: 2, name: "CBD", value: "cbd" },
   { id: 3, name: "Recreational", value: "recreational" },
 ];
@@ -27,8 +27,7 @@ const AllProductTypesList = [
 ];
 
 const AuctionsFilter = () => {
-  const [show, setShow] = useState<string>("all"); // Default to "all"
-  const [productsType, setProductType] = useState("all");
+  const {show, setShow, productsType, setProductType} = useVendorAuctionListingState()
 
   return (
     <div className=" p-[17px] bg-white w-full flex items-center justify-between rounded-[12px] py-[23px]">

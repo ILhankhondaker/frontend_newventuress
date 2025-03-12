@@ -5,16 +5,16 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Check, ImagePlus, MoreHorizontal } from "lucide-react";
 import Image from "next/image";
 
-import { AuctionsListingDataType } from "./data";
+import { Button } from "@/components/ui/button";
+import { Product } from "@/types/vendorstore";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@radix-ui/react-dropdown-menu";
-import { Button } from "@/components/ui/button";
 
-export const AuctionListingColumns: ColumnDef<AuctionsListingDataType>[] = [
+export const AuctionListingColumns: ColumnDef<Product>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -48,7 +48,7 @@ export const AuctionListingColumns: ColumnDef<AuctionsListingDataType>[] = [
         <div className="flex  items-center gap-x-[8px] ">
           <div className="h-[80px] w-[90px] 2xl:h-[110px] 2xl:w-[110px] relative rounded-[12px]">
             <Image
-              src={row.original.image}
+              src={row.original.photos[0]}
               fill
               alt="product"
               className="rounded-[12px]"
@@ -56,12 +56,12 @@ export const AuctionListingColumns: ColumnDef<AuctionsListingDataType>[] = [
           </div>
           <div className="flex flex-col gap-y-[8px]">
             <h3 className="text-[15px] 2xl:text-[18px] leading-[21.6px] font-semibold text-gradient dark:text-gradient-pink">
-              {row.original.name}
+              {row.original.title}
             </h3>
             <div className="flex items-center  py-1 rounded">
               <span className="text-sm text-[#444444] font-normal  border border-[#444444] rounded-3xl flex items-center gap-1 2xl:gap-2 px-1 2xl:px-2 2xl:py-1 ">
                 <Check className="w-3 h-3" />
-                In stock (08)
+                In stock ({row.original.quantity})
               </span>
             </div>
           </div>
@@ -81,7 +81,7 @@ export const AuctionListingColumns: ColumnDef<AuctionsListingDataType>[] = [
     header: "Store",
     cell: ({ row }) => (
       <h4 className="max-w-[137px] text-gradient font-semibold text-[18px] leading-[21.6px]  flex justify-center ml-10 dark:text-gradient-pink ">
-        {row.original.store}
+        {row.original.storeID}
       </h4>
     ),
   },
@@ -89,7 +89,7 @@ export const AuctionListingColumns: ColumnDef<AuctionsListingDataType>[] = [
     header: "Status",
     cell: ({ row }) => (
       <h5 className="max-w-[137px] font-normal text-[16px] leading-[19.2px] text-[#E10E0E]">
-        {row.original.status}
+        {row.original.stockStatus}
       </h5>
     ),
   },
@@ -97,7 +97,7 @@ export const AuctionListingColumns: ColumnDef<AuctionsListingDataType>[] = [
     header: "Price",
     cell: ({ row }) => (
       <h4 className="text-base text-[#444444] font-normal leading-[19.2px] ">
-        ${row.original.price}
+        ${row.original.sellingPrice}
       </h4>
     ),
   },
@@ -105,9 +105,9 @@ export const AuctionListingColumns: ColumnDef<AuctionsListingDataType>[] = [
   {
     header: "Date",
     accessorKey: "date",
-    cell: ({ row }) => (
+    cell: () => (
       <h4 className="text-base text-[#444444] font-normal leading-[19.2px]">
-        {row.original.date}
+        Date Not Found
       </h4>
     ),
   },

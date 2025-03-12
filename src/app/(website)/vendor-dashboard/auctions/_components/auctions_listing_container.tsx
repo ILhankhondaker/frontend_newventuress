@@ -10,41 +10,61 @@ import { useState } from "react";
 
 // Local imports
 import { DataTable } from "@/components/ui/data-table";
+import ErrorContainer from "@/components/ui/error-container";
 import PacificPagination from "@/components/ui/PacificPagination";
+import SkeletonWrapper from "@/components/ui/skeleton-wrapper";
+import { Product, VendorAuctionListingResponse } from "@/types/vendorstore";
+import { useQuery } from "@tanstack/react-query";
 import { AuctionListingColumns } from "./auctions_listing_column";
-import { auctionsListingData, AuctionsListingDataType } from "./data";
 
 const AuctionListingContainer = () => {
   const [currentPage, setCurrentPage] = useState(1);
-  return (
-    <section className="w-full">
+  const {data, isLoading, isError, error} = useQuery<VendorAuctionListingResponse>({
+    queryKey: ["auction_listing", currentPage],
+    queryFn: () => fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/product?page=${currentPage}&limit=5`).then((res) => res.json())
+  })
+
+  
+
+  let content;
+
+  if(isLoading || data) {
+    content = <SkeletonWrapper isLoading={isLoading}>
+       <section className="w-full">
       <div className="w-full shadow-[0px_0px_22px_8px_#C1C9E4] h-auto  rounded-[24px] bg-white">
         <TableContainer
-          data={auctionsListingData}
+          data={data?.data ?? []}
           columns={AuctionListingColumns}
         />
       </div>
-      <div className="my-[40px] w-full  flex justify-between">
+      <div className="my-[40px] mb-[80px] w-full  flex justify-between">
         <p className="font-normal text-[16px] leading-[19.2px] text-[#444444]">
-          Showing 1 to 25 in first entries
+          Showing 1 to {data?.meta.totalProducts ?? 0} in first entries
         </p>
         <div>
           <PacificPagination
             currentPage={currentPage}
-            totalPages={10}
+            totalPages={data?.meta.totalPages ?? 1}
             onPageChange={(page) => setCurrentPage(page)}
           />
         </div>
       </div>
     </section>
-  );
+    </SkeletonWrapper>
+  } else if(isError) {
+    content = <ErrorContainer message={error?.message ?? ""} />
+  }
+
+
+
+  return content;
 };
 
 export default AuctionListingContainer;
 
 interface TableContainerProps {
-  data: any[];
-  columns: ColumnDef<AuctionsListingDataType>[];
+  data: Product[];
+  columns: ColumnDef<Product>[];
 }
 const TableContainer = ({ data, columns }: TableContainerProps) => {
   const [rowSelection, setRowSelection] = useState({});

@@ -1,12 +1,12 @@
 "use client";
 
 import {
-    Breadcrumb,
-    BreadcrumbItem,
-    BreadcrumbLink,
-    BreadcrumbList,
-    BreadcrumbPage,
-    BreadcrumbSeparator,
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
 import { getRegionByCountry } from "@/data/countries";
@@ -94,8 +94,6 @@ const isOnlyRecreational = industries.length === 1 && industries.includes("Recre
     redirect("/registration")
   }
 
-  console.log("isHEMP", isOnlyHempCBD)
-  console.log("ISrECREATIONAL", isOnlyRecreational)
 
 
   const isUs = countries.includes("United States");
