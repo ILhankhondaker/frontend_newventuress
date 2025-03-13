@@ -17,7 +17,7 @@ const FindFavourite = () => {
         <h1 className="text-[28px] lg:text-[36px] font-medium leading-[43.2px]">
           Benifits of join Pacific Rim
         </h1>
-        <ul className="*:list-disc">
+        <ul className="">
           <li>
           Our platform ensures that all participants have valid Cannabis
           Business licenses and that those licenses are in good standing with

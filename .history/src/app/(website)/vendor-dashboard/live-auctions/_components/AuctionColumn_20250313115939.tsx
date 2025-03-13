@@ -47,7 +47,7 @@ export const ActionColumn: ColumnDef<AuctionDataType>[] = [
               height={142}
               width={110}
               alt="img"
-              className="rounded-[8px] h-24 w-36"
+              className="rounded-[8px] h-36 w-36"
             />
           </div>
           <div>
@@ -73,7 +73,7 @@ export const ActionColumn: ColumnDef<AuctionDataType>[] = [
     },
   },
   {
-    header: "Starting Date & Time",
+    header: "Start Date",
     cell: ({ row }) => {
       return (
         <div>
@@ -83,7 +83,7 @@ export const ActionColumn: ColumnDef<AuctionDataType>[] = [
     },
   },
   {
-    header: "Ending Date & Time",
+    header: "End Date",
     cell: ({ row }) => {
       return (
         <div>

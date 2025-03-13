@@ -96,7 +96,7 @@ function DesktopNavbar({ pathName, loggedin }: DesktopNavbarProps) {
         >
           Home
         </Link>
-        {/* <Link
+        <Link
           href="/about"
           className={cn(
             "text-[20px] font-medium hover:text-primary-blue-main dark:hover:text-primary-pink-main",
@@ -104,11 +104,11 @@ function DesktopNavbar({ pathName, loggedin }: DesktopNavbarProps) {
           )}
         >
           About
-        </Link> */}
+        </Link>
         <Link
           href=""
           className={cn(
-            "text-[20px] font-medium hover:text-primary-blue-main dark:hover:text-primary-pink-main ",
+            "text-[20px] font-medium hover:text-primary-blue-main dark:hover:text-primary-pink-main",
             pathName === "/products"
               ? "text-primary-blue-main dark:text-primary-pink-main"
               : "text-black font-normal"
