@@ -223,8 +223,7 @@ const AddAuctionForm: React.FC = () => {
   return (
     <section className="pb-[60px]">
       <div className="bg-white rounded-[24px] p-[32px]">
-        <div
-          className={
+	@@ -142,7 +228,7 @@ const AddAuctionForm: React.FC = () => {
             "bg-primary dark:bg-pinkGradient px-4 py-3 mb- rounded-t-3xl text-white text-[32px] leading-[38px] font-semibold h-[78px] flex items-center"
           }
         >
@@ -232,8 +231,7 @@ const AddAuctionForm: React.FC = () => {
         </div>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
-            <div className="flex gap-4">
-              <div className="w-[58%] space-y-[16px] mt-[16px]">
+	@@ -151,253 +237,473 @@ const AddAuctionForm: React.FC = () => {
                 <FormField
                   control={form.control}
                   name="title"
