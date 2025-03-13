@@ -35,9 +35,7 @@ export default function FeaturedProductCard({ product }: { product: Product }) {
         discountPrice: product.discountPrice,
         sellingPrice: product.selllingPrice,
         stockStatus: product.stockStatus,
-        image:
-          product.photos[0] ||
-          "https://images.pexels.com/photos/7667735/pexels-photo-7667735.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+        image: product.images[0] || "/assets/blogs/blogs.png",
         quantity: 1,
       })
     );
@@ -59,9 +57,7 @@ export default function FeaturedProductCard({ product }: { product: Product }) {
           title: product.title,
           discountPrice: product.discountPrice,
           sellingPrice: product.selllingPrice,
-          image:
-            product.photos[0] ||
-            "https://images.pexels.com/photos/7667735/pexels-photo-7667735.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+          image: product.images[0] || "/assets/blogs/blogs.png",
           stockStatus: product.stockStatus,
         })
       );
@@ -76,17 +72,13 @@ export default function FeaturedProductCard({ product }: { product: Product }) {
       <div className="overflow-hidden rounded-[8px]">
         <Image
           loading="lazy"
-          src={
-            product?.photos[0] ??
-            "https://images.pexels.com/photos/7667735/pexels-photo-7667735.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-          }
+          src={product?.images[0] ?? "/assets/blogs/blogs.png"}
           alt="Product image"
           width={300}
           height={100}
           className="z-0 aspect-[1.07] w-full rounded-[8px] object-cover duration-300 hover:scale-105"
           onError={(e) => {
-            e.currentTarget.src =
-              "https://images.pexels.com/photos/7667735/pexels-photo-7667735.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1";
+            e.currentTarget.src = "/assets/blogs/blogs.png";
           }}
         />
       </div>

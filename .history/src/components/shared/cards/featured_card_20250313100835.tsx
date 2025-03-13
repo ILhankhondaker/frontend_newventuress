@@ -9,10 +9,7 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { useAppDispatch, useAppSelector } from "@/redux/store";
 import { addToCart } from "@/redux/features/cart/cartSlice";
-import {
-  addToWishlist,
-  removeFromWishlist,
-} from "@/redux/features/wishlist/wishlistSlice";
+import { addToWishlist, removeFromWishlist } from "@/redux/features/wishlist/wishlistSlice";
 import { Product } from "@/types/product";
 
 export default function FeaturedProductCard({ product }: { product: Product }) {
@@ -21,50 +18,36 @@ export default function FeaturedProductCard({ product }: { product: Product }) {
 
   const isWishlist = wishlist.some((item) => item._id === product._id);
 
-  const handleAddToCart = (e: {
-    stopPropagation: () => void;
-    preventDefault: () => void;
-  }) => {
+  const handleAddToCart = (e: { stopPropagation: () => void; preventDefault: () => void; }) => {
     e.stopPropagation();
     e.preventDefault();
 
-    dispatch(
-      addToCart({
-        _id: product._id,
-        title: product.title,
-        discountPrice: product.discountPrice,
-        sellingPrice: product.selllingPrice,
-        stockStatus: product.stockStatus,
-        image:
-          product.photos[0] ||
-          "https://images.pexels.com/photos/7667735/pexels-photo-7667735.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-        quantity: 1,
-      })
-    );
+    dispatch(addToCart({ 
+      _id: product._id,
+      title: product.title,
+      discountPrice: product.discountPrice,
+      sellingPrice: product.selllingPrice,
+      stockStatus: product.stockStatus,
+      image: product.images[0] || "/assets/blogs/blogs.png",
+      quantity: 1,
+    }));
   };
 
-  const handleWishlistToggle = (e: {
-    stopPropagation: () => void;
-    preventDefault: () => void;
-  }) => {
+  const handleWishlistToggle = (e: { stopPropagation: () => void; preventDefault: () => void; }) => {
     e.stopPropagation();
     e.preventDefault();
-
+    
     if (isWishlist) {
       dispatch(removeFromWishlist(product._id));
     } else {
-      dispatch(
-        addToWishlist({
-          _id: product._id,
-          title: product.title,
-          discountPrice: product.discountPrice,
-          sellingPrice: product.selllingPrice,
-          image:
-            product.photos[0] ||
-            "https://images.pexels.com/photos/7667735/pexels-photo-7667735.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-          stockStatus: product.stockStatus,
-        })
-      );
+      dispatch(addToWishlist({
+              _id: product._id,
+              title: product.title,
+              discountPrice: product.discountPrice,
+              sellingPrice: product.selllingPrice,
+              image: product.images[0] || "/assets/blogs/blogs.png",
+              stockStatus: product.stockStatus,
+            }));
     }
   };
 
@@ -75,18 +58,15 @@ export default function FeaturedProductCard({ product }: { product: Product }) {
     >
       <div className="overflow-hidden rounded-[8px]">
         <Image
+        optimize={true}
           loading="lazy"
-          src={
-            product?.photos[0] ??
-            "https://images.pexels.com/photos/7667735/pexels-photo-7667735.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-          }
+          src={product?.images[0] ??  "/assets/blogs/blogs.png"} 
           alt="Product image"
           width={300}
           height={100}
           className="z-0 aspect-[1.07] w-full rounded-[8px] object-cover duration-300 hover:scale-105"
           onError={(e) => {
-            e.currentTarget.src =
-              "https://images.pexels.com/photos/7667735/pexels-photo-7667735.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1";
+            e.currentTarget.src = "/assets/blogs/blogs.png";
           }}
         />
       </div>
@@ -95,11 +75,10 @@ export default function FeaturedProductCard({ product }: { product: Product }) {
       <div className="absolute right-[20px] top-5 z-0 flex w-[32px] flex-col">
         <button
           onClick={handleWishlistToggle}
-          className={`flex gap-2.5 justify-center items-center px-2 bg-white rounded-full ${
-            isWishlist
+          className={`flex gap-2.5 justify-center items-center px-2 bg-white rounded-full ${isWishlist
               ? "border-none text-white bg-primary dark:bg-pinkGradient"
               : "border-blue-500 text-black hover:bg-hover-gradient dark:hover:bg-pinkGradient hover:text-white"
-          } min-h-[32px] w-[32px]`}
+            } min-h-[32px] w-[32px]`}
           aria-label="Add to wishlist"
         >
           <Heart className="group-hover:fill-white hover:border-0 w-4 h-4" />
@@ -115,7 +94,7 @@ export default function FeaturedProductCard({ product }: { product: Product }) {
                     "my-auto text-[12px] font-normal",
                     product.stockStatus === "In Stock"
                       ? "text-[#2A6C2D]"
-                      : "text-red-500"
+                      : "text-red-500",
                   )}
                 >
                   {product.stockStatus}
