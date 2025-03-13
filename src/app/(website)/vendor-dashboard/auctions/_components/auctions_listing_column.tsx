@@ -2,7 +2,7 @@
 
 import { Checkbox } from "@/components/ui/checkbox"
 import type { ColumnDef } from "@tanstack/react-table"
-import { Check, ImagePlus, MoreHorizontal } from "lucide-react"
+import { ImagePlus, MoreHorizontal } from "lucide-react"
 import Image from "next/image"
 
 import { Button } from "@/components/ui/button"
@@ -130,15 +130,9 @@ export const AuctionListingColumns: ColumnDef<Product>[] = [
             <Image src={row.original.photos[0] || "/placeholder.svg"} fill alt="product" className="rounded-[12px]" />
           </div>
           <div className="flex flex-col gap-y-[8px]">
-            <h3 className="text-[15px] 2xl:text-[18px] leading-[21.6px] font-semibold text-gradient dark:text-gradient-pink">
+            <h3 className="text-[15px] 2xl:text-[18px] leading-[21.6px] font-semibold text-gradient dark:text-gradient-pink ml-5">
               {row.original.title}
             </h3>
-            <div className="flex items-center  py-1 rounded">
-              <span className="text-sm text-[#444444] font-normal  border border-[#444444] rounded-3xl flex items-center gap-1 2xl:gap-2 px-1 2xl:px-2 2xl:py-1 ">
-                <Check className="w-3 h-3" />
-                In stock ({row.original.quantity})
-              </span>
-            </div>
           </div>
         </div>
       </div>
