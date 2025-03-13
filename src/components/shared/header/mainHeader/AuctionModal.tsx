@@ -40,7 +40,7 @@ const AuctionModal: React.FC<AuctionModalProps> = ({ isOpen, onClose }) => {
             animate={{ y: 0, opacity: 1 }} // Slide into position and become visible
             exit={{ y: -50, opacity: 0 }} // Slide up and fade out
             transition={{ duration: 0.3, ease: "easeInOut" }}
-            className="flex justify-center ml-[-70px]"
+            className="flex justify-center -ml-[450px]"
           >
             <Dialog.Panel className="bg-white shadow-lg rounded-b-[8px] z-50">
               {/* Staggered Links */}

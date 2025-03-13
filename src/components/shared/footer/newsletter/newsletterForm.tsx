@@ -21,10 +21,7 @@ import { Input } from "@/components/ui/input";
 
 // Define validation schema using Zod
 const newsletterSchema = z.object({
-  email: z
-    .string()
-    .email("Please enter a valid email address.") // Validate email format
-    .nonempty("Email is required."), // Ensure email is not empty
+  email: z.string().email("Invalid email Address. Please enter a valid email."),
 });
 
 // Infer the type of the form values from the Zod schema
@@ -42,20 +39,37 @@ const NewsletterForm = () => {
         },
         body: JSON.stringify(data), // Convert form data to JSON
       }),
-    onSuccess: () => {
-      // Show success toast notification
-      toast.success("You have successfully subscribed to our newsletter! 🎉", {
-        position: "top-right",
-        richColors: true,
-      });
 
-      // Reset the form after successful submission
-      form.reset();
-    },
-    onError: (error) => {
-      // Show error toast notification
-      toast.error(error.message);
-    },
+      onSuccess: async (data: Response) => {
+        const jsonData = await data.json();
+        if (!jsonData.status) {
+          toast.error(jsonData.message, {
+            position: "top-right",
+            richColors: true,
+          });
+          return;
+        }
+        form.reset();
+        toast.success(jsonData.message, {
+          position: "top-right",
+          richColors: true,
+        });
+      }
+
+    // onSuccess: () => {
+    //   // Show success toast notification
+    //   toast.success("You have successfully subscribed to our newsletter! 🎉", {
+    //     position: "top-right",
+    //     richColors: true,
+    //   });
+
+    //   // Reset the form after successful submission
+    //   form.reset();
+    // },
+    // onError: (error) => {
+    //   // Show error toast notification
+    //   toast.error(error.message);
+    // },
   });
 
   // Initialize the form with react-hook-form and Zod resolver

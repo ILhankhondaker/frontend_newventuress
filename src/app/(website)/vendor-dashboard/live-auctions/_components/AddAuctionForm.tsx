@@ -549,57 +549,62 @@ const AddAuctionForm: React.FC = () => {
                   )}
                 />
 
-                <div className="grid grid-cols-12 gap-4">
-                  <div className="col-span-6">
-                    <FormField
-                      control={form.control}
-                      name="thc"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="leading-[19.2px] text-[#444444] text-[16px] font-normal">
-                            THC %
-                          </FormLabel>
-                          <FormControl>
-                            <Input
-                              placeholder="0.0"
-                              type="number"
-                              step="0.1"
-                              className="h-[51px] border-[#9C9C9C] dark:!text-black"
-                              disabled={shouldDisableThcCbd()}
-                              {...field}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-
-                  <div className="col-span-6">
-                    <FormField
-                      control={form.control}
-                      name="cbd"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="leading-[19.2px] text-[#444444] text-[16px] font-normal">
-                            CBD %
-                          </FormLabel>
-                          <FormControl>
-                            <Input
-                              placeholder="0.0"
-                              type="number"
-                              step="0.1"
-                              className="h-[51px] border-[#9C9C9C] dark:!text-black"
-                              disabled={shouldDisableThcCbd()}
-                              {...field}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-                </div>
+               { !(selectedCategory === "67d1b9ecf2ed66e4a542fe5e" || selectedCategory === "67d1ba16f2ed66e4a542fe7b") ? (
+                              <div className="grid grid-cols-12 gap-4">
+                                <div className="col-span-6">
+                                  <FormField
+                                    control={form.control}
+                                    name="thc"
+                                    render={({ field }) => (
+                                      <FormItem>
+                                        <FormLabel className="leading-[19.2px] text-[#444444] text-[16px] font-normal">
+                                          THC
+                                        </FormLabel>
+                                        <FormControl>
+                                          <Input
+                                            placeholder="0.0"
+                                            type="number"
+                                            step="0.1"
+                                            className="h-[51px] border-[#9C9C9C] dark:!text-black"
+                                            disabled={shouldDisableThcCbd()}
+                                            {...field}
+                                          />
+                                        </FormControl>
+                                        <FormMessage />
+                                      </FormItem>
+                                    )}
+                                  />
+                                </div>
+              
+                                <div className="col-span-6">
+                                  <FormField
+                                    control={form.control}
+                                    name="cbd"
+                                    render={({ field }) => (
+                                      <FormItem>
+                                        <FormLabel className="leading-[19.2px] text-[#444444] text-[16px] font-normal">
+                                          CBD
+                                        </FormLabel>
+                                        <FormControl>
+                                          <Input
+                                            placeholder="0.0"
+                                            type="number"
+                                            step="0.1"
+                                            className="h-[51px] border-[#9C9C9C] dark:!text-black"
+                                            disabled={shouldDisableThcCbd()}
+                                            {...field}
+                                          />
+                                        </FormControl>
+                                        <FormMessage />
+                                      </FormItem>
+                                    )}
+                                  />
+                                </div>
+              
+                              </div>
+                            ) : null
+                            }
+              
 
                 <div className="mt-3">
                   <InputWithTags placeholder="Add Tags" limit={10} tags={tags} setTags={setTags} />
