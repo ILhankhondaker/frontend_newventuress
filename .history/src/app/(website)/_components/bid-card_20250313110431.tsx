@@ -62,11 +62,11 @@ export default function BiddingCard({ product }: { product: Product }) {
         </div> */}
 
         <h2 className="text-gradient dark:text-gradient-pink mb-2 text-center text-[25px] font-semibold leading-[30px]">
-          {product?.title}
+          {product.comment}
         </h2>
 
         <div className="mb-4 flex items-baseline justify-center gap-2">
-          <span className="text-xl font-bold">${product?.startingPrice || 0}</span>
+          <span className="text-xl font-bold">${product.startingPrice}</span>
           <span className="text-sm text-gray-400 line-through">
             {/* ₿{product.selllingPrice} */}
           </span>
