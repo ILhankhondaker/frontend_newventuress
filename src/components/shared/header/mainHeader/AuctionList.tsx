@@ -23,7 +23,10 @@ const AuctionList: React.FC = () => {
       >
         Auction {isExpanded ? <ChevronUp className="h-4 w-4 text-black" /> : <ChevronDown className="h-4 w-4 text-black"/>}
       </span>
+      <div>
       <AuctionModal isOpen={isModalOpen} onClose={handleCloseModal} />
+      </div>
+      
     </div>
   );
 };
