@@ -78,9 +78,8 @@ export type Product = {
   stockStatus: 'in stock' | 'out of stock'  // You can extend stock status if needed
   category: string;
   subCategory: string;
-  purchasedPrice: number;
-  sellingPrice: number;
-  discountPrice: number;
+  selllingPrice: number;
+  regularPrice: number;
   size: string;
   quantity: string; // You may want to consider changing this to a number if it's always numeric
   sku: string;
