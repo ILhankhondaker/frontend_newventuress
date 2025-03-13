@@ -10,14 +10,16 @@ export interface SingleProductDataType {
   storeId: string;
   shortDescription: string;
   description: string;
-  images: string[];
+  photos: string[];
   productType: string;
   stockStatus: string;
   cateogry: string; 
   subCateogry: string; 
+  regularPrice: number;
   purchasedPrice: number;
   selllingPrice: number; 
   discountPrice: number;
+  coaCertificate: string;
   size: string;
   quantity: string | number; 
   sku: string;

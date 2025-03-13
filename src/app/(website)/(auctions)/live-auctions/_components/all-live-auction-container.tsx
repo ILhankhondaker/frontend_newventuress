@@ -32,7 +32,7 @@ const AllLiveAuctionContainer = () => {
 
 
   const liveAuctionsData = data?.data?.filter((liveAuction) => {
-    const auctionEndTime = new Date(liveAuction.endingTime).getTime(); 
+    const auctionEndTime = new Date(liveAuction.endingDateAndTime).getTime(); 
     return auctionEndTime > Date.now();
   });
 
