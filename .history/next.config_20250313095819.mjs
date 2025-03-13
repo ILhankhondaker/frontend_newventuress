@@ -75,7 +75,7 @@ const nextConfig = {
         hostname: "greenblisscbd.com",
       },
       {
-        protocol: "https",
+        protocol: "https", // Also allow https for Cloudinary
         hostname: "via.placeholder.com",
       },
     ],
