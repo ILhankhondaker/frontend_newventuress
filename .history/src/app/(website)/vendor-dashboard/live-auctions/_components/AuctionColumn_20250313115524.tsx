@@ -5,7 +5,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { AuctionDataType } from "@/types/vendorAuction";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
 import { ColumnDef } from "@tanstack/react-table";
-import {MoreHorizontal } from "lucide-react";
+import { Check, MoreHorizontal } from "lucide-react";
 import moment from "moment";
 import Image from "next/image";
 
@@ -47,16 +47,16 @@ export const ActionColumn: ColumnDef<AuctionDataType>[] = [
               height={142}
               width={110}
               alt="img"
-              className="rounded-[8px] h-24 w-36"
+              className="rounded-[8px]"
             />
           </div>
           <div>
             <h4 className="text-[18px] text-gradient font-semibold dark:text-gradient-pink">{row.original.title}</h4>
-            {/* <div className="flex items-center w-[125px] h-[22px] text-[12px] mt-3 p-[10px] dark:text-[#444444] border border-[#9E9E9E] rounded-[24px] shadow-[4px_4px_8px_0px_#0000000D,-4px_-4px_8px_0px_#0000000D]">
+            <div className="flex items-center w-[125px] h-[22px] text-[12px] mt-3 p-[10px] dark:text-[#444444] border border-[#9E9E9E] rounded-[24px] shadow-[4px_4px_8px_0px_#0000000D,-4px_-4px_8px_0px_#0000000D]">
               <Check className="w-[12px] h-[12px] text-[#6E6E6E] mr-2" /> 
               In stock 
               <span>({row.original.stockQuantity})</span>
-            </div> */}
+            </div>
           </div>
         </div>
       );
@@ -73,7 +73,7 @@ export const ActionColumn: ColumnDef<AuctionDataType>[] = [
     },
   },
   {
-    header: "Starting Date & Time",
+    header: "Start Date",
     cell: ({ row }) => {
       return (
         <div>
@@ -83,7 +83,7 @@ export const ActionColumn: ColumnDef<AuctionDataType>[] = [
     },
   },
   {
-    header: "Ending Date & Time",
+    header: "End Date",
     cell: ({ row }) => {
       return (
         <div>

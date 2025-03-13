@@ -73,7 +73,7 @@ export const ActionColumn: ColumnDef<AuctionDataType>[] = [
     },
   },
   {
-    header: "Starting Date & Time",
+    header: "Start Date",
     cell: ({ row }) => {
       return (
         <div>
@@ -83,7 +83,7 @@ export const ActionColumn: ColumnDef<AuctionDataType>[] = [
     },
   },
   {
-    header: "Ending Date & Time",
+    header: "End Date",
     cell: ({ row }) => {
       return (
         <div>

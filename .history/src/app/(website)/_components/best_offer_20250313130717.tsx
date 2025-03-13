@@ -42,7 +42,7 @@ const BestOffer: React.FC = () => {
   return (
     <div className="container pb-[40px] md:pb-[60px] lg:pb-[80px] mt-[-70px]">
       <h3 className="heading text-gradient dark:text-gradient-pink">
-        Look what our Customer&apos;s are posting!
+        Look what ou customers are posting!
       </h3>
       <p className="lg:text-xl text-[16px] mt-1 font-normal leading-[24px] text-[#444444] pt-[6] md:pt-[7px] lg:pt-[8px]">
         &quot;Unlock unbeatable savings on select products - Shop now before

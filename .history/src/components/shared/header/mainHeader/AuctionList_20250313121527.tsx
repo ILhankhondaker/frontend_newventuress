@@ -18,7 +18,7 @@ const AuctionList: React.FC = () => {
   return (
     <div className="">
       <span
-        className="flex items-center gap-1 "
+        className="flex items-center gap-1 translate-y-10 cursor-pointer"
         onClick={() => handleItemClick()}
       >
         Auction {isExpanded ? <ChevronUp className="h-4 w-4 text-black" /> : <ChevronDown className="h-4 w-4 text-black"/>}

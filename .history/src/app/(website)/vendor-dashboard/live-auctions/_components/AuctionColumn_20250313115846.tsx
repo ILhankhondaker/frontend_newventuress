@@ -5,7 +5,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { AuctionDataType } from "@/types/vendorAuction";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
 import { ColumnDef } from "@tanstack/react-table";
-import {MoreHorizontal } from "lucide-react";
+import { Check, MoreHorizontal } from "lucide-react";
 import moment from "moment";
 import Image from "next/image";
 
@@ -47,7 +47,7 @@ export const ActionColumn: ColumnDef<AuctionDataType>[] = [
               height={142}
               width={110}
               alt="img"
-              className="rounded-[8px] h-24 w-36"
+              className="rounded-[8px]"
             />
           </div>
           <div>
@@ -73,7 +73,7 @@ export const ActionColumn: ColumnDef<AuctionDataType>[] = [
     },
   },
   {
-    header: "Starting Date & Time",
+    header: "Start Date",
     cell: ({ row }) => {
       return (
         <div>
@@ -83,7 +83,7 @@ export const ActionColumn: ColumnDef<AuctionDataType>[] = [
     },
   },
   {
-    header: "Ending Date & Time",
+    header: "End Date",
     cell: ({ row }) => {
       return (
         <div>

@@ -45,9 +45,9 @@ export const ActionColumn: ColumnDef<AuctionDataType>[] = [
             <Image
               src={row.original.images[0] || "https://images.pexels.com/photos/7667900/pexels-photo-7667900.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"}
               height={142}
-              width={110}
+              width={142}
               alt="img"
-              className="rounded-[8px] h-24 w-36"
+              className="rounded-[8px]"
             />
           </div>
           <div>
@@ -73,7 +73,7 @@ export const ActionColumn: ColumnDef<AuctionDataType>[] = [
     },
   },
   {
-    header: "Starting Date & Time",
+    header: "Start Date",
     cell: ({ row }) => {
       return (
         <div>
@@ -83,7 +83,7 @@ export const ActionColumn: ColumnDef<AuctionDataType>[] = [
     },
   },
   {
-    header: "Ending Date & Time",
+    header: "End Date",
     cell: ({ row }) => {
       return (
         <div>
