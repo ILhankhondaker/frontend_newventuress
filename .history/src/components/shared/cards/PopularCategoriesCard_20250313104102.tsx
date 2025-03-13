@@ -105,7 +105,7 @@ const PopularCategoriesCard = ({ token }: Props) => {
               >
                 <Image
                   src={
-                    category.image ||
+                    category.image ??
                     "https://images.pexels.com/photos/28216688/pexels-photo-28216688/free-photo-of-autumn-camping.png"
                   }
                   alt={category.categoryName}

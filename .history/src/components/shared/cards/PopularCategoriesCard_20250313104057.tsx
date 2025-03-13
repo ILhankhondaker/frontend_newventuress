@@ -104,10 +104,7 @@ const PopularCategoriesCard = ({ token }: Props) => {
                 className="aspect-square relative"
               >
                 <Image
-                  src={
-                    category.image ||
-                    "https://images.pexels.com/photos/28216688/pexels-photo-28216688/free-photo-of-autumn-camping.png"
-                  }
+                  src={category.image }
                   alt={category.categoryName}
                   fill
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
