@@ -64,8 +64,8 @@ export default function OurAuctionCard({ auction, index }: Props) {
         <Link href={`/auction/${auction._id}`}>
           <Image
             loading="lazy"
-            src={auction.images[0] || "https://via.placeholder.com/150"}
-            alt={auction.title}
+            src={auction?.images?.[0]}
+            alt={auction?.title}
             fill
             className="object-cover z-0 rounded-[8px] aspect-[1.07] hover:scale-105 duration-300"
             placeholder="blur"
