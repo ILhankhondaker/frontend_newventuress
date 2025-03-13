@@ -4,9 +4,10 @@ export type AuctionProduct = {
     title: string;
     shortDescription: string;
     category: string;
+    buyNowPrice: number;
     startingPrice: number;
-    startingTime: string; // Consider using Date if parsing is needed
-    endingTime: Date; // Consider using Date if parsing is needed
+    startingDateAndTime: Date; // Consider using Date if parsing is needed
+    endingDateAndTime: Date; // Consider using Date if parsing is needed
     sku: string;
     stockQuantity: number;
     tags: string[]; // Fixing array structure, assuming it's an array of strings

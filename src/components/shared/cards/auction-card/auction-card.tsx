@@ -21,8 +21,9 @@ interface Auction {
   shortDescription?: string;
   productType?: string;
   startingPrice: number;
-  startingTime: string;
-  endingTime: Date;
+  buyNowPrice: number;
+  startingDateAndTime: Date;
+  endingDateAndTime: Date;
   sku: string;
   stockQuantity: number;
   tags?: string[];
@@ -42,10 +43,10 @@ export default function AuctionCard({ auction, index }: Props) {
     setIsWishlist((prev) => !prev);
   };
 
-  const endDate = new Date(auction.endingTime);
+  const endDate = new Date(auction.endingDateAndTime);
   const isExpired = Date.now() > endDate.getTime();
 
-  console.log({auction})
+  console.log({ auction });
 
   return (
     <div className="flex relative flex-col grow shrink self-stretch p-3 my-auto mx-auto bg-white rounded-[8px] border border-gray-200 border-solid w-full md:h-auto hover:shadow-feature_card transition-shadow duration-300 h-[389px]">
@@ -76,10 +77,19 @@ export default function AuctionCard({ auction, index }: Props) {
       {imgLoaded && (
         <motion.div
           initial={{ opacity: 0.5, scale: 0.5 }}
-          animate={{ opacity: 1, scale: 1, transition: { duration: 0.4, ease: "circIn" } }}
+          animate={{
+            opacity: 1,
+            scale: 1,
+            transition: { duration: 0.4, ease: "circIn" },
+          }}
           className="absolute -top-[10px] -right-[10px] rounded-full w-[48px] h-[48px] p-0 bg-gradient-to-r dark:bg-pinkGradient from-[#121D42] via-[#152764] to-[#4857BD] hover:bg-[#121D42] flex justify-center items-center"
         >
-          <Image src="/assets/svg/hammer.svg" alt="hammer" width={20} height={20} />
+          <Image
+            src="/assets/svg/hammer.svg"
+            alt="hammer"
+            width={20}
+            height={20}
+          />
         </motion.div>
       )}
       <div className="flex absolute top-5 z-0 flex-col w-[32px] left-[22px]">
@@ -90,7 +100,9 @@ export default function AuctionCard({ auction, index }: Props) {
             handleWishlistToggle();
           }}
           className={`flex gap-2.5 justify-center items-center px-2 bg-white rounded-full ${
-            isWishlist ? "border-none text-white bg-primary dark:bg-pinkGradient" : "text-black hover:bg-hover-gradient dark:hover:bg-pinkGradient dark:hover:text-white"
+            isWishlist
+              ? "border-none text-white bg-primary dark:bg-pinkGradient"
+              : "text-black hover:bg-hover-gradient dark:hover:bg-pinkGradient dark:hover:text-white"
           } min-h-[32px] w-[32px]`}
           aria-label="Add to wishlist"
         >
@@ -99,19 +111,23 @@ export default function AuctionCard({ auction, index }: Props) {
       </div>
       <div className="flex z-0 flex-col mt-2 w-full">
         <div className="flex flex-col w-full">
-          <div className="flex gap-10 justify-between items-center w-full">
-            <p className="text-xs font-medium leading-[14px] text-[#9C9C9C]">8 Views</p>
-          </div>
+          {/* <div className="flex gap-10 justify-between items-center w-full">
+            <p className="text-xs font-medium leading-[14px] text-[#9C9C9C]">
+              8 Views
+            </p>
+          </div> */}
           <div className="mt-2 text-[16px] text-base font-medium leading-[19.2px] text-gradient dark:text-gradient-pink">
             {auction.title}
           </div>
           <div className="flex gap-1 items-end self-start mt-2 font-medium leading-tight">
             <div className="self-stretch text-base text-[16px] leading-[19.2px] text-[#1A1A1A]">
-              ${auction.startingPrice}
+              ${auction.buyNowPrice}
             </div>
           </div>
         </div>
-        {!isExpired && <AuctionCountDownTimer endDate={auction.endingTime} />}
+        {!isExpired && (
+          <AuctionCountDownTimer endDate={auction.endingDateAndTime} />
+        )}
         <Button
           aria-label="Bid Now"
           disabled={isExpired}
@@ -122,8 +138,11 @@ export default function AuctionCard({ auction, index }: Props) {
               : "bg-gradient-to-br from-[#121D42] via-[#152764] to-[#4857BD] text-base font-medium leading-[19px] text-white"
           }`}
         >
-          {isExpired ? "Expired" : 
-          <Link href={`/auction/${auction._id}`}>Bid Now</Link>}
+          {isExpired ? (
+            "Expired"
+          ) : (
+            <Link href={`/auction/${auction._id}`}>Bid Now</Link>
+          )}
         </Button>
       </div>
     </div>
