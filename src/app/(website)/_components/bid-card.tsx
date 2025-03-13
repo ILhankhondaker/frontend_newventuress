@@ -30,7 +30,7 @@ export default function BiddingCard({ product }: { product: Product }) {
         <Image
           height={300}
           width={400}
-          src={product?.images[0] || "https://images.pexels.com/photos/8330975/pexels-photo-8330975.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"}
+          src={product?.images?.[0] || "https://images.pexels.com/photos/8330975/pexels-photo-8330975.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"}
           alt="American Beauty product"
           className="h-[266px] w-full rounded-[8px] object-cover duration-300 hover:scale-105"
         />

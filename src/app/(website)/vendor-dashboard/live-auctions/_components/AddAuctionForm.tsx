@@ -620,7 +620,7 @@ const AddAuctionForm: React.FC = () => {
                       </FormControl>
                       <div className="space-y-1 leading-none">
                         <FormLabel className="text-sm font-normal text-[#444444]">
-                          Certificate of Authentication (COA)
+                          Certificate of Autheticity (COA)
                         </FormLabel>
                         <p className="text-xs text-muted-foreground">Upload a COA document for this product</p>
                       </div>
