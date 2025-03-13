@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useState } from "react";
-import { Heart } from "lucide-react";
+// import { Heart } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { blurDataUrl } from "@/data/blur-data-url";
@@ -35,13 +35,17 @@ interface Props {
   index: number;
 }
 
+//? if the user set a startingDateAndTime and endingDateAndTime,
+// and the starting time will be in near future but not today,
+// the countdown shouldn't be started now but later on the started time
+
 export default function AuctionCard({ auction, index }: Props) {
   const [imgLoaded, setImgLoaded] = useState(false);
-  const [isWishlist, setIsWishlist] = useState(false);
+  // const [isWishlist, setIsWishlist] = useState(false);
 
-  const handleWishlistToggle = () => {
-    setIsWishlist((prev) => !prev);
-  };
+  // const handleWishlistToggle = () => {
+  //   setIsWishlist((prev) => !prev);
+  // };
 
   const endDate = new Date(auction.endingDateAndTime);
   const isExpired = Date.now() > endDate.getTime();
@@ -64,7 +68,10 @@ export default function AuctionCard({ auction, index }: Props) {
         <Link href={`/auction/${auction._id}`}>
           <Image
             loading="lazy"
-            src={auction.images[0] || "https://via.placeholder.com/150"}
+            src={
+              auction.images[0] ||
+              "https://images.pexels.com/photos/28216688/pexels-photo-28216688/free-photo-of-autumn-camping.png?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+            }
             alt={auction.title}
             fill
             className="object-cover z-0 rounded-[8px] aspect-[1.07] hover:scale-105 duration-300"
@@ -92,7 +99,7 @@ export default function AuctionCard({ auction, index }: Props) {
           />
         </motion.div>
       )}
-      <div className="flex absolute top-5 z-0 flex-col w-[32px] left-[22px]">
+      {/* <div className="flex absolute top-5 z-0 flex-col w-[32px] left-[22px]">
         <button
           onClick={(e) => {
             e.stopPropagation();
@@ -108,7 +115,7 @@ export default function AuctionCard({ auction, index }: Props) {
         >
           <Heart className="group-hover:fill-white hover:border-0 w-4 h-4" />
         </button>
-      </div>
+      </div> */}
       <div className="flex z-0 flex-col mt-2 w-full">
         <div className="flex flex-col w-full">
           {/* <div className="flex gap-10 justify-between items-center w-full">
@@ -120,7 +127,7 @@ export default function AuctionCard({ auction, index }: Props) {
             {auction.title}
           </div>
           <div className="flex gap-1 items-end self-start mt-2 font-medium leading-tight">
-            <div className="self-stretch text-base text-[16px] leading-[19.2px] text-[#1A1A1A]">
+            <div className="self-stretch text-base text-[16px] leading-[19.2px] font-semibold text-[#1A1A1A]">
               ${auction.buyNowPrice}
             </div>
           </div>
