@@ -43,7 +43,7 @@ export const ActionColumn: ColumnDef<AuctionDataType>[] = [
         <div className="flex items-center gap-4">
           <div>
             <Image
-              src={row.original.images[0] || "https://images.pexels.com/photos/7667900/pexels-photo-7667900.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"}
+              src={row.original.images[0] || }
               height={142}
               width={110}
               alt="img"
@@ -67,7 +67,7 @@ export const ActionColumn: ColumnDef<AuctionDataType>[] = [
     cell: ({ row }) => {
       return (
         <div>
-          <span className="text-[16px] text-[#444444] font-normal">${row.original.startingPrice || 0}</span>
+          <span className="text-[16px] text-[#444444] font-normal">${row.original.startingPrice}</span>
         </div>
       );
     },

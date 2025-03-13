@@ -47,8 +47,7 @@ const VendorAuctionContainer = ({productType}: any) => {
 
   return (
     <section className="w-full">
-    <div className="w-full shadow-[0px_0px_22px_8px_#C1C9E4] h-auto  rounded-[24px] bg-white">
-    { content}
+    < content}
     </div>
     <div className="my-[40px] w-full  flex justify-between">
       <p className="font-normal text-[16px] leading-[19.2px] text-[#444444]">
