@@ -198,8 +198,8 @@ const ProductDetails = ({ productId }: props) => {
         <div className="flex w-full max-w-[1200px] flex-col">
           <div className="flex w-full flex-wrap gap-8">
             <ProductImageGallery
-              thumbnails={productData.images}
-              mainImage={productData.mainImage}
+              thumbnails={productData?.images}
+              mainImage={productData?.mainImage}
             />
             <div className="flex w-[30%] min-w-[240px] shrink grow flex-col justify-center">
               <div className="flex max-w-full flex-col">

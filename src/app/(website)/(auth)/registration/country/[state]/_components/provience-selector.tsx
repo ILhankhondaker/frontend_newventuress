@@ -195,7 +195,7 @@ const isOnlyRecreational = industries.length === 1 && industries.includes("Recre
       /></div>}
 
       {!isOnlyRecreational && <div className="flex items-center gap-x-2 font-medium">
-      <Star fill="#2387b4" className="text-[#2387b4] h-4 w-4" /> NOTE:   Allowed only HEMP/CBD
+      <Star fill="#2387b4" className="text-[#2387b4] h-4 w-4" /> NOTE:  Only HEMP/CBD Allowed
       </div>}
       <NextButton currentState={currentState} isCanada={isCA} isUsa={isUs} />
     </div>

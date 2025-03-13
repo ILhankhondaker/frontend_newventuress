@@ -67,7 +67,7 @@ export const ActionColumn: ColumnDef<AuctionDataType>[] = [
     cell: ({ row }) => {
       return (
         <div>
-          <span className="text-[16px] text-[#444444] font-normal">${row.original.startingPrice || 0}</span>
+          <span className="text-[16px] text-[#444444] font-normal">${row.original.startingPrice}</span>
         </div>
       );
     },
