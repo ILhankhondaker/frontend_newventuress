@@ -305,7 +305,7 @@ const disabled = isProductError || isStoreGetError || isProductLoading || isStor
                     <FormItem>
                       <FormLabel className="flex justify-start text-[#444444] text-[16px] font-normal">Start Date</FormLabel>
                       <FormControl>
-                        <Input type="date" {...field} className="border border-[#B0B0B0] h-[51px] dark:!text-[#9E9E9E] text-black"/>
+                        <Input type="datetime-local" {...field} className="border border-[#B0B0B0] h-[51px] dark:!text-[#9E9E9E] text-black"/>
                       </FormControl>
                     </FormItem>
                   )}
@@ -318,7 +318,7 @@ const disabled = isProductError || isStoreGetError || isProductLoading || isStor
                     <FormItem>
                       <FormLabel className="flex justify-start text-[#444444] text-[16px] font-normal">Expire Date</FormLabel>
                       <FormControl>
-                        <Input   type="date" {...field} className="border border-[#B0B0B0] h-[51px] dark:!text-[#9E9E9E]"/>
+                        <Input   type="datetime-local" {...field} className="border border-[#B0B0B0] h-[51px] dark:!text-[#9E9E9E]"/>
                         
                       </FormControl>
                       <FormMessage />
