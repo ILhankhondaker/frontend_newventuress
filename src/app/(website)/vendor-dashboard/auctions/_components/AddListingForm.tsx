@@ -533,7 +533,7 @@ function AddListingForm({ setShowAddAuction }: Props) {
                       </FormControl>
                       <div className="space-y-1 leading-none">
                         <FormLabel className="text-sm font-normal text-[#444444]">
-                          Certificate of Analysis (COA)
+                          Certificate of Authentication (COA)
                         </FormLabel>
                         <p className="text-xs text-muted-foreground">Upload a COA document for this product</p>
                       </div>
