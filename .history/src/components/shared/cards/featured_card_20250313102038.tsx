@@ -35,9 +35,7 @@ export default function FeaturedProductCard({ product }: { product: Product }) {
         discountPrice: product.discountPrice,
         sellingPrice: product.selllingPrice,
         stockStatus: product.stockStatus,
-        image:
-          product.photos[0] ||
-          "https://images.pexels.com/photos/7667735/pexels-photo-7667735.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+        image: product.images[0] || "/assets/blogs/blogs.png",
         quantity: 1,
       })
     );
@@ -59,9 +57,7 @@ export default function FeaturedProductCard({ product }: { product: Product }) {
           title: product.title,
           discountPrice: product.discountPrice,
           sellingPrice: product.selllingPrice,
-          image:
-            product.photos[0] ||
-            "https://images.pexels.com/photos/7667735/pexels-photo-7667735.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+          image: product.images[0] || "/assets/blogs/blogs.png",
           stockStatus: product.stockStatus,
         })
       );
@@ -77,7 +73,7 @@ export default function FeaturedProductCard({ product }: { product: Product }) {
         <Image
           loading="lazy"
           src={
-            product?.photos[0] ??
+            product?.images[0] ??
             "https://images.pexels.com/photos/7667735/pexels-photo-7667735.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
           }
           alt="Product image"

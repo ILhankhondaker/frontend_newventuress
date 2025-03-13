@@ -22,7 +22,7 @@ function Categories() {
 
   const { as } = useApplicationAs();
 
-  const categoryParam = as === "HEMP/CBD" ? "industry=cbd" : "industry=recreational";
+  const categoryParam = as === "HEMP/CBD" ? "industry=" : "industry=recreational";
 
   const linkVariants = {
     hidden: { opacity: 0, y: -20 },

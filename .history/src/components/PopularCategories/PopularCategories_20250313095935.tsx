@@ -3,6 +3,7 @@
 import OurAuction from "@/app/(website)/_components/our_auction";
 import OurFeatureSection from "@/app/(website)/_components/our_feature_section";
 import FindFavourite from "../../app/(website)/_components/FindFavourite";
+import SectionHeading from "../shared/SectionHeading/SectionHeading";
 import PopularCategoriesCard from "../shared/cards/PopularCategoriesCard";
 
 interface Props {

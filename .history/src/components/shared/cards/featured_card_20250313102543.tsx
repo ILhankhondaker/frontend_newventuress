@@ -60,7 +60,7 @@ export default function FeaturedProductCard({ product }: { product: Product }) {
           discountPrice: product.discountPrice,
           sellingPrice: product.selllingPrice,
           image:
-            product.photos[0] ||
+            product.images[0] ||
             "https://images.pexels.com/photos/7667735/pexels-photo-7667735.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
           stockStatus: product.stockStatus,
         })
