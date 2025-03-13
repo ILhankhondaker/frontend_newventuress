@@ -2,6 +2,7 @@ import { auth } from "@/auth";
 import SectionHeading from "@/components/shared/SectionHeading/SectionHeading";
 import { PageHeader } from "@/components/shared/sections/page-header";
 import PlansContainer from "./_components/PlansContainer";
+import AdditionalPlans from "./_components/AdditionalPlans";
 
 const page = async () => {
   const currentuser = await auth();
@@ -31,7 +32,7 @@ const page = async () => {
       </div>
        <div className="container section px-4 my-[80px]">
         <SectionHeading heading="Additional Plans" subheading="Plans" />
-        <PlansContainer token={token} userId={currentuser?.user.id} />
+        <AdditionalPlans token={token} userId={currentuser?.user.id} />
       </div>
     </>
   );
