@@ -150,7 +150,7 @@ function AddListingForm({ setShowAddAuction }: Props) {
     return categoryName === "Accessories" || categoryName === "Apparel"
   }
 
-  const { mutate } = useMutation<any, unknown, FormData>({
+  const { mutate, isPending } = useMutation<any, unknown, FormData>({
     mutationKey: ["add-auction"],
     mutationFn: (formData) =>
       fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/product`, {
@@ -533,7 +533,7 @@ function AddListingForm({ setShowAddAuction }: Props) {
                       </FormControl>
                       <div className="space-y-1 leading-none">
                         <FormLabel className="text-sm font-normal text-[#444444]">
-                          Certificate of Analysis (COA)
+                          Certificate of Autheticity (COA)
                         </FormLabel>
                         <p className="text-xs text-muted-foreground">Upload a COA document for this product</p>
                       </div>
@@ -608,12 +608,39 @@ function AddListingForm({ setShowAddAuction }: Props) {
                 )} */}
               </div>
               <div className="w-[600px] h-full mt-[16px] border border-[#B0B0B0] rounded-lg">
-                <ProductGallery onImageChange={handleImageChange} />
+                <ProductGallery onImageChange={handleImageChange}/>
               </div>
             </div>
             <div className="flex justify-end mt-6">
-              <Button type="submit" className="py-[12px] px-[24px]">
-                Confirm
+            <Button type="submit" className="py-[12px] px-[24px]" disabled={isPending}>
+                {isPending ? (
+                  <>
+                  Submitting...
+                    <svg
+                      className="animate-spin -ml-1 mr-3 h-4 w-4 text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      ></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      ></path>
+                    </svg>
+                    
+                  </>
+                ) : (
+                  "Confirm"
+                )}
               </Button>
             </div>
           </form>
