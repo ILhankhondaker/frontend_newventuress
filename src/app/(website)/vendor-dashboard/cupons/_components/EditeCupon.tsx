@@ -224,7 +224,7 @@ const disabled = isProductError || isStoreGetError || isProductLoading || isStor
                 render={({ field }) => (
                   <FormItem >
                     <FormLabel className="flex justify-start text-[#444444] text-[16px] font-normal">
-                      Store <span className="text-red-500">*</span>
+                      Store Location <span className="text-red-500">*</span>
                     </FormLabel>
                     <Select onValueChange={(value) => {
                       field.onChange(value);
@@ -232,7 +232,7 @@ const disabled = isProductError || isStoreGetError || isProductLoading || isStor
                     }} defaultValue={field.value} disabled={isStoreLoading}>
                       <FormControl>
                         <SelectTrigger className="border border-[#B0B0B0] dark:!text-[#9E9E9E] h-[41px]">
-                          <SelectValue placeholder="Select discount type"/>
+                          <SelectValue placeholder="Select"/>
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent className="dark:bg-white dark:border-none">
@@ -291,7 +291,7 @@ const disabled = isProductError || isStoreGetError || isProductLoading || isStor
                     <FormItem>
                       <FormLabel className="flex justify-start text-[#444444] text-[16px] font-normal">Amount</FormLabel>
                       <FormControl>
-                        <Input placeholder="Percentage discount" {...field} className="border border-[#B0B0B0] h-[51px] text-black dark:!text-black"/>
+                        <Input placeholder="Discout amount" {...field} className="border border-[#B0B0B0] h-[51px] text-black dark:!text-black"/>
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -337,7 +337,7 @@ const disabled = isProductError || isStoreGetError || isProductLoading || isStor
                     <FormItem>
                       <FormLabel className="flex justify-start text-[#444444] text-[16px] font-normal">Usage Limit</FormLabel>
                       <FormControl>
-                        <Input type="number" placeholder="Percentage discount" {...field} className="border border-[#B0B0B0] h-[51px] text-black dark:!text-black"/>
+                        <Input type="number" placeholder="Enter Limit" {...field} className="border border-[#B0B0B0] h-[51px] text-black dark:!text-black"/>
                       </FormControl>
                       <FormMessage />
                     </FormItem>
