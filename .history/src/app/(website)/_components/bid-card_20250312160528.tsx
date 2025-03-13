@@ -28,7 +28,7 @@ export default function BiddingCard({ product }: { product: Product }) {
         <Image
           height={300}
           width={400}
-          src={product?.images[0] || "https://images.pexels.com/photos/8330975/pexels-photo-8330975.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"}
+          src={product.images[0]}
           alt="American Beauty product"
           className="h-[266px] w-full rounded-[8px] object-cover duration-300 hover:scale-105"
         />
@@ -62,11 +62,11 @@ export default function BiddingCard({ product }: { product: Product }) {
         </div> */}
 
         <h2 className="text-gradient dark:text-gradient-pink mb-2 text-center text-[25px] font-semibold leading-[30px]">
-          {product?.title}
+          {product.title}
         </h2>
 
         <div className="mb-4 flex items-baseline justify-center gap-2">
-          <span className="text-xl font-bold">${product?.startingPrice || 0}</span>
+          <span className="text-xl font-bold">${product.startingPrice}</span>
           <span className="text-sm text-gray-400 line-through">
             {/* ₿{product.selllingPrice} */}
           </span>

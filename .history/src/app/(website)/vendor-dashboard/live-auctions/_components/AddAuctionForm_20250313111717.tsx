@@ -1,5 +1,5 @@
 "use client"
-import React, { type SetStateAction, useEffect, useState, type Dispatch } from "react"
+import React, { useEffect, useState } from "react"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
@@ -10,6 +10,7 @@ import { InputWithTags } from "@/components/ui/input-with-tags"
 import { Textarea } from "@/components/ui/textarea"
 import { Checkbox } from "@/components/ui/checkbox"
 import ProductGallery from "@/components/shared/imageUpload/ProductGallery"
+import { DateTimePicker } from "@/components/ui/datetime-picker"
 import { useSession } from "next-auth/react"
 import { useMutation, useQuery } from "@tanstack/react-query"
 import { toast } from "sonner"
@@ -19,32 +20,35 @@ const formSchema = z.object({
   title: z.string().min(1, "Title is required"),
   shortDescription: z.string(),
   description: z.string(),
-  productType: z.string().min(1, "Industry is required"),
+  industry: z.string().min(1, "Industry is required"),
   category: z.string().min(1, "Category is required"),
   subCategory: z.string().optional(),
-  regularPrice: z.string().min(1, "Regular price is required"),
-  selllingPrice: z.string().optional(),
+  openingPrice: z.string().min(1, "Opening price is required"),
+  reservePrice: z.string().optional(),
+  buyNowPrice: z.string().optional(),
+  startingDateAndTime: z.coerce.date().optional(),
+  endingDateAndTime: z.coerce.date().optional(),
   quantity: z.string().min(1, "Quantity is required"),
   tags: z.array(z.string()).optional(),
   thc: z.string().optional(),
   cbd: z.string().optional(),
-  coa: z.boolean().default(false),
-  photos: z.array(z.any()).optional(),
-  coaCertificate: z.any().optional(),
+  makeAnOfferCheck: z.boolean().default(false),
+  makeAnOfferValue: z.string().optional(),
+  hasCOA: z.boolean().default(false),
+  images: z.array(z.any()).optional(),
+  coaImage: z.any().optional(),
 })
 
-interface Props {
-  setShowAddAuction: Dispatch<SetStateAction<boolean>>
-}
-
-function AddListingForm({ setShowAddAuction }: Props) {
+const AddAuctionForm: React.FC = () => {
   const [images, setImages] = useState<File[]>([])
-  const [coaCertificate, setCoaCertificate] = useState<File | null>(null)
+  const [coaImage, setCoaImage] = useState<File | null>(null)
   const [formValues, setFormValues] = useState({})
   const [selectedIndustry, setSelectedIndustry] = useState<string>("")
   const [selectedCategory, setSelectedCategory] = useState<string>("")
   const [categories, setCategories] = useState<any[]>([])
   const [subCategories, setSubCategories] = useState<any[]>([])
+  const [startDate, setStartDate] = useState<Date | undefined>(new Date())
+  const [endDate, setEndDate] = useState<Date | undefined>(new Date())
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -52,18 +56,23 @@ function AddListingForm({ setShowAddAuction }: Props) {
       title: "",
       shortDescription: "",
       description: "",
-      productType: "",
+      industry: "",
       category: "",
       subCategory: "",
-      regularPrice: "",
-      selllingPrice: "",
+      openingPrice: "",
+      reservePrice: "",
+      buyNowPrice: "",
+      startingDateAndTime: new Date(),
+      endingDateAndTime: new Date(),
       quantity: "",
       tags: [],
       thc: "",
       cbd: "",
-      coa: false,
-      photos: [],
-      coaCertificate: null,
+      makeAnOfferCheck: false,
+      makeAnOfferValue: "",
+      hasCOA: false,
+      images: [],
+      coaImage: null,
     },
   })
 
@@ -73,7 +82,7 @@ function AddListingForm({ setShowAddAuction }: Props) {
     form.setValue("tags", tags)
     form.trigger("tags")
     form.setValue(
-      "photos",
+      "images",
       images.map((image) => image.name),
     )
   }, [tags, form, images])
@@ -84,8 +93,8 @@ function AddListingForm({ setShowAddAuction }: Props) {
   }
 
   const handleCoaImageChange = (image: File) => {
-    setCoaCertificate(image)
-    setFormValues({ ...formValues, coaCertificate: image })
+    setCoaImage(image)
+    setFormValues({ ...formValues, coaImage: image })
   }
 
   const session = useSession()
@@ -152,7 +161,7 @@ function AddListingForm({ setShowAddAuction }: Props) {
   const { mutate } = useMutation<any, unknown, FormData>({
     mutationKey: ["add-auction"],
     mutationFn: (formData) =>
-      fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/product`, {
+      fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/vendor/auction/create`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -173,7 +182,6 @@ function AddListingForm({ setShowAddAuction }: Props) {
         position: "top-right",
         richColors: true,
       })
-      setShowAddAuction(false)
     },
   })
 
@@ -182,45 +190,40 @@ function AddListingForm({ setShowAddAuction }: Props) {
     formData.append("title", data.title)
     formData.append("shortDescription", data.shortDescription)
     formData.append("description", data.description)
-    formData.append("productType", data.productType)
+    formData.append("industry", data.industry)
     formData.append("category", data.category)
     formData.append("subCategory", data.subCategory || "")
-    formData.append("regularPrice", data.regularPrice)
-    formData.append("selllingPrice", data.selllingPrice || "")
+    formData.append("openingPrice", data.openingPrice)
+    formData.append("reservePrice", data.reservePrice || "")
+    formData.append("buyNowPrice", data.buyNowPrice || "")
+    formData.append("startingDateAndTime", data.startingDateAndTime?.toString() || "")
+    formData.append("endingDateAndTime", data.endingDateAndTime?.toString() || "")
     formData.append("quantity", data.quantity)
     formData.append("tags", JSON.stringify(data.tags))
     formData.append("thc", data.thc || "")
     formData.append("cbd", data.cbd || "")
-    formData.append("coa", data.coa.toString())
+    formData.append("makeAnOfferCheck", data.makeAnOfferCheck.toString())
+    formData.append("makeAnOfferValue", data.makeAnOfferValue || "")
+    formData.append("hasCOA", data.hasCOA.toString())
 
     if (images.length > 0) {
       images.forEach((image) => {
-        formData.append("photos", image)
+        formData.append("images", image)
       })
     }
 
-    if (data.coa && coaCertificate) {
-      formData.append("coaCertificate", coaCertificate)
+    if (data.hasCOA && coaImage) {
+      formData.append("coaImage", coaImage)
     }
 
-    // Log the complete FormData to see all entries including files
-    // console.log("Form data being submitted:")
-    // for (const pair of formData.entries()) {
-    //   console.log(pair[0], pair[1])
-    // }
-
-    // Log the original data object for reference
-    console.log("Original form data:", data)
-    console.log("Images array:", images)
-    console.log("COA Certificate:", coaCertificate)
+    console.log(data)
     mutate(formData)
   }
 
   return (
     <section className="pb-[60px]">
       <div className="bg-white rounded-[24px] p-[32px]">
-        <div
-          className={
+	@@ -142,7 +228,7 @@ const AddAuctionForm: React.FC = () => {
             "bg-primary dark:bg-pinkGradient px-4 py-3 mb- rounded-t-3xl text-white text-[32px] leading-[38px] font-semibold h-[78px] flex items-center"
           }
         >
@@ -228,8 +231,7 @@ function AddListingForm({ setShowAddAuction }: Props) {
         </div>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
-            <div className="flex gap-4">
-              <div className="w-[58%] space-y-[16px] mt-[16px]">
+	@@ -151,253 +237,473 @@ const AddAuctionForm: React.FC = () => {
                 <FormField
                   control={form.control}
                   name="title"
@@ -278,7 +280,7 @@ function AddListingForm({ setShowAddAuction }: Props) {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="leading-[19.2px] text-[#9C9C9C] text-[16px] font-medium">
-                        Description
+                        Full Description
                       </FormLabel>
                       <FormControl>
                         <Textarea
@@ -295,7 +297,7 @@ function AddListingForm({ setShowAddAuction }: Props) {
 
                 <FormField
                   control={form.control}
-                  name="productType"
+                  name="industry"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="leading-[19.2px] text-[#9C9C9C] text-[16px] font-medium">
@@ -385,14 +387,14 @@ function AddListingForm({ setShowAddAuction }: Props) {
                 />
 
                 <div className="grid grid-cols-12 gap-4">
-                  <div className="col-span-6">
+                  <div className="col-span-4">
                     <FormField
                       control={form.control}
-                      name="regularPrice"
+                      name="openingPrice"
                       render={({ field }) => (
                         <FormItem className="flex flex-col">
                           <FormLabel className="leading-[19.2px] text-[#444444] text-[16px] font-normal">
-                            Regular Price<span className="text-red-500">*</span>
+                            Opening Price<span className="text-red-500">*</span>
                           </FormLabel>
                           <div className="flex justify-between mt-2 w-full whitespace-nowrap rounded-md border border-solid border-[#B0B0B0] h-[51px]">
                             <div className="gap-3 self-stretch px-4 dark:!text-[#6841A5] text-sm font-semibold leading-tight text-[#0057A8] dark:bg-[#482D721A] bg-gray-200 rounded-l-lg h-[49px] w-[42px] flex items-center justify-center">
@@ -413,14 +415,14 @@ function AddListingForm({ setShowAddAuction }: Props) {
                     />
                   </div>
 
-                  <div className="col-span-6">
+                  <div className="col-span-4">
                     <FormField
                       control={form.control}
-                      name="selllingPrice"
+                      name="reservePrice"
                       render={({ field }) => (
                         <FormItem className="flex flex-col">
                           <FormLabel className="leading-[19.2px] text-[#444444] text-[16px] font-normal">
-                            Sell Price
+                            Reserve Price
                           </FormLabel>
                           <div className="flex justify-between mt-2 w-full whitespace-nowrap rounded-md border border-solid border-[#B0B0B0] h-[51px]">
                             <div className="gap-3 self-stretch px-4 dark:!text-[#6841A5] text-sm font-semibold leading-tight text-[#0057A8] dark:bg-[#482D721A] bg-gray-200 rounded-l-lg h-[49px] w-[42px] flex items-center justify-center">
@@ -435,6 +437,88 @@ function AddListingForm({ setShowAddAuction }: Props) {
                               />
                             </FormControl>
                           </div>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
+                  <div className="col-span-4">
+                    <FormField
+                      control={form.control}
+                      name="buyNowPrice"
+                      render={({ field }) => (
+                        <FormItem className="flex flex-col">
+                          <FormLabel className="leading-[19.2px] text-[#444444] text-[16px] font-normal">
+                            Buy Now Price
+                          </FormLabel>
+                          <div className="flex justify-between mt-2 w-full whitespace-nowrap rounded-md border border-solid border-[#B0B0B0] h-[51px]">
+                            <div className="gap-3 self-stretch px-4 dark:!text-[#6841A5] text-sm font-semibold leading-tight text-[#0057A8] dark:bg-[#482D721A] bg-gray-200 rounded-l-lg h-[49px] w-[42px] flex items-center justify-center">
+                              $
+                            </div>
+                            <FormControl>
+                              <Input
+                                placeholder="0.00"
+                                type="number"
+                                className="flex-1 shrink gap-2 self-stretch py-3 pr-5 pl-4 my-auto text-base leading-snug rounded-lg min-w-[100px] border-none h-[50px] dark:!text-black"
+                                {...field}
+                              />
+                            </FormControl>
+                          </div>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-12 gap-4">
+                  <div className="col-span-6 w-auto">
+                    <FormField
+                      control={form.control}
+                      name="startingDateAndTime"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="leading-[19.2px] text-[#444444] text-[16px] font-normal">
+                            Starting Day & Time<span className="text-red-500">*</span>
+                          </FormLabel>
+                          <FormControl>
+                            <DateTimePicker
+                              hourCycle={24}
+                              value={startDate}
+                              onChange={(date) => {
+                                setStartDate(date)
+                                field.onChange(date)
+                              }}
+                              className="border-[#B0B0B0] dark:bg-white dark:hover:text-[#C5C5C5] dark:text-[#444444]"
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
+                  <div className="col-span-6 w-auto">
+                    <FormField
+                      control={form.control}
+                      name="endingDateAndTime"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="leading-[19.2px] text-[#444444] text-[16px] font-normal">
+                            Ending Day & Time<span className="text-red-500">*</span>
+                          </FormLabel>
+                          <FormControl>
+                            <DateTimePicker
+                              hourCycle={24}
+                              value={endDate}
+                              onChange={(date) => {
+                                setEndDate(date)
+                                field.onChange(date)
+                              }}
+                              className="border-[#B0B0B0] dark:bg-white dark:hover:text-[#C5C5C5] dark:text-[#444444]"
+                            />
+                          </FormControl>
                           <FormMessage />
                         </FormItem>
                       )}
@@ -471,7 +555,7 @@ function AddListingForm({ setShowAddAuction }: Props) {
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel className="leading-[19.2px] text-[#444444] text-[16px] font-normal">
-                            THC
+                            THC %
                           </FormLabel>
                           <FormControl>
                             <Input
@@ -496,7 +580,7 @@ function AddListingForm({ setShowAddAuction }: Props) {
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel className="leading-[19.2px] text-[#444444] text-[16px] font-normal">
-                            CBD
+                            CBD %
                           </FormLabel>
                           <FormControl>
                             <Input
@@ -521,7 +605,7 @@ function AddListingForm({ setShowAddAuction }: Props) {
 
                 <FormField
                   control={form.control}
-                  name="coa"
+                  name="hasCOA"
                   render={({ field }) => (
                     <FormItem className="flex flex-row items-start space-x-3 space-y-0 mt-4">
                       <FormControl>
@@ -537,7 +621,7 @@ function AddListingForm({ setShowAddAuction }: Props) {
                   )}
                 />
 
-                {form.watch("coa") && (
+                {form.watch("hasCOA") && (
                   <div className="border border-dashed border-[#9C9C9C] p-4 rounded-md">
                     <FormLabel className="leading-[19.2px] text-[#444444] text-[16px] font-normal">
                       Upload COA Document
@@ -555,7 +639,7 @@ function AddListingForm({ setShowAddAuction }: Props) {
                   </div>
                 )}
 
-                {/* <FormField
+                <FormField
                   control={form.control}
                   name="makeAnOfferCheck"
                   render={({ field }) => (
@@ -573,9 +657,9 @@ function AddListingForm({ setShowAddAuction }: Props) {
                       </div>
                     </FormItem>
                   )}
-                /> */}
+                />
 
-                {/* {form.watch("makeAnOfferCheck") && (
+                {form.watch("makeAnOfferCheck") && (
                   <FormField
                     control={form.control}
                     name="makeAnOfferValue"
@@ -601,7 +685,7 @@ function AddListingForm({ setShowAddAuction }: Props) {
                       </FormItem>
                     )}
                   />
-                )} */}
+                )}
               </div>
               <div className="w-[600px] h-full mt-[16px] border border-[#B0B0B0] rounded-lg">
                 <ProductGallery onImageChange={handleImageChange} />
@@ -619,5 +703,4 @@ function AddListingForm({ setShowAddAuction }: Props) {
   )
 }
 
-export default AddListingForm
-
+export default AddAuctionForm

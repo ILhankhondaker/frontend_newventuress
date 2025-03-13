@@ -201,7 +201,7 @@ const countries = filteredCountries.reduce((acc, { countryCode, country }) => {
             ? "HEMP/CBD"
             :
             countryData.allow.includes("Select All")
-            ?  "HEMP/CBD & Recreational Cannabis both" : " Recreational Cannabis" 
+            ?  "HEMP/CBD & Recreational Cannabis" : " Recreational Cannabis" 
 
           return (
             <span
