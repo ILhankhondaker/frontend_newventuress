@@ -1,199 +1,233 @@
-"use client";
+"use client"
+import React, { type SetStateAction, useEffect, useState, type Dispatch } from "react"
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
+import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
+import * as z from "zod"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { InputWithTags } from "@/components/ui/input-with-tags"
+import { Textarea } from "@/components/ui/textarea"
+import { Checkbox } from "@/components/ui/checkbox"
+import ProductGallery from "@/components/shared/imageUpload/ProductGallery"
+import { useSession } from "next-auth/react"
+import { useMutation, useQuery } from "@tanstack/react-query"
+import { toast } from "sonner"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-
-import ProductGallery from "@/components/shared/imageUpload/ProductGallery";
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { InputWithTags } from "@/components/ui/input-with-tags";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import SkeletonWrapper from "@/components/ui/skeleton-wrapper";
-import { Textarea } from "@/components/ui/textarea";
-import VideoUploader from "@/components/ui/video-uploader";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { Loader2 } from "lucide-react";
-import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { toast } from "sonner";
-import {
-  productFormSchema,
-  type ProductFormValues,
-} from "./product-form-schema";
+const formSchema = z.object({
+  title: z.string().min(1, "Title is required"),
+  shortDescription: z.string(),
+  description: z.string(),
+  productType: z.string().min(1, "Industry is required"),
+  category: z.string().min(1, "Category is required"),
+  subCategory: z.string().optional(),
+  regularPrice: z.string().min(1, "Regular price is required"),
+  selllingPrice: z.string().optional(),
+  quantity: z.string().min(1, "Quantity is required"),
+  tags: z.array(z.string()).optional(),
+  thc: z.string().optional(),
+  cbd: z.string().optional(),
+  coa: z.boolean().default(false),
+  photos: z.array(z.any()).optional(),
+  coaCertificate: z.any().optional(),
+})
 
 interface Props {
-  setShowAddAuction: Dispatch<SetStateAction<boolean>>;
+  setShowAddAuction: Dispatch<SetStateAction<boolean>>
 }
 
+function AddListingForm({ setShowAddAuction }: Props) {
+  const [images, setImages] = useState<File[]>([])
+  const [coaCertificate, setCoaCertificate] = useState<File | null>(null)
+  const [formValues, setFormValues] = useState({})
+  const [selectedIndustry, setSelectedIndustry] = useState<string>("")
+  const [selectedCategory, setSelectedCategory] = useState<string>("")
+  const [categories, setCategories] = useState<any[]>([])
+  const [subCategories, setSubCategories] = useState<any[]>([])
 
-type CategoriesResponse = {
-  status: boolean;
-  message: string;
-  data: {
-    _id: string;
-    categoryName: string
-  }[]
-}
-type SubCategoriesResponse = {
-  status: boolean;
-  message: string;
-  data: {
-    _id: string;
-    subCategoryName: string
-  }[]
-}
-
-export function AddListingForm({setShowAddAuction}: Props) {
-  const [images, setImages] = useState<File[]>([]);
-  const [formValues, setFormValues] = useState({ /* your form values here */ });
-  const [tags, setTags] = React.useState<string[]>([]);
-
-  const form = useForm<ProductFormValues>({
-    resolver: zodResolver(productFormSchema),
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
     defaultValues: {
       title: "",
       shortDescription: "",
       description: "",
-      productType: "cbd",
-      stockStatus: "in stock",
-      storeId: "6795fbc52288a452214d2371",
-      category: "6794b3a0bf6abc36ff944cec",
-      subCategory: "6794c42e9bf73edbb82f688a",
-      purchasedPrice: "",
+      productType: "",
+      category: "",
+      subCategory: "",
+      regularPrice: "",
       selllingPrice: "",
-      discountPrice: "",
-      size: "",
       quantity: "",
-      sku: "",
-      coa: false,
       tags: [],
+      thc: "",
+      cbd: "",
+      coa: false,
       photos: [],
+      coaCertificate: null,
     },
-  });
-
-  const productType = form.watch("productType");
-  const categoryId = form.watch("category")
-
-  const {data, isLoading: isCategoryLoading} = useQuery<CategoriesResponse>({
-    queryKey: ["categories", productType],
-    queryFn: () => fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/categories/${productType}`).then((res) => res.json())
-  })
-  const {data:subcategoriesRes, isLoading: isSubCategoryLoading} = useQuery<SubCategoriesResponse>({
-    queryKey: ["categories", categoryId],
-    queryFn: () => fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/subcategories/${categoryId}`).then((res) => res.json())
   })
 
-  const {mutate: createProduct, isPending} = useMutation({
-    mutationKey: ["auction_listing_create"],
-    mutationFn: (body: FormData) => fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/product`, {
-      method: "POST",
-      body: body
-    }).then((res) => res.json()),
-    onSuccess: (data) => {
-      if(!data.status) {
-        toast.error(data.message, {
-          position: "top-right",
-          richColors: true
-        });
-        return;
-      }
+  const [tags, setTags] = React.useState<string[]>([])
 
-      // handle success
-      toast.success(data.message, {
-        position: "top-right",
-        richColors: true
-      });
-
-      form.reset();
-      setTags([]);
-      setImages([])
-      setShowAddAuction(false)
-
-    }
-  })
-
-
-  
-
-  
   useEffect(() => {
-    form.setValue("tags", tags); // Update the 'tags' field in the form
-    form.trigger("tags");
-    
-    
-  }, [tags, form,images, form.trigger]);
-  const onSubmit = (data: ProductFormValues) => {
-    const formData = new FormData();
-  
-    // Append images to the formData
-    images.forEach((image) => {
-      formData.append("photos", image ); // Append each image file
-    });
-  
-    // Append other fields using 'data' from the form
-    tags.forEach((tag) => {
-      formData.append("tags", tag)
-    })
-    
-    formData.append("title", data.title);
-    formData.append("shortDescription", data.shortDescription);
-    formData.append("description", data.description);
-    formData.append("productType", data.productType);
-    formData.append("stockStatus", data.stockStatus);
-    formData.append("storeId", data.storeId);
-    formData.append("category", data.category);
-    formData.append("subCategory", data.subCategory);
-    formData.append("purchasedPrice", data.purchasedPrice);
-    formData.append("selllingPrice", data.selllingPrice);
-    formData.append("discountPrice", data.discountPrice || ""); // Use empty string if no discount price
-    formData.append("size", data.size);
-    formData.append("quantity", data.quantity);
-    formData.append("sku", data.sku);
-    formData.append("coa", data.coa.toString()); // COA is a boolean, so convert to string
-    formData.append("photos", data.video!)
-    
-    // Log formData to inspect it if needed
-    createProduct(formData)
-  
-    // After creating the formData, you can submit it using fetch or axios:
-   
-  };
+    form.setValue("tags", tags)
+    form.trigger("tags")
+    form.setValue(
+      "photos",
+      images.map((image) => image.name),
+    )
+  }, [tags, form, images])
 
-  
   const handleImageChange = (images: File[]) => {
-    setImages(images);
-    setFormValues({ ...formValues, images }); // Update the form values
-   
+    setImages(images)
+    setFormValues({ ...formValues, images })
+  }
 
-  };
+  const handleCoaImageChange = (image: File) => {
+    setCoaCertificate(image)
+    setFormValues({ ...formValues, coaCertificate: image })
+  }
+
+  const session = useSession()
+  const token = session.data?.user.token
+
+  // Fetch categories based on selected industry
+  const { data: categoriesData, refetch: refetchCategories } = useQuery({
+    queryKey: ["categories", selectedIndustry],
+    queryFn: () =>
+      fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/categories?industry=${selectedIndustry}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }).then((res) => res.json()),
+    enabled: !!selectedIndustry && !!token,
+  })
+
+  // Fetch subcategories based on selected category
+  const { data: subCategoriesData, refetch: refetchSubCategories } = useQuery({
+    queryKey: ["subcategories", selectedCategory],
+    queryFn: () =>
+      fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/subcategories/${selectedCategory}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }).then((res) => res.json()),
+    enabled: !!selectedCategory && !!token,
+  })
+
+  useEffect(() => {
+    if (categoriesData?.data) {
+      setCategories(categoriesData.data)
+    }
+  }, [categoriesData])
+
+  useEffect(() => {
+    if (subCategoriesData?.data) {
+      setSubCategories(subCategoriesData.data)
+    }
+  }, [subCategoriesData])
+
+  useEffect(() => {
+    if (selectedIndustry) {
+      refetchCategories()
+      form.setValue("category", "")
+      form.setValue("subCategory", "")
+      setSelectedCategory("")
+    }
+  }, [selectedIndustry, refetchCategories, form])
+
+  useEffect(() => {
+    if (selectedCategory) {
+      refetchSubCategories()
+      form.setValue("subCategory", "")
+    }
+  }, [selectedCategory, refetchSubCategories, form])
+
+  // Check if THC and CBD inputs should be disabled
+  const shouldDisableThcCbd = () => {
+    const categoryName = categories.find((cat) => cat.id === selectedCategory)?.name
+    return categoryName === "Accessories" || categoryName === "Apparel"
+  }
+
+  const { mutate } = useMutation<any, unknown, FormData>({
+    mutationKey: ["add-auction"],
+    mutationFn: (formData) =>
+      fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/product`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
+      }).then((res) => res.json()),
+
+    onSuccess: (formData) => {
+      if (formData.status === false) {
+        toast.error(formData.message, {
+          position: "top-right",
+          richColors: true,
+        })
+        return
+      }
+      form.reset()
+      toast.success(formData.message, {
+        position: "top-right",
+        richColors: true,
+      })
+      setShowAddAuction(false)
+    },
+  })
+
+  const onSubmit = (data: z.infer<typeof formSchema>) => {
+    const formData = new FormData()
+    formData.append("title", data.title)
+    formData.append("shortDescription", data.shortDescription)
+    formData.append("description", data.description)
+    formData.append("productType", data.productType)
+    formData.append("category", data.category)
+    formData.append("subCategory", data.subCategory || "")
+    formData.append("regularPrice", data.regularPrice)
+    formData.append("selllingPrice", data.selllingPrice || "")
+    formData.append("quantity", data.quantity)
+    formData.append("tags", JSON.stringify(data.tags))
+    formData.append("thc", data.thc || "")
+    formData.append("cbd", data.cbd || "")
+    formData.append("coa", data.coa.toString())
+
+    if (images.length > 0) {
+      images.forEach((image) => {
+        formData.append("photos", image)
+      })
+    }
+
+    if (data.coa && coaCertificate) {
+      formData.append("coaCertificate", coaCertificate)
+    }
+
+    // Log the complete FormData to see all entries including files
+    // console.log("Form data being submitted:")
+    // for (const pair of formData.entries()) {
+    //   console.log(pair[0], pair[1])
+    // }
+
+    // Log the original data object for reference
+    console.log("Original form data:", data)
+    console.log("Images array:", images)
+    console.log("COA Certificate:", coaCertificate)
+    mutate(formData)
+  }
 
   return (
     <section className="pb-[60px]">
-      <div className="bg-white rounded-[24px] p-[32px]  ">
+      <div className="bg-white rounded-[24px] p-[32px]">
         <div
           className={
-            "bg-primary px-4 py-3 mb- rounded-t-3xl text-white text-[32px] leading-[38px] font-semibold h-[78px] flex items-center dark:bg-pinkGradient"
+            "bg-primary dark:bg-pinkGradient px-4 py-3 mb- rounded-t-3xl text-white text-[32px] leading-[38px] font-semibold h-[78px] flex items-center"
           }
         >
-          Add New Product
+          Add Auction Product
         </div>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <form onSubmit={form.handleSubmit(onSubmit)}>
             <div className="flex gap-4">
               <div className="w-[58%] space-y-[16px] mt-[16px]">
                 <FormField
@@ -201,11 +235,16 @@ export function AddListingForm({setShowAddAuction}: Props) {
                   name="title"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-base text-[#444444] font-normal">
-                        Title <span className="text-red-500">*</span>
+                      <FormLabel className="leading-[19.2px] text-[#444444] text-[16px] font-normal">
+                        Title<span className="text-red-500">*</span>
                       </FormLabel>
                       <FormControl>
-                        <Input {...field} className="h-[51px] border-[1px] border-[#B0B0B0] dark:border-[#B0B0B0] dark:!text-black " />
+                        <Input
+                          placeholder=""
+                          type="text"
+                          className="py-6 border-[1px] border-[#B0B0B0] dark:!text-black text-[16px]"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -217,13 +256,15 @@ export function AddListingForm({setShowAddAuction}: Props) {
                   name="shortDescription"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-base text-[#444444] font-normal ">Short Description</FormLabel>
+                      <FormLabel className="leading-[19.2px] text-[#9C9C9C] text-[16px] font-medium">
+                        Short Description
+                      </FormLabel>
                       <FormControl>
                         <Textarea
-                          placeholder="Type Description here"
+                          placeholder="Type Short Description Here"
+                          className="py-3 resize-none border-[#9E9E9E] dark:!text-black"
+                          rows={2}
                           {...field}
-                          className=" border-[1px] border-[#B0B0B0] dark:border-[#B0B0B0] dark:!text-black"
-                          rows={3}
                         />
                       </FormControl>
                       <FormMessage />
@@ -236,13 +277,15 @@ export function AddListingForm({setShowAddAuction}: Props) {
                   name="description"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-base text-[#444444] font-normal">Description</FormLabel>
+                      <FormLabel className="leading-[19.2px] text-[#9C9C9C] text-[16px] font-medium">
+                        Description
+                      </FormLabel>
                       <FormControl>
                         <Textarea
-                          placeholder="Type Description here"
-                          {...field}
-                          className=" border-[1px] border-[#B0B0B0] dark:border-[#B0B0B0] dark:!text-black"
+                          placeholder="Type Full Description Here"
+                          className="py-3 resize-none border-[#9E9E9E] dark:!text-black"
                           rows={3}
+                          {...field}
                         />
                       </FormControl>
                       <FormMessage />
@@ -250,358 +293,331 @@ export function AddListingForm({setShowAddAuction}: Props) {
                   )}
                 />
 
-                <div className="grid grid-cols-2 gap-6">
-                  <FormField
-                    control={form.control}
-                    name="productType"
-                    render={({ field }) =>
-                      <FormItem>
-                        <FormLabel className="leading-[19.2px] text-base text-[#444444] font-normal">
-                          Product Type<span className="text-red-500">*</span>
-                        </FormLabel>
+                <FormField
+                  control={form.control}
+                  name="productType"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="leading-[19.2px] text-[#9C9C9C] text-[16px] font-medium">
+                        Industry Type<span className="text-red-500">*</span>
+                      </FormLabel>
+                      <Select
+                        onValueChange={(value) => {
+                          field.onChange(value)
+                          setSelectedIndustry(value)
+                        }}
+                        value={field.value}
+                      >
                         <FormControl>
-                          <div className="space-y-2">
-                            {["cbd", "recreational"].map(type =>
-                              <div
-                                key={type}
-                                className="flex items-center space-x-2"
-                              >
-                                <Checkbox
-                                  id={type}
-                                  checked={field.value === type}
-                                  onCheckedChange={checked => {
-                                    if (checked) {
-                                      field.onChange(type); // Ensures only one checkbox is selected at a time
-                                    } else {
-                                      field.onChange(""); // Clears the selection
-                                    }
-                                  }}
-                                  className="h-4 w-4 border-[#C5C5C5]"
-                                />
-                                <Label
-                                  htmlFor={type}
-                                  className="leading-[19.2px] text-base text-[#444444] font-normal"
-                                >
-                                  {type}
-                                </Label>
-                              </div>
-                            )}
-                          </div>
+                          <SelectTrigger className="h-[51px] border-[#9C9C9C] dark:!text-black">
+                            <SelectValue placeholder="Select Industry" />
+                          </SelectTrigger>
                         </FormControl>
-                        <FormMessage />
-                      </FormItem>}
-                  />
+                        <SelectContent>
+                          <SelectItem value="recreational">RECREATIONAL CANNABIS</SelectItem>
+                          <SelectItem value="cbd">HEMP/CBD</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-                  <FormField
-                    control={form.control}
-                    name="stockStatus"
-                    render={({ field }) =>
-                      <FormItem>
-                        <FormLabel className="leading-[19.2px] text-base text-[#444444] font-normal">
-                          Stock Status <span className="text-red-500">*</span>
-                        </FormLabel>
+                <FormField
+                  control={form.control}
+                  name="category"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="leading-[19.2px] text-[#444444] text-[16px] font-normal">
+                        Category<span className="text-red-500">*</span>
+                      </FormLabel>
+                      <Select
+                        onValueChange={(value) => {
+                          field.onChange(value)
+                          setSelectedCategory(value)
+                        }}
+                        value={field.value}
+                        disabled={!selectedIndustry}
+                      >
                         <FormControl>
-                          <div className="space-y-2">
-                            {["in stock", "out of stock"].map(type =>
-                              <div
-                                key={type}
-                                className="flex items-center space-x-2"
-                              >
-                                <Checkbox
-                                  id={type}
-                                  checked={field.value === type}
-                                  onCheckedChange={checked => {
-                                    if (checked) {
-                                      field.onChange(type); // Ensures only one checkbox is selected at a time
-                                    } else {
-                                      field.onChange(""); // Clears the selection
-                                    }
-                                  }}
-                                  className="h-4 w-4 border-[#C5C5C5]"
-                                />
-                                <Label
-                                  htmlFor={type}
-                                  className="leading-[19.2px] text-base text-[#444444] font-normal"
-                                >
-                                  {type}
-                                </Label>
-                              </div>
-                            )}
-                          </div>
+                          <SelectTrigger className="h-[51px] border-[#9C9C9C] dark:!text-black">
+                            <SelectValue placeholder="Select Category" />
+                          </SelectTrigger>
                         </FormControl>
-                        <FormMessage />
-                      </FormItem>}
-                  />
+                        <SelectContent>
+                          {categories.map((category) => (
+                            <SelectItem key={category._id} value={category._id}>
+                              {category.categoryName}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="subCategory"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="leading-[19.2px] text-[#444444] text-[16px] font-normal">
+                        Sub Category
+                      </FormLabel>
+                      <Select onValueChange={field.onChange} value={field.value} disabled={!selectedCategory}>
+                        <FormControl>
+                          <SelectTrigger className="h-[51px] border-[#9C9C9C] dark:!text-black">
+                            <SelectValue placeholder="Select Sub Category" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {subCategories.map((subCategory) => (
+                            <SelectItem key={subCategory._id} value={subCategory._id}>
+                              {subCategory.subCategoryName}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <div className="grid grid-cols-12 gap-4">
+                  <div className="col-span-6">
+                    <FormField
+                      control={form.control}
+                      name="regularPrice"
+                      render={({ field }) => (
+                        <FormItem className="flex flex-col">
+                          <FormLabel className="leading-[19.2px] text-[#444444] text-[16px] font-normal">
+                            Regular Price<span className="text-red-500">*</span>
+                          </FormLabel>
+                          <div className="flex justify-between mt-2 w-full whitespace-nowrap rounded-md border border-solid border-[#B0B0B0] h-[51px]">
+                            <div className="gap-3 self-stretch px-4 dark:!text-[#6841A5] text-sm font-semibold leading-tight text-[#0057A8] dark:bg-[#482D721A] bg-gray-200 rounded-l-lg h-[49px] w-[42px] flex items-center justify-center">
+                              $
+                            </div>
+                            <FormControl>
+                              <Input
+                                placeholder="0.00"
+                                type="number"
+                                className="flex-1 shrink gap-2 self-stretch py-3 pr-5 pl-4 my-auto text-base leading-snug rounded-lg min-w-[100px] border-none h-[50px] dark:!text-black"
+                                {...field}
+                              />
+                            </FormControl>
+                          </div>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
+                  <div className="col-span-6">
+                    <FormField
+                      control={form.control}
+                      name="selllingPrice"
+                      render={({ field }) => (
+                        <FormItem className="flex flex-col">
+                          <FormLabel className="leading-[19.2px] text-[#444444] text-[16px] font-normal">
+                            Sell Price
+                          </FormLabel>
+                          <div className="flex justify-between mt-2 w-full whitespace-nowrap rounded-md border border-solid border-[#B0B0B0] h-[51px]">
+                            <div className="gap-3 self-stretch px-4 dark:!text-[#6841A5] text-sm font-semibold leading-tight text-[#0057A8] dark:bg-[#482D721A] bg-gray-200 rounded-l-lg h-[49px] w-[42px] flex items-center justify-center">
+                              $
+                            </div>
+                            <FormControl>
+                              <Input
+                                placeholder="0.00"
+                                type="number"
+                                className="flex-1 shrink gap-2 self-stretch py-3 pr-5 pl-4 my-auto text-base leading-snug rounded-lg min-w-[100px] border-none h-[50px] dark:!text-black"
+                                {...field}
+                              />
+                            </FormControl>
+                          </div>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
                 </div>
 
-                <div className="grid grid-cols-3 gap-6">
-                  <FormField
-                    control={form.control}
-                    name="storeId"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-base text-[#444444] font-normal">
-                          Store <span className="text-red-500">*</span>
-                        </FormLabel>
-                        <Select
-                          onValueChange={field.onChange}
-                          defaultValue={field.value}
-                        >
-                          <FormControl className="h-[51px] border-[1px] border-[#B0B0B0] dark:border-[#B0B0B0]">
-                            <SelectTrigger className="dark:text-[#444444]">
-                              <SelectValue placeholder="Select store" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent className="dark:bg-white dark:border-none">
-                            <SelectItem value="6795fbc52288a452214d2371">Store 1</SelectItem>
-                            <SelectItem value="6795fbc52288a452214d2371">Store 2</SelectItem>
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                <FormField
+                  control={form.control}
+                  name="quantity"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="leading-[19.2px] text-[#444444] text-[16px] font-normal">
+                        Quantity<span className="text-red-500">*</span>
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="123"
+                          type="number"
+                          className="h-[51px] border-[#9C9C9C] dark:!text-black"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-                  <FormField
-                    control={form.control}
-                    name="category"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-base text-[#444444] font-normal">
-                          Category <span className="text-red-500">*</span>
-                        </FormLabel>
-                        <SkeletonWrapper isLoading={isCategoryLoading}>
-                        <Select
-                          onValueChange={field.onChange}
-                          defaultValue={field.value}
-                        >
-                          <FormControl className="h-[51px] border-[1px] border-[#B0B0B0] dark:border-[#B0B0B0]">
-                            <SelectTrigger className="dark:text-[#444444]" >
-                              <SelectValue placeholder="Select category" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent className="dark:bg-white dark:border-none">
-                            {data && data.data.length > 0 && data.data.map((item) => (
-                              <SelectItem value={item._id} key={item._id}>{item.categoryName}</SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                        </SkeletonWrapper>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="subCategory"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-base text-[#444444] font-normal">
-                          Sub-Category <span className="text-red-500">*</span>
-                        </FormLabel>
-                        <SkeletonWrapper isLoading={isSubCategoryLoading}>
-                        <Select
-                          onValueChange={field.onChange}
-                          defaultValue={field.value}
-                        >
-                          <FormControl className="h-[51px] border-[1px] border-[#B0B0B0] dark:border-[#B0B0B0]">
-                            <SelectTrigger className="dark:text-[#444444]">
-                              <SelectValue placeholder="Select sub-category" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent className="dark:bg-white dark:border-none">
-                            {subcategoriesRes && subcategoriesRes.data.length > 0 && subcategoriesRes.data.map((item) => (
-                              <SelectItem value={item._id} key={item._id}>{item.subCategoryName}</SelectItem>
-                            ))}
-                            
-                          </SelectContent>
-                        </Select>
-                        </SkeletonWrapper>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-
-                <div className="grid grid-cols-3 gap-6">
-                  <FormField
-                    control={form.control}
-                    name="purchasedPrice"
-                    render={({ field }) => (
-                      <FormItem className="flex flex-col ">
-                        <FormLabel className=" leading-tight text-[#444444] text-[16px] font-normal ">
-                          Purchased Price
-                        </FormLabel>
-                        <div className="flex justify-between mt-2 w-full whitespace-nowrap rounded-md border border-solid border-neutral-400 h-[51px] dark:border-[#B0B0B0]">
-                          <div className="gap-3 self-stretch dark:bg-[#482D721A] px-4 text-sm font-semibold leading-tight text-[#0057A8] dark:!text-[#6841A5] bg-gray-200 rounded-l-lg h-[49px] w-[42px] flex items-center justify-center">
-                            $
-                          </div>
+                <div className="grid grid-cols-12 gap-4">
+                  <div className="col-span-6">
+                    <FormField
+                      control={form.control}
+                      name="thc"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="leading-[19.2px] text-[#444444] text-[16px] font-normal">
+                            THC
+                          </FormLabel>
                           <FormControl>
                             <Input
-                              placeholder="0.00"
+                              placeholder="0.0"
                               type="number"
-                              className="flex-1 shrink gap-2 self-stretch py-3 pr-5 pl-4 my-auto text-base leading-snug rounded-lg  border-none h-[50px] "
+                              step="0.1"
+                              className="h-[51px] border-[#9C9C9C] dark:!text-black"
+                              disabled={shouldDisableThcCbd()}
                               {...field}
                             />
                           </FormControl>
-                        </div>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
 
-                  <FormField
-                    control={form.control}
-                    name="selllingPrice"
-                    render={({ field }) => (
-                      <FormItem className="flex flex-col ">
-                        <FormLabel className=" leading-tight text-[#444444] text-[16px] font-normal">
-                          Selling Price
-                        </FormLabel>
-                        <div className="flex justify-between mt-2 w-full whitespace-nowrap rounded-md border border-solid border-neutral-400 h-[51px] dark:border-[#B0B0B0]">
-                          <div className="gap-3 self-stretch px-4 text-sm font-semibold leading-tight text-[#0057A8] dark:!text-[#6841A5] bg-gray-200 dark:bg-[#482D721A] rounded-l-lg h-[49px] w-[42px] flex items-center justify-center">
-                            $
-                          </div>
+                  <div className="col-span-6">
+                    <FormField
+                      control={form.control}
+                      name="cbd"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="leading-[19.2px] text-[#444444] text-[16px] font-normal">
+                            CBD
+                          </FormLabel>
                           <FormControl>
                             <Input
-                              placeholder="0.00"
+                              placeholder="0.0"
                               type="number"
-                              className="flex-1 shrink gap-2 self-stretch py-3 pr-5 pl-4 my-auto text-base leading-snug rounded-lg  border-none h-[50px] "
+                              step="0.1"
+                              className="h-[51px] border-[#9C9C9C] dark:!text-black"
+                              disabled={shouldDisableThcCbd()}
                               {...field}
                             />
                           </FormControl>
-                        </div>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="discountPrice"
-                    render={({ field }) => (
-                      <FormItem className="flex flex-col ">
-                        <FormLabel className=" leading-tight text-[#444444] text-[16px] font-normal">
-                          Discount Price
-                        </FormLabel>
-                        <div className="flex justify-between mt-2 w-full whitespace-nowrap rounded-md border border-solid border-neutral-400 h-[51px] dark:border-[#B0B0B0]">
-                          <div className="gap-3 self-stretch px-4 text-sm font-semibold leading-tight text-[#0057A8] dark:!text-[#6841A5] dark:bg-[#482D721A] bg-gray-200 rounded-l-lg h-[49px] w-[42px] flex items-center justify-center">
-                            $
-                          </div>
-                          <FormControl>
-                            <Input
-                              placeholder="0.00"
-                              type="number"
-                              className="flex-1 shrink gap-2 self-stretch py-3 pr-5 pl-4 my-auto text-base leading-snug rounded-lg  border-none h-[50px]"
-                              {...field}
-                            />
-                          </FormControl>
-                        </div>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
                 </div>
 
-                <div className="grid grid-cols-3 gap-6">
-                  <FormField
-                    control={form.control}
-                    name="size"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-base text-[#444444] font-normal">Size (KG)</FormLabel>
-                        <FormControl>
-                          <Input type="number" {...field} className="h-[51px] border-[#B0B0B0] dark:border-[#B0B0B0] dark:!text-[#444444]" />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="quantity"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-base text-[#444444] font-normal">Quantity</FormLabel>
-                        <FormControl>
-                          <Input type="number" {...field} className="h-[51px] border-[#B0B0B0] dark:border-[#B0B0B0] dark:!text-[#444444]" />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="sku"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-base text-[#444444] font-normal">SKU</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Fox-0389" {...field} className="h-[51px] border-[#B0B0B0] dark:border-[#B0B0B0]" />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                <div className="mt-3">
+                  <InputWithTags placeholder="Add Tags" limit={10} tags={tags} setTags={setTags} />
                 </div>
 
                 <FormField
                   control={form.control}
                   name="coa"
                   render={({ field }) => (
-                    <FormItem className="flex flex-row items-center  space-x-3 space-y-0">
+                    <FormItem className="flex flex-row items-start space-x-3 space-y-0 mt-4">
                       <FormControl>
-                        <Checkbox
-                          checked={field.value}
-                          onCheckedChange={field.onChange}
-                        />
+                        <Checkbox checked={field.value} onCheckedChange={field.onChange} />
                       </FormControl>
                       <div className="space-y-1 leading-none">
-                        <FormLabel className="text-base text-[#444444] font-normal">COA (Certificate Of Authenticity)</FormLabel>
+                        <FormLabel className="text-sm font-normal text-[#444444]">
+                          Certificate of Analysis (COA)
+                        </FormLabel>
+                        <p className="text-xs text-muted-foreground">Upload a COA document for this product</p>
                       </div>
                     </FormItem>
                   )}
                 />
 
+                {form.watch("coa") && (
+                  <div className="border border-dashed border-[#9C9C9C] p-4 rounded-md">
+                    <FormLabel className="leading-[19.2px] text-[#444444] text-[16px] font-normal">
+                      Upload COA Document
+                    </FormLabel>
+                    <Input
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => {
+                        if (e.target.files && e.target.files[0]) {
+                          handleCoaImageChange(e.target.files[0])
+                        }
+                      }}
+                      className="mt-2"
+                    />
+                  </div>
+                )}
 
-                <div className="mt-3">
-                  <InputWithTags
-                    className="dark:border-[#B0B0B0]"
-                    placeholder="Add Tags"
-                    limit={10}
-                    tags={tags} // Pass tags
-                    setTags={setTags} // Pass setTags
+                {/* <FormField
+                  control={form.control}
+                  name="makeAnOfferCheck"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-row items-start space-x-3 space-y-0 mt-4">
+                      <FormControl>
+                        <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+                      </FormControl>
+                      <div className="space-y-1 leading-none">
+                        <FormLabel className="text-sm font-normal text-[#444444]">
+                          Allow users to make an offer
+                        </FormLabel>
+                        <p className="text-xs text-muted-foreground">
+                          Enable this to allow users to make custom offers
+                        </p>
+                      </div>
+                    </FormItem>
+                  )}
+                /> */}
+
+                {/* {form.watch("makeAnOfferCheck") && (
+                  <FormField
+                    control={form.control}
+                    name="makeAnOfferValue"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-col">
+                        <FormLabel className="leading-[19.2px] text-[#444444] text-[16px] font-normal">
+                          Minimum Offer Value
+                        </FormLabel>
+                        <div className="flex justify-between mt-2 w-full whitespace-nowrap rounded-md border border-solid border-[#B0B0B0] h-[51px]">
+                          <div className="gap-3 self-stretch px-4 dark:!text-[#6841A5] text-sm font-semibold leading-tight text-[#0057A8] dark:bg-[#482D721A] bg-gray-200 rounded-l-lg h-[49px] w-[42px] flex items-center justify-center">
+                            $
+                          </div>
+                          <FormControl>
+                            <Input
+                              placeholder="0.00"
+                              type="number"
+                              className="flex-1 shrink gap-2 self-stretch py-3 pr-5 pl-4 my-auto text-base leading-snug rounded-lg min-w-[240px] border-none h-[50px] dark:!text-black"
+                              {...field}
+                            />
+                          </FormControl>
+                        </div>
+                        <FormMessage />
+                      </FormItem>
+                    )}
                   />
-                </div>
+                )} */}
               </div>
-
-              <div className="w-[600px] h-full mt-[16px] border border-[#9C9C9C] dark:border-[#B0B0B0] rounded-lg  ">
-                <ProductGallery onImageChange={handleImageChange} files={images}  />
-                <FormField
-          control={form.control}
-          name="video"
-          render={({ field }) => (
-            <FormItem className="p-6">
-              <FormLabel>Upload Video</FormLabel>
-              <VideoUploader value={field.value} onChange={field.onChange} error={form.formState.errors.video?.message} />
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+              <div className="w-[600px] h-full mt-[16px] border border-[#B0B0B0] rounded-lg">
+                <ProductGallery onImageChange={handleImageChange} />
               </div>
-              
             </div>
-            <div className="flex justify-end ">
-              <Button type="submit" className="py-[12px] px-[24px]" disabled={isPending}>
-                Create {isPending && <Loader2 className="animate-spin" />}
+            <div className="flex justify-end mt-6">
+              <Button type="submit" className="py-[12px] px-[24px]">
+                Confirm
               </Button>
             </div>
           </form>
         </Form>
       </div>
     </section>
-  );
+  )
 }
+
+export default AddListingForm
+

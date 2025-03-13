@@ -1,9 +1,9 @@
 "use client";
 import React, { useState } from "react";
-import { AddListingForm } from "./AddListingForm";
 import AuctionsFilter from "./auctions_filter";
 import AuctionsHeader from "./auctions_header";
 import AuctionListingContainer from "./auctions_listing_container";
+import AddListingForm from "./AddListingForm";
 
 const AuctionMainSection: React.FC = () => {
   const [showAddAuction, setShowAddAuction] = useState(false);
