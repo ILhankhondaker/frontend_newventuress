@@ -46,6 +46,7 @@ function AddListingForm({ setShowAddAuction }: Props) {
   const [categories, setCategories] = useState<any[]>([])
   const [subCategories, setSubCategories] = useState<any[]>([])
 
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -462,7 +463,7 @@ function AddListingForm({ setShowAddAuction }: Props) {
                     </FormItem>
                   )}
                 />
-
+              { !(selectedCategory === "67d1b9ecf2ed66e4a542fe5e" || selectedCategory === "67d1ba16f2ed66e4a542fe7b") ? (
                 <div className="grid grid-cols-12 gap-4">
                   <div className="col-span-6">
                     <FormField
@@ -513,7 +514,10 @@ function AddListingForm({ setShowAddAuction }: Props) {
                       )}
                     />
                   </div>
+
                 </div>
+              ) : null
+              }
 
                 <div className="mt-3">
                   <InputWithTags placeholder="Add Tags" limit={10} tags={tags} setTags={setTags} />
