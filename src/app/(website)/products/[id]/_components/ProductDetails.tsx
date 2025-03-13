@@ -107,7 +107,7 @@ const ProductDetails = ({ productId }: props) => {
 
   // Transform API photos to the format expected by ProductImageGallery
   const productImages =
-    singleProduct?.data.photos?.map((photo) => ({
+    singleProduct?.data?.photos?.map((photo) => ({
       src: photo,
       alt: singleProduct.data.title || "Product image",
     })) || []
@@ -174,7 +174,7 @@ const ProductDetails = ({ productId }: props) => {
               <div className="flex max-w-full flex-col">
                 <div className="flex w-full flex-col">
                   <div className="text-gradient dark:text-gradient-pink text-4xl font-semibold leading-tight">
-                    {singleProduct?.data.title}
+                    {singleProduct?.data?.title}
                   </div>
                   <div className="mt-2 flex w-full flex-col items-start">
                     <StarRating rating={4} onChange={() => {}} />
@@ -187,26 +187,26 @@ const ProductDetails = ({ productId }: props) => {
                   </div>
                   <div className="mt-2 flex items-end gap-1 self-start font-medium leading-tight">
                     <div className="self-stretch whitespace-nowrap text-lg text-zinc-900">
-                      ${singleProduct?.data.selllingPrice.toFixed(2)}
+                      ${singleProduct?.data?.selllingPrice.toFixed(2)}
                     </div>
                     <div className="self-stretch text-sm text-[#9C9C9C]">
-                      <span className="line-through">${singleProduct?.data.regularPrice.toFixed(2)}</span>
+                      <span className="line-through">${singleProduct?.data?.regularPrice.toFixed(2)}</span>
                     </div>
                   </div>
                 </div>
                 <div className="mt-4 w-full font-[16px] leading-[19px] text-[#444444]">
-                  {singleProduct?.data.shortDescription}
+                  {singleProduct?.data?.shortDescription}
                 </div>
 
                 <div className="mt-4 flex flex-col gap-2">
                   
 
                   
-                  {singleProduct?.data.coa && (
+                  {singleProduct?.data?.coa && (
                     <div className="flex gap-4 items-center">
                       <span className="text-[#9C9C9C]">COA:</span>
                       <a
-                        href={singleProduct?.data.coaCertificate}
+                        href={singleProduct?.data?.coaCertificate}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-primary hover:underline"
@@ -220,7 +220,7 @@ const ProductDetails = ({ productId }: props) => {
                 <div className="mt-3 flex gap-4">
                   <span className="text-[#9C9C9C]">Type:</span>
                   <div className="flex items-center">
-                    <Badge className="capitalize">{singleProduct?.data.productType}</Badge>
+                    <Badge className="capitalize">{singleProduct?.data?.productType}</Badge>
                   </div>
                 </div>
 
@@ -281,7 +281,7 @@ const ProductDetails = ({ productId }: props) => {
               Description
             </div>
             <div className="mt-5 text-base leading-5 text-[#444444] max-md:max-w-full">
-              {singleProduct?.data.description}
+              {singleProduct?.data?.description}
             </div>
 
             {/* {singleProduct?.data.tags && singleProduct.data.tags.length > 0 && (
