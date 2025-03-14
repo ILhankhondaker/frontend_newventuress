@@ -68,7 +68,7 @@ const Footer = () => {
                       {title}
                     </h3>
                     <ul className="space-y-2">
-                      {links.map(({ label, href }) => (
+                      {links.map(({ label }) => (
                         <li key={label}>
                           <p
                             // href={href}
