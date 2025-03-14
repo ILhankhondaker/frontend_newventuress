@@ -7,7 +7,6 @@ import { Inter } from "next/font/google";
 
 // Local imports
 import { auth } from "@/auth";
-import { ChatBot } from "@/components/chatbot/chat-bot";
 import AppProvider from "@/components/providers/AppProvider";
 import NProgress from "@/components/providers/NProgress";
 import Footer from "@/components/shared/footer/mainFooter/footer";
@@ -58,7 +57,7 @@ export default async function RootLayout({
             <Toaster />
             </ThemeProvider>
             {/* <CrispProvider /> */}
-            <ChatBot/>
+            {/* <ChatBot/> */}
           </body>
         </html>
       </AppProvider>
