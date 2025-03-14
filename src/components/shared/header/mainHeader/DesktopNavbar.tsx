@@ -87,8 +87,8 @@ function DesktopNavbar({ pathName, loggedin }: DesktopNavbarProps) {
         </Link>
       </div>
       <PopoverGroup className="hidden lg:flex lg:gap-x-[36px] ">
-        <Link
-          href="/"
+        <p
+          // href="/"
           className={cn(
             "text-[20px] font-medium hover:text-primary-blue-main dark:hover:text-primary-pink-main cursor-not-allowed ",
             pathName === "/" ? "text-primary-blue-main dark:text-primary-pink-main" : "text-black font-normal"
@@ -96,7 +96,7 @@ function DesktopNavbar({ pathName, loggedin }: DesktopNavbarProps) {
           
         >
           Home
-        </Link>
+        </p>
         {/* <Link
           href="/about"
           className={cn(
@@ -106,8 +106,8 @@ function DesktopNavbar({ pathName, loggedin }: DesktopNavbarProps) {
         >
           About
         </Link> */}
-        <Link
-          href=""
+        <p
+          // href=""
           className={cn(
             "text-[20px] font-medium hover:text-primary-blue-main dark:hover:text-primary-pink-main cursor-not-allowed",
             pathName === "/products"
@@ -116,9 +116,9 @@ function DesktopNavbar({ pathName, loggedin }: DesktopNavbarProps) {
           )}
         >
           <AuctionList />
-        </Link>
-         <Link
-          href="/products"
+        </p>
+         <p
+          // href="/products"
           className={cn(
             "text-[20px] font-medium hover:text-primary-blue-main dark:hover:text-primary-pink-main cursor-not-allowed",
             pathName === "/products"
@@ -127,7 +127,7 @@ function DesktopNavbar({ pathName, loggedin }: DesktopNavbarProps) {
           )}
         >
          Products
-        </Link>
+        </p>
          {/* <Link
           href="/about"
           className={cn(
@@ -149,15 +149,15 @@ function DesktopNavbar({ pathName, loggedin }: DesktopNavbarProps) {
         >
           <PagesList />
         </Link> */}
-         <Link
-          href="/blogs"
+         <p
+          // href="/blogs"
           className={cn(
             "text-[20px] font-medium hover:text-primary-blue-main dark:hover:text-primary-pink-main cursor-not-allowed",
             pathName === "/blogs" ? "text-primary-blue-main dark:text-primary-pink-main" : "text-black font-normal"
           )}
         >
           Blog
-        </Link>
+        </p>
         {loggedin ?(
 
           <Link
@@ -171,15 +171,15 @@ function DesktopNavbar({ pathName, loggedin }: DesktopNavbarProps) {
         </Link>
         ): null}
 
-        <Link
-          href="/plans"
+        <p
+          // href="/plans"
           className={cn(
             "text-[20px] font-medium hover:text-primary-blue-main dark:hover:text-primary-pink-main cursor-not-allowed",
             pathName === "/plans" ? "text-primary-blue-main dark:text-primary-pink-main" : "text-black font-normal"
           )}
         >
           Membership
-        </Link>
+        </p>
       </PopoverGroup>
       <div>
         {!loggedin ? (
