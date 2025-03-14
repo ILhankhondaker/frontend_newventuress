@@ -29,18 +29,18 @@ function NewsletterPage() {
         <div className="container mx-auto py-12 w-full h-full flex items-center">
           <div className="flex flex-col lg:flex-row gap-4">
             {/* Left column with image */}
-            <div className="hidden lg:block md:w-[470px] h-[293px] relative">
+            <div className="hidden lg:block md:w-[470px] h-[293px] relative ">
               <Image
-                src="/assets/newsletter/newsletter.png"
+                src="https://res.cloudinary.com/drdztqgcx/image/upload/v1741927956/newsletter_2_dbfqja.jpg"
                 alt="Newsletter feature image"
                 fill
-                className="object-cover"
+                className="object-cover rounded-xl"
                 priority
               />
             </div>
 
             {/* Right column with form */}
-            <div className="flex-1 w-full bg-white/70 p-[20px] md:p-[40px] rounded-[16px]">
+            <div className="flex-1 w-full bg-white/70 p-[20px]  rounded-[16px]">
               <div className="space-y-4 mb-5">
                 <h2 className="text-[25px] lg:text-[32px] font-semibold text-gradient dark:text-gradient-pink">
                   Subscribe Newsletter

@@ -22,6 +22,7 @@ const ProductsContainer = ({ token }: Props) => {
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 1000])
   const [selectedCategories, setSelectedCategories] = useState<string[]>([])
   const [selectedAvailability, setSelectedAvailability] = useState<string[]>([])
+  
 
   // Handle filter change
   const onFilterChange = (filters: {
