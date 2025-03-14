@@ -1,11 +1,13 @@
 "use client"
 
-import { useQuery } from "@tanstack/react-query"
-import { useState } from "react"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Slider } from "@/components/ui/slider"
+import { countries } from "@/routes"
+import { useQuery } from "@tanstack/react-query"
+import { useState } from "react"
 
 interface Category {
   _id: string
@@ -42,7 +44,9 @@ interface SidebarFiltersProps {
 
 export default function SidebarFilters({ onFilterChange, priceRange }: SidebarFiltersProps) {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([])
-  const [selectedAvailability, setSelectedAvailability] = useState<string[]>([])
+  const [selectedAvailability, setSelectedAvailability] = useState<string[]>([]);
+
+  
 
   // Fetch categories from API
   const { data: categoriesData, isLoading: isCategoriesLoading } = useQuery<CategoryResponse>({
@@ -56,7 +60,6 @@ export default function SidebarFilters({ onFilterChange, priceRange }: SidebarFi
     },
   })
 
-  const availabilityOptions = ["In Stock", "Out Of Stock"]
 
   // Handle slider changes for price
   const handlePriceChange = (value: number[]) => {
@@ -112,8 +115,28 @@ export default function SidebarFilters({ onFilterChange, priceRange }: SidebarFi
     })
   }
 
+  console.log(typeof handleAvailabilityChange)
+
   return (
     <aside className="w-[270px] space-y-4 mt-[52px]">
+      <div className="rounded-lg bg-[#E6EEF6] dark:bg-[#482D721A] p-4">
+      <h2 className="text-[28px] font-bold text-gradient dark:text-gradient-pink mb-4">Filter by Location</h2>
+      <div>
+      <Select>
+      <SelectTrigger className="w-full text-black">
+        <SelectValue className="dark:text-black placeholder:text-black" placeholder="Select a country" />
+      </SelectTrigger>
+      <SelectContent>
+        <SelectGroup>
+          {countries.map((c) => (
+            <SelectItem value={c} key={c}>{c}</SelectItem>
+          ))}
+          
+        </SelectGroup>
+      </SelectContent>
+    </Select>
+      </div>
+      </div>
       {/* Price Filter */}
       <div className="rounded-lg bg-[#E6EEF6] dark:bg-[#482D721A] p-4">
         <h2 className="text-[28px] font-bold text-gradient dark:text-gradient-pink mb-4">Filter by Price</h2>
@@ -173,26 +196,7 @@ export default function SidebarFilters({ onFilterChange, priceRange }: SidebarFi
         </div>
       </div>
 
-      {/* Availability Filter */}
-      <div className="rounded-lg bg-[#E6EEF6] dark:bg-[#482D721A] p-4">
-        <h2 className="text-[28px] leading-[30px] font-bold text-gradient dark:text-gradient-pink mb-4">
-          Availability
-        </h2>
-        <div className="space-y-3">
-          {availabilityOptions.map((option) => (
-            <div key={option} className="flex items-center space-x-2">
-              <Checkbox
-                id={option}
-                checked={selectedAvailability.includes(option)}
-                onCheckedChange={() => handleAvailabilityChange(option)}
-              />
-              <Label htmlFor={option} className="text-[#434851]">
-                {option}
-              </Label>
-            </div>
-          ))}
-        </div>
-      </div>
+      
     </aside>
   )
 }

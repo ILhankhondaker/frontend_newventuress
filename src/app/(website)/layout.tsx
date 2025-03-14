@@ -7,17 +7,16 @@ import { Inter } from "next/font/google";
 
 // Local imports
 import { auth } from "@/auth";
+import { ChatBot } from "@/components/chatbot/chat-bot";
 import AgeRestrictionGuard from "@/components/providers/AgeRestrictionGuard";
 import AppProvider from "@/components/providers/AppProvider";
 import NProgress from "@/components/providers/NProgress";
 import Footer from "@/components/shared/footer/mainFooter/footer";
 import NewsletterPage from "@/components/shared/footer/newsletter/newsletter";
 import Navbar from "@/components/shared/header/mainHeader/navbar";
-import SearchBerCategories from "@/components/shared/searchBerCategories/searchBerCategories";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/provider/theme-provider";
 import { Toaster } from "sonner";
-import { ChatBot } from "@/components/chatbot/chat-bot";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -47,7 +46,7 @@ export default async function RootLayout({
               <Navbar loggedin={!!session} />
             </div>
             <div>
-            <SearchBerCategories />
+            {/* <SearchBerCategories /> */}
             </div>
             <AgeRestrictionGuard>{children}</AgeRestrictionGuard>
 
