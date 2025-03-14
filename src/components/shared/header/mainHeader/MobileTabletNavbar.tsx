@@ -7,42 +7,41 @@ import Link from "next/link";
 import { useState } from "react";
 
 // Local imports
-import { Button } from "@/components/ui/button";
 import HeaderIconMenu from "../headerIconMenu/headerIconMenu";
 // import Dropdown, { AuctionMobileMenu } from "./demonav";
 import { motion } from "framer-motion";
-import { Bell, CircleUser, Heart, ShoppingCart } from "lucide-react";
+import { Heart, ShoppingCart } from "lucide-react";
 import SearchBer from "../../searchBer/searchBer";
 import AuctionMobileNav from "./AuctionMobileNav";
 
-const Navicons = [
-  {
-    href: "/notifications",
-    icon: <Bell />,
-    alt: "bell-icon",
-    count: 4,
-    srOnlyText: "View notifications",
-  },
-  {
-    href: "/wishlist",
-    icon: <Heart />,
-    alt: "heart-icon",
-    srOnlyText: "View wishlist",
-  },
-  {
-    href: "/cart",
-    icon: <ShoppingCart />,
-    alt: "cart-icon",
-    count: 2,
-    srOnlyText: "View cart",
-  },
-  {
-    href: "/account",
-    icon: <CircleUser />,
-    alt: "user-icon",
-    srOnlyText: "View account",
-  },
-];
+// const Navicons = [
+//   {
+//     href: "/notifications",
+//     icon: <Bell />,
+//     alt: "bell-icon",
+//     count: 4,
+//     srOnlyText: "View notifications",
+//   },
+//   {
+//     href: "/wishlist",
+//     icon: <Heart />,
+//     alt: "heart-icon",
+//     srOnlyText: "View wishlist",
+//   },
+//   {
+//     href: "/cart",
+//     icon: <ShoppingCart />,
+//     alt: "cart-icon",
+//     count: 2,
+//     srOnlyText: "View cart",
+//   },
+//   {
+//     href: "/account",
+//     icon: <CircleUser />,
+//     alt: "user-icon",
+//     srOnlyText: "View account",
+//   },
+// ];
 const mobileNavicons = [
   {
     href: "/wishlist",
@@ -59,7 +58,7 @@ const mobileNavicons = [
   },
 ];
 
-function MobileTabletNavbar({ loggedin }: { loggedin: boolean }) {
+function MobileTabletNavbar({  }: { loggedin: boolean }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const closeMobileMenu = () => setMobileMenuOpen(false);
@@ -204,7 +203,7 @@ function MobileTabletNavbar({ loggedin }: { loggedin: boolean }) {
               </div>
 
 
-              <div className="container pt-6">
+              {/* <div className="container pt-6">
                 {!loggedin ? (
                   <div className="grid grid-cols-2 gap-[30px]">
                     <Link href="/login">
@@ -221,7 +220,7 @@ function MobileTabletNavbar({ loggedin }: { loggedin: boolean }) {
                 ) : (
                   <HeaderIconMenu icons={Navicons} onClick={closeMobileMenu}/>
                 )}
-              </div>
+              </div> */}
             </div>
           </div>
         </motion.div>
