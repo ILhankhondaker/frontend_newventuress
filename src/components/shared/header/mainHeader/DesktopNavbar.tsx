@@ -90,9 +90,10 @@ function DesktopNavbar({ pathName, loggedin }: DesktopNavbarProps) {
         <Link
           href="/"
           className={cn(
-            "text-[20px] font-medium hover:text-primary-blue-main dark:hover:text-primary-pink-main",
+            "text-[20px] font-medium hover:text-primary-blue-main dark:hover:text-primary-pink-main cursor-not-allowed ",
             pathName === "/" ? "text-primary-blue-main dark:text-primary-pink-main" : "text-black font-normal"
           )}
+          
         >
           Home
         </Link>
@@ -108,7 +109,7 @@ function DesktopNavbar({ pathName, loggedin }: DesktopNavbarProps) {
         <Link
           href=""
           className={cn(
-            "text-[20px] font-medium hover:text-primary-blue-main dark:hover:text-primary-pink-main ",
+            "text-[20px] font-medium hover:text-primary-blue-main dark:hover:text-primary-pink-main cursor-not-allowed",
             pathName === "/products"
               ? "text-primary-blue-main dark:text-primary-pink-main"
               : "text-black font-normal"
@@ -119,7 +120,7 @@ function DesktopNavbar({ pathName, loggedin }: DesktopNavbarProps) {
          <Link
           href="/products"
           className={cn(
-            "text-[20px] font-medium hover:text-primary-blue-main dark:hover:text-primary-pink-main",
+            "text-[20px] font-medium hover:text-primary-blue-main dark:hover:text-primary-pink-main cursor-not-allowed",
             pathName === "/products"
               ? "text-primary-blue-main dark:text-primary-pink-main"
               : "text-black font-normal"
@@ -151,7 +152,7 @@ function DesktopNavbar({ pathName, loggedin }: DesktopNavbarProps) {
          <Link
           href="/blogs"
           className={cn(
-            "text-[20px] font-medium hover:text-primary-blue-main dark:hover:text-primary-pink-main",
+            "text-[20px] font-medium hover:text-primary-blue-main dark:hover:text-primary-pink-main cursor-not-allowed",
             pathName === "/blogs" ? "text-primary-blue-main dark:text-primary-pink-main" : "text-black font-normal"
           )}
         >
@@ -162,7 +163,7 @@ function DesktopNavbar({ pathName, loggedin }: DesktopNavbarProps) {
           <Link
           href="/vendor-dashboard"
           className={cn(
-            "text-[20px] font-medium hover:text-primary-blue-main dark:hover:text-primary-pink-main",
+            "text-[20px] font-medium hover:text-primary-blue-main dark:hover:text-primary-pink-main cursor-not-allowed",
             pathName === "/vendor-dashboard" ? "text-primary-blue-main dark:text-primary-pink-main" : "text-black font-normal"
           )}
           >
@@ -173,7 +174,7 @@ function DesktopNavbar({ pathName, loggedin }: DesktopNavbarProps) {
         <Link
           href="/plans"
           className={cn(
-            "text-[20px] font-medium hover:text-primary-blue-main dark:hover:text-primary-pink-main",
+            "text-[20px] font-medium hover:text-primary-blue-main dark:hover:text-primary-pink-main cursor-not-allowed",
             pathName === "/plans" ? "text-primary-blue-main dark:text-primary-pink-main" : "text-black font-normal"
           )}
         >
@@ -183,10 +184,10 @@ function DesktopNavbar({ pathName, loggedin }: DesktopNavbarProps) {
       <div>
         {!loggedin ? (
           <div className="hidden lg:flex lg:flex-1 gap-x-[20px] lg:justify-end">
-            <Button variant="outline" asChild size="md" className="dark:bg-white dark:hover:bg-[#482D721A] dark:text-black dark:border dark:border-[#6741a521] dark:shadow">
+            <Button variant="outline"  size="md" className="dark:bg-white dark:hover:bg-[#482D721A] dark:text-black dark:border dark:border-[#6741a521] dark:shadow" disabled>
               <Link href="/login">Log in</Link>
             </Button>
-            <Button size="md" asChild>
+            <Button size="md"  disabled>
               <Link href="/registration">Sign up</Link>
             </Button>
           </div>
