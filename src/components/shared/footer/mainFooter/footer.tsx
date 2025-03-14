@@ -70,12 +70,12 @@ const Footer = () => {
                     <ul className="space-y-2">
                       {links.map(({ label, href }) => (
                         <li key={label}>
-                          <Link
-                            href={href}
+                          <p
+                            // href={href}
                             className="text-[#E6EEF6] text-[14px] font-normal hover:text-white transition-colors cursor-not-allowed"
                           >
                             {label}
-                          </Link>
+                          </p>
                         </li>
                       ))}
                     </ul>
